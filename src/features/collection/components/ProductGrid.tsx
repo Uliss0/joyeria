@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
@@ -43,6 +43,9 @@ interface ProductGridProps {
 export const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const addItem = useCartAddItem();
+  const toggleCart = useCartToggleCart();
 
   const mainImage = product.images.find(img => img.isMain) || product.images[0];
   const discountPercentage = product.compareAtPrice
@@ -93,7 +96,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
             <IconButton
               icon={Heart}
               size="sm"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault();
                 setIsWishlisted(!isWishlisted);
               }}
@@ -127,8 +130,6 @@ export const ProductCard = ({ product }: { product: Product }) => {
               className="w-full btn-gold shadow-md"
               onClick={(e) => {
                 e.preventDefault();
-                const addItem = useCartAddItem();
-                const toggleCart = useCartToggleCart();
                 addItem({
                   productId: product.id,
                   name: product.name,

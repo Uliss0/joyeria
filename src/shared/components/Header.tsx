@@ -1,9 +1,8 @@
 "use client";
 
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ const navigation = [
   { name: "Contacto", href: "/contacto" },
 ];
 
-function CartButton() {
+const CartButton = dynamic(() => Promise.resolve(() => {
   const itemCount = useCartItemCount();
   const toggleCart = useCartToggleCart();
 
@@ -38,7 +37,7 @@ function CartButton() {
       )}
     </button>
   );
-}
+}), { ssr: false });
 
 function UserMenu() {
   const { data: session, status } = useSession();
@@ -136,7 +135,7 @@ interface HeaderProps {
   className?: string;
 }
 
-export function Header({ className }: HeaderProps) {
+export default function Header({ className }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
 

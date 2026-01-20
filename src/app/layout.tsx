@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Header } from '@/shared/components/Header';
+import Header from '@/shared/components/Header';
 import { Footer } from '@/shared/components/Footer';
 import { AuthProvider } from '@/lib/auth/provider';
 import './globals.css';
@@ -8,7 +8,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MOKSHA - Joyería Premium',
+  title: 'MOKSHA - Joyería',
   description: 'Diseños contemporáneos, elegantes y pensados para destacar cada momento.',
 };
 

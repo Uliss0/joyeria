@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import React from "react";
 
 interface IconButtonProps {
   icon: LucideIcon;
   size?: "sm" | "md" | "lg";
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   "aria-label": string;
 }

@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { CheckoutSteps } from "./components/CheckoutSteps";
-import { OrderSummary } from "./components/OrderSummary";
 import { ShippingStep } from "./steps/ShippingStep";
 import { PaymentStep } from "./steps/PaymentStep";
 import { ReviewStep } from "./steps/ReviewStep";
 import { useCartClearCart } from "@/shared/store/cartStore";
+
+const OrderSummary = dynamic(() => import("./components/OrderSummary").then(mod => ({ default: mod.OrderSummary })), { ssr: false });
 
 const steps = [
   { id: "shipping", title: "Envío", description: "Dirección y envío" },
