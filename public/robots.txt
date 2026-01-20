@@ -1,0 +1,19 @@
+# Robots.txt for MOKSHA Joyería
+# Allow all web crawlers to access all content
+
+User-agent: *
+Allow: /
+
+# Block access to admin and API routes
+Disallow: /api/
+Disallow: /admin/
+Disallow: /cuenta/
+
+# Allow access to sitemap
+Allow: /sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://moksha-joyeria.com/sitemap.xml

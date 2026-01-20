@@ -293,12 +293,12 @@ export default function Collection() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
+        {/* Breadcrumb 
         <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8 font-sans">
           <Link href="/">Inicio</Link>
           <span>/</span>
           <span className="text-gray-900">Colección</span>
-        </nav>
+        </nav>*/}
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
