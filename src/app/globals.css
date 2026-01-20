@@ -1,0 +1,75 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+/* Custom color variables for gold palette */
+:root {
+  --color-gold-50: #fdfdfb;
+  --color-gold-100: #fbf9f5;
+  --color-gold-200: #f6f1e8;
+  --color-gold-300: #f0e6d1;
+  --color-gold-400: #e6d0a9;
+  --color-gold-500: #d4b27d;
+  --color-gold-600: #c19659;
+  --color-gold-700: #a47a4a;
+  --color-gold-800: #86633f;
+  --color-900: #6f5236;
+  --color-gold-950: #3c2718;
+
+  /* Font variables */
+  --font-serif: 'Lora', serif;
+  --font-sans: 'Montserrat', sans-serif;
+}
+/*ocultar scrollbar*/
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom styles */
+@layer base {
+  html {
+    font-family: var(--font-sans); /* Default font for the entire app */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+}
+
+@layer components {
+  .btn-gold {
+    background-color: var(--color-gold-600);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+  }
+  .btn-gold:hover {
+    background-color: var(--color-gold-700);
+  }
+
+  .text-gold-600 {
+    color: var(--color-gold-600);
+  }
+
+  .bg-gold-600 {
+    background-color: var(--color-gold-600);
+  }
+
+  .bg-gold-50 {
+    background-color: var(--color-gold-50);
+  }
+
+  .border-gold-600 {
+    border-color: var(--color-gold-600);
+  }
+
+  .hover\:bg-gold-700:hover {
+    background-color: var(--color-gold-700);
+  }
+
+  .hover\:text-gold-700:hover {
+    color: var(--color-gold-700);
+  }
+}
