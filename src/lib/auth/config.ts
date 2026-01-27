@@ -7,9 +7,12 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma) as any, // Temporarily disabled
+  adapter: PrismaAdapter(prisma) as any,
   providers: [
-    // Google and Facebook disabled for now due to missing env vars
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -60,7 +63,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "database",
   },
   pages: {
     signIn: "/auth/signin",
@@ -69,18 +72,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
+        token.id = user.id;
         token.role = (user as any).role;
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).role = token.role;
+    async session({ session, user }) {
+      if (session.user && user) {
+        (session.user as any).id = user.id;
+        (session.user as any).role = (user as any).role;
       }
       return session;
     },
     async signIn({ user, account, profile }) {
+      console.log("SignIn callback:", { user, account, profile });
       // Allow sign in for all providers
       return true;
     },

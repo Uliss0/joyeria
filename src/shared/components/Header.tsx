@@ -172,6 +172,13 @@ export default function Header({ className }: HeaderProps) {
           {/* Shopping Cart */}
           <CartButton />
 
+          {/* Admin: Upload product */}
+          {session?.user?.role === "ADMIN" && (
+            <Link href="/admin/new-product">
+              <Button variant="outline" size="sm">Subir producto</Button>
+            </Link>
+          )}
+
           {/* Mobile Menu Trigger */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>

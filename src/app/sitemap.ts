@@ -25,6 +25,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Agrega más URLs según tu estructura
     // En una app real, generarías estas URLs dinámicamente desde tu base de datos
     {
+      url: `${baseUrl}/privacidad`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/terminos`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/envios`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/devoluciones`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
       url: `${baseUrl}/producto/anillo-clasico-oro-18k`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

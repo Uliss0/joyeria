@@ -3,11 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native"]
+  engineType = "library"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 // User model for authentication
@@ -35,12 +37,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
-  scope             String?
-  id_token          String?
+  scope             String? @db.Text
+  id_token          String? @db.Text
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -134,7 +136,7 @@ model ProductImage {
   id        String  @id @default(cuid())
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
+  url       String  @db.Text
   alt       String?
   order     Int     @default(0)
   isMain    Boolean @default(false)

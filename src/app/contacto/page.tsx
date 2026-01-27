@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, MessageCircleDashed  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,8 +41,20 @@ export default function ContactoPage() {
               <div>
                 <p className="font-semibold text-gray-800">Teléfono</p>
                 <a href="tel:+34912345678" className="text-gray-700 hover:text-gold-700 font-sans">
-                  +34 912 345 678
+                  +54 9 11 3650 7549
                 </a>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+            <MessageCircleDashed className="w-6 h-6 text-gold-600" />
+              <div>
+                <p className="font-semibold text-gray-800">Redes Sociales</p>
+                <div className="flex space-x-4">
+                  <a href="https://instagram.com/moksha.joyeriaa" target="_blank" rel="noopener noreferrer">
+                    <p className="text-gray-700 font-sans">@moksha.joyeriaa</p>
+                  </a>
+                </div>
               </div>
             </div>
             <div className="flex items-start space-x-4">
@@ -50,8 +62,8 @@ export default function ContactoPage() {
               <div>
                 <p className="font-semibold text-gray-800">Nuestra Ubicación</p>
                 <p className="text-gray-700 font-sans">
-                  Calle de la Joya, 123 <br />
-                  28001 Madrid, España
+                 Teniente Farias 1509 <br />
+                  Bahia Blanca, Buenos aires
                 </p>
               </div>
             </div>
@@ -62,10 +74,8 @@ export default function ContactoPage() {
             <h3 className="text-2xl font-serif font-semibold text-gray-900 mb-4">Encuéntranos en el mapa</h3>
             <div className="relative h-64 bg-gray-200 rounded-lg overflow-hidden shadow-md">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1dXXXX.XXXX!2d-X.XXXXX!3dXX.XXXXX!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDQzJzA3LjEiTiA0wrAyOScwMi44Ilc!5e0!3m2!1sen!2ses!4vXXXXXXXXXXXXX"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d388.98267976898626!2d-62.26518572662129!3d-38.74394176371671!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95edbdbc4db45dcf%3A0x2479e5b07a0ad30d!2sMoksha!5e0!3m2!1ses-419!2sar!4v1769527762255!5m2!1ses-419!2sar" width="600" height="450" 
+                
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

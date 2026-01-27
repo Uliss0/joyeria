@@ -10,7 +10,7 @@ const footerLinks = {
     { name: "Aros", href: "/coleccion/aros" },
   ],
   servicio: [
-    { name: "Dónde Encontrarnos", href: "/ubicacion" },
+    { name: "Dónde Encontrarnos", href: "/contacto" },
     { name: "Contacto", href: "/contacto" },
     { name: "Envíos", href: "/envios" },
     { name: "Devoluciones", href: "/devoluciones" },
@@ -48,7 +48,7 @@ export function Footer({ className }: FooterProps) {
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link
-                href="#"
+                href="@moksha.joyeriaa"
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Instagram"
               >
@@ -98,12 +98,12 @@ export function Footer({ className }: FooterProps) {
               <div className="flex items-center space-x-3">
                 <MapPin className="w-4 h-4 text-gold-400 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  Av. Corrientes 1234, CABA
+                  Teniente Farias 1509, Bahia Blanca, Buenos Aires
                 </span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-gold-400 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">+54 11 1234-5678</span>
+                <span className="text-gray-400 text-sm">+54 9 11 3650 7549</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-gold-400 flex-shrink-0" />
@@ -136,8 +136,10 @@ export function Footer({ className }: FooterProps) {
         {/* Bottom */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 MOKSHA. Todos los derechos reservados.
+            © 2026 MOKSHA. Todos los derechos reservados.
           </p>
+          {/* desarrollador */}
+          <p><a href="https://origam-ia.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-sm"> Desarrollado por origam-ia</a></p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/privacidad" className="text-gray-400 hover:text-white text-sm">
               Privacidad

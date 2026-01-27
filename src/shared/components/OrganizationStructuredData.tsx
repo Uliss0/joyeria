@@ -14,7 +14,7 @@ export function OrganizationStructuredData() {
       '@type': 'PostalAddress',
       addressCountry: 'AR',
       addressRegion: 'Buenos Aires', // Cambia según tu ubicación
-      addressLocality: 'Buenos Aires', // Cambia según tu ubicación
+      addressLocality: 'Bahia Blanca', // Cambia según tu ubicación
     },
     contactPoint: {
       '@type': 'ContactPoint',
@@ -27,7 +27,7 @@ export function OrganizationStructuredData() {
       'https://instagram.com/moksha_joyeria',
       'https://twitter.com/moksha_joyeria',
     ],
-    foundingDate: '2024', // Cambia por la fecha real
+    foundingDate: '2025', // Cambia por la fecha real
     knowsAbout: [
       'Joyería artesanal',
       'Diseños contemporáneos',
