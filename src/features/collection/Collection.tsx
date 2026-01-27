@@ -36,8 +36,8 @@ interface Product {
 const mockProducts: Product[] = [
   {
     id: "1",
-    name: "Anillo Clásico de Oro",
-    slug: "anillo-clasico-oro",
+    name: "Anillo Clásico de Oro 18K",
+    slug: "anillo-clasico-oro-18k",
     price: 85000,
     compareAtPrice: 95000,
     images: [
@@ -57,19 +57,19 @@ const mockProducts: Product[] = [
   },
   {
     id: "2",
-    name: "Collar Minimalista de Plata",
-    slug: "collar-minimalista-plata",
+    name: "Anillo Moderno de Plata",
+    slug: "anillo-moderno-plata",
     price: 45000,
     images: [
       {
         url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop",
-        alt: "Collar minimalista de plata",
+        alt: "Anillo moderno de plata",
         isMain: true,
       },
     ],
     category: {
-      name: "Collares",
-      slug: "collares",
+      name: "Anillos",
+      slug: "anillos",
     },
     isFeatured: false,
     isNew: true,

@@ -158,13 +158,13 @@ const mockRelatedProducts = [
 ];
 
 interface ProductPageProps {
-  productSlug: string;
+  product: typeof mockProduct;
+  relatedProducts?: typeof mockRelatedProducts;
   className?: string;
 }
 
-export default function ProductPage({ productSlug, className }: ProductPageProps) {
-  const [product] = useState(mockProduct); // In real app, fetch by slug
-  const [relatedProducts] = useState(mockRelatedProducts);
+export default function ProductPage({ product, relatedProducts = mockRelatedProducts, className }: ProductPageProps) {
+  const [selectedProduct] = useState(product);
 
   const handleAddToCart = (
     productId: string,
@@ -178,8 +178,8 @@ export default function ProductPage({ productSlug, className }: ProductPageProps
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: product.name,
-        text: product.shortDescription,
+        title: selectedProduct.name,
+        text: selectedProduct.shortDescription,
         url: window.location.href,
       });
     } else {
@@ -198,19 +198,19 @@ export default function ProductPage({ productSlug, className }: ProductPageProps
           <ChevronRight className="w-4 h-4" />
           <Link href="/coleccion" className="hover:text-gold-600">Colección</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href={`/coleccion/${product.category.slug}`} className="hover:text-gold-600">
-            {product.category.name}
+          <Link href={`/coleccion/${selectedProduct.category.slug}`} className="hover:text-gold-600">
+            {selectedProduct.category.name}
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900">{product.name}</span>
+          <span className="text-gray-900">{selectedProduct.name}</span>
         </nav>
 
         {/* Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Product Gallery */}
           <ProductGallery
-            images={product.images}
-            productName={product.name}
+            images={selectedProduct.images}
+            productName={selectedProduct.name}
           />
 
           {/* Product Information */}
@@ -224,7 +224,7 @@ export default function ProductPage({ productSlug, className }: ProductPageProps
                       key={star}
                       className={cn(
                         "w-4 h-4",
-                        star <= Math.floor(product.rating.average)
+                        star <= Math.floor(selectedProduct.rating.average)
                           ? "text-yellow-400 fill-current"
                           : "text-gray-300"
                       )}
@@ -232,7 +232,7 @@ export default function ProductPage({ productSlug, className }: ProductPageProps
                   ))}
                 </div>
                 <span className="text-sm text-gray-600">
-                  {product.rating.average} ({product.rating.count} reseñas)
+                  {selectedProduct.rating.average} ({selectedProduct.rating.count} reseñas)
                 </span>
               </div>
 
@@ -244,7 +244,7 @@ export default function ProductPage({ productSlug, className }: ProductPageProps
             </div>
 
             <ProductInfo
-              {...product}
+              {...selectedProduct}
               onAddToCart={handleAddToCart}
             />
           </div>

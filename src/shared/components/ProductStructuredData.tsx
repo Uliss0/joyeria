@@ -1,4 +1,4 @@
-import { Product,WithContext } from 'schema-dts';
+import { Article, Product,WithContext } from 'schema-dts';
 import { jsonLdScriptProps } from 'react-schemaorg';
 import Head from 'next/head';
 

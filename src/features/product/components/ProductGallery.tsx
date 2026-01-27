@@ -4,9 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ZoomIn, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { IconButton } from "@/shared/components/IconButton";
 import { cn } from "@/lib/utils";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface ProductImage {
   id: string;
@@ -140,6 +141,9 @@ export function ProductGallery({ images, productName, className }: ProductGaller
       {/* Zoom Modal */}
       <Dialog open={isZoomModalOpen} onOpenChange={setIsZoomModalOpen}>
         <DialogContent className="max-w-4xl w-full h-full max-h-[90vh] p-0">
+          <DialogTitle asChild>
+            <VisuallyHidden>Imagen ampliada del producto</VisuallyHidden>
+          </DialogTitle>
           <div className="relative w-full h-full flex items-center justify-center bg-black">
             {/* Close Button */}
             <button
