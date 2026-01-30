@@ -104,7 +104,7 @@ export default function NewProductPage() {
         throw new Error(err?.message || "Error al crear producto");
       }
 
-      router.push("/admin");
+      router.push("/coleccion");
     } catch (err: any) {
       setError(err.message || "Error desconocido");
     } finally {

@@ -52,6 +52,8 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       exit={{ opacity: 0, y: -20 }}
       className="flex space-x-4 py-4 border-b border-gray-100 last:border-b-0"
     >
+      
+
       {/* Product Image */}
       <Link href={`/producto/${item.slug}`} className="flex-shrink-0">
         <div className="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden">
@@ -62,6 +64,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             className="object-cover"
             sizes="64px"
           />
+          
         </div>
       </Link>
 

@@ -159,8 +159,48 @@ const mockProducts: Product[] = [
 ];
 
 export default function Collection() {
-  const [displayedProducts, setDisplayedProducts] = useState<Product[]>(mockProducts);
-  const [loading, setLoading] = useState(false);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from API on mount
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/products?limit=200');
+        if (!res.ok) throw new Error('Failed to fetch products');
+        const data = await res.json();
+        if (mounted) {
+          if (data?.products && data.products.length > 0) {
+            setAllProducts(data.products);
+            setDisplayedProducts(data.products);
+          } else {
+            // Fallback to mocks only after API responds with empty results
+            setAllProducts(mockProducts);
+            setDisplayedProducts(mockProducts);
+          }
+        }
+      } catch (e) {
+        console.error('Error fetching products:', e);
+        // On error, fallback to mocks
+        if (mounted) {
+          setAllProducts(mockProducts);
+          setDisplayedProducts(mockProducts);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -174,13 +214,14 @@ export default function Collection() {
   const applyFilters = useCallback(() => {
     setLoading(true);
     setTimeout(() => {
-      let filtered = [...mockProducts];
+      const source = allProducts.length ? [...allProducts] : (loading ? [] : [...mockProducts]);
+      let filtered = source;
 
       // Filter by search term
       if (searchTerm) {
         filtered = filtered.filter(product =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (product.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
           product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
@@ -238,7 +279,7 @@ export default function Collection() {
       setDisplayedProducts(sorted);
       setLoading(false);
     }, 300); // Simulate API call delay
-  }, [selectedCategories, selectedGenders, selectedMaterials, selectedPriceRange, searchTerm, sortBy]);
+  }, [allProducts, selectedCategories, selectedGenders, selectedMaterials, selectedPriceRange, searchTerm, sortBy]);
 
   // Apply filters on initial load and when filter states change
   useEffect(() => {

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import type { Session } from "next-auth";
 import { authOptions } from "@/lib/auth/config";
 
+
 const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
@@ -77,9 +78,10 @@ export async function POST(req: Request) {
     const publicId = uploadResult.public_id;
 
     // Build transformed URL using provided template, replacing final public id
-    const transformed = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/d_docs:placeholders:samples:avatar.png/u_unnamed_njbj9m/c_scale,h_1.10,w_1.00/fl_layer_apply,fl_no_overflow,g_center/f_webp/cs_srgb/q_auto:good/dpr_auto/${encodeURIComponent(publicId)}`;
-
-    // Generate slug and sku
+    //const transformed = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/d_docs:placeholders:samples:avatar.png/u_unnamed_njbj9m/c_scale,h_1.10,w_1.00/fl_layer_apply,fl_no_overflow,g_center/f_webp/cs_srgb/q_auto:good/dpr_auto/${encodeURIComponent(publicId)}`;
+      ////const transformed1 ='https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/d_docs:placeholders:samples:avatar.png/u_gold-texture-in-black-marble-c8lmk8uqfiba6eyi_ps0h11/c_scale,h_1.10,w_1.00/fl_layer_apply,fl_no_overflow,g_center/f_webp/cs_keep_cmyk/q_auto/dpr_auto/${encodeURIComponent(publicId)}'
+      const transformed= `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/u_abstract-marble-black-gold-background_pyjrww/c_scale,fl_relative,w_1.22/fl_layer_apply,fl_no_overflow,g_center,x_181,y_74/ar_4:3,c_auto,w_1024/f_webp/cs_srgb/q_auto/dpr_auto/${encodeURIComponent(publicId)}`;
+      // Generate slug and sku
     const baseSlug = slugify(name || "product");
     const slug = `${baseSlug}-${Date.now().toString().slice(-5)}`;
     const sku = `SKU-${Date.now().toString().slice(-6)}`;
