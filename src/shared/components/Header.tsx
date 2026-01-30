@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon, ArrowRight, Minus, Plus } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,15 +12,11 @@ import { IconButton } from "./IconButton";
 import { Cart } from "./Cart";
 import { useCartItemCount, useCartToggleCart } from "@/shared/store/cartStore";
 import { cn } from "@/lib/utils";
-import ShoppingBagg from "./ShoppingBag";
-
-import { ArrowRight,  Minus, Plus } from "lucide-react";
+import ShoppingBagg from "./ShoppingBag"; // Mantenemos el import por si se usa a futuro, aunque esté comentado abajo
 import { Badge } from "@/components/ui/badge";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import haloImage from "@/assets/halo.jpg";
-
-
 
 const navigation = [
   { name: "Inicio", href: "/" },
@@ -37,8 +33,6 @@ interface CartItem {
   category: string;
 }
 
-
-
 const CartButton = dynamic(() => Promise.resolve(() => {
   const itemCount = useCartItemCount();
   const toggleCart = useCartToggleCart();
@@ -46,7 +40,8 @@ const CartButton = dynamic(() => Promise.resolve(() => {
   return (
     <button
       onClick={toggleCart}
-      className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      // Puntos 5 y 8: Quitamos hover bg, agregamos glow (drop-shadow) y cursor-pointer
+      className="relative p-2 text-white/95 hover:text-white transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] cursor-pointer"
       aria-label={`Carrito de compras${itemCount > 0 ? ` (${itemCount} productos)` : ''}`}
     >
       <ShoppingBag className="w-5 h-5" />
@@ -72,7 +67,12 @@ function UserMenu() {
   if (!session) {
     return (
       <Link href="/auth/signin">
-        <Button variant="outline" size="sm">
+        {/* Punto 6: Estilo glow para iniciar sesión */}
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="text-white/95 hover:text-white hover:bg-transparent hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all duration-300 cursor-pointer"
+        >
           Iniciar sesión
         </Button>
       </Link>
@@ -83,7 +83,8 @@ function UserMenu() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg transition-colors"
+        // Punto 6 y 8: Glow effect y cursor pointer
+        className="flex items-center space-x-2 p-2 text-white/95 hover:text-white rounded-lg transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] cursor-pointer"
         aria-label="Menú de usuario"
       >
         {session.user?.image ? (
@@ -93,22 +94,23 @@ function UserMenu() {
             className="w-8 h-8 rounded-full"
           />
         ) : (
-          <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center">
-            <UserIcon className="w-4 h-4 text-gold-600" />
+          // Glow interno para el icono de usuario
+          <div className="w-8 h-8 rounded-full flex items-center justify-center border border-white/20 hover:border-white/80 transition-all">
+            <UserIcon className="w-4 h-4 text-white" />
           </div>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-[#222428] text-gray-100 rounded-lg shadow-lg border border-slate-900 py-2 z-80">
+        <div className="absolute right-0 mt-2 w-48 bg-[#222428] text-gray-100 rounded-lg shadow-lg border border-slate-900 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
           <div className="px-4 py-2 border-b border-slate-700">
             <p className="font-medium text-gray-100">{session.user?.name}</p>
-            <p className="text-sm text-gray-300">{session.user?.email}</p>
+            <p className="text-sm text-gray-300 truncate">{session.user?.email}</p>
           </div>
 
           <Link
             href="/cuenta/perfil"
-            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700"
+            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
             onClick={() => setIsOpen(false)}
           >
             <UserIcon className="w-4 h-4" />
@@ -117,7 +119,7 @@ function UserMenu() {
 
           <Link
             href="/cuenta/pedidos"
-            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700"
+            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
             onClick={() => setIsOpen(false)}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -126,7 +128,7 @@ function UserMenu() {
 
           <Link
             href="/cuenta/direcciones"
-            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700"
+            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
             onClick={() => setIsOpen(false)}
           >
             <Settings className="w-4 h-4" />
@@ -139,7 +141,7 @@ function UserMenu() {
                 setIsOpen(false);
                 signOut({ callbackUrl: "/" });
               }}
-              className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-red-700/10"
+              className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-red-700/10 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>Cerrar sesión</span>
@@ -162,6 +164,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   const { data: session } = useSession();
+  
   // Shopping bag state with 3 mock items
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
@@ -261,8 +264,8 @@ const Header = () => {
       ]
     },
     { 
-      name: "About", 
-      href: "/about/our-story",
+      name: "Contacto", 
+      href: "/contacto",
       submenuItems: [
         "Our Story",
         "Sustainability",
@@ -278,29 +281,34 @@ const Header = () => {
 
   return (
     <nav 
-      className="relative z-80 bg-[#222428] text-white/95 backdrop-blur-md border-b border-slate-800"
+      // Punto 1: Sticky top-0
+      // Punto 3: Border blanco (border-white/95) igual que el texto
+      className="sticky top-0 z-50 bg-[#222428] text-white/95 backdrop-blur-md border-b border-white/95 shadow-sm transition-all"
     >
       
-      <div className="flex items-center justify-between h-16 px-6">
+      {/* Punto 2: Layout Grid para móvil para evitar superposición Cart/Logo */}
+      <div className="grid grid-cols-[auto_1fr_auto] lg:flex lg:items-center lg:justify-between h-16 px-6 relative">
         
         {/* Mobile hamburger button */}
-        <button
-          className="lg:hidden p-2 mt-0.5 text-white hover:text-primary transition-colors duration-200"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-5 h-5 relative">
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
-              isMobileMenuOpen ? 'rotate-45 top-2.5' : 'top-1.5'
-            }`}></span>
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 top-2.5 ${
-              isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
-            }`}></span>
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
-              isMobileMenuOpen ? '-rotate-45 top-2.5' : 'top-3.5'
-            }`}></span>
-          </div>
-        </button>
+        <div className="flex items-center lg:hidden">
+          <button
+            className="p-2 -ml-2 text-white/95 hover:text-white transition-colors duration-200 cursor-pointer"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 h-5 relative">
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
+                isMobileMenuOpen ? 'rotate-45 top-2.5' : 'top-1.5'
+              }`}></span>
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 top-2.5 ${
+                isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+              }`}></span>
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
+                isMobileMenuOpen ? '-rotate-45 top-2.5' : 'top-3.5'
+              }`}></span>
+            </div>
+          </button>
+        </div>
 
         {/* Left navigation - Hidden on tablets and mobile */}
         <div className="hidden lg:flex space-x-8">
@@ -313,7 +321,8 @@ const Header = () => {
             >
               <Link
                 href={item.href}
-                className="text-white hover:text-primary transition-colors duration-200 text-sm font-light py-6 block"
+                // Punto 7: Iluminación letras en Hover
+                className="text-white/95 hover:text-white transition-all duration-300 text-sm font-light py-6 block hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] cursor-pointer"
               >
                 {item.name}
               </Link>
@@ -321,26 +330,20 @@ const Header = () => {
           ))}
         </div>
 
-        {/* Center logo */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          <Link href="/" className="block">
-            <span className="text-xl font-light tracking-[0.3em] text-white">MOKSHA</span>
+        {/* Center logo - Centrado absoluto en Desktop, centrado de grid en móvil */}
+        <div className="flex justify-center items-center lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2">
+          <Link href="/" className="block cursor-pointer">
+            {/* Logo con efecto glow suave al hover */}
+            <span className="text-xl font-light tracking-[0.3em] text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">MOKSHA</span>
           </Link>
         </div>
 
         {/* Right icons */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 justify-end">
+          {/* Favorites Icon */}
           <button 
-            className="p-2 text-white hover:text-primary transition-colors duration-200"
-            aria-label="Search"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </button>
-          <button 
-            className="hidden lg:block p-2 text-white hover:text-primary transition-colors duration-200"
+            // Punto 6 y 8: Glow effect y cursor pointer
+            className="hidden lg:block p-2 text-white/95 hover:text-white transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] cursor-pointer"
             aria-label="Favorites"
             onClick={() => setOffCanvasType('favorites')}
           >
@@ -348,25 +351,12 @@ const Header = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
           </button>
+          
           <CartButton />
-          {/* Shopping Bag Icon *
-          <button 
-            className="p-2 text-white hover:text-primary transition-colors duration-200 relative"
-            aria-label="Shopping bag"
-            onClick={() => setIsShoppingBagOpen(true)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
-            {totalItems > 0 && (
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[30%] text-[0.5rem] font-semibold text-primary pointer-events-none">
-                {totalItems}
-              </span>
-            )}
-          </button>*/}
+          
           {session?.user?.role === "ADMIN" && (
             <Link href="/admin/new-product">
-              <Button variant="outline" size="sm">Subir producto</Button>
+              <Button variant="outline" size="sm" className="cursor-pointer">Subir producto</Button>
             </Link>
           )}
           <UserMenu />  
@@ -374,14 +364,15 @@ const Header = () => {
       </div>
 
       {/* Full width dropdown */}
+      {/* Punto 4: Animaciones de despliegue */}
       {activeDropdown && (
         <div 
-          className="absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-80"
+          className="absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-40 animate-in fade-in slide-in-from-top-2 duration-300 ease-out shadow-2xl"
           onMouseEnter={() => setActiveDropdown(activeDropdown)}
           onMouseLeave={() => setActiveDropdown(null)}
         >
           <div className="px-6 py-8">
-            <div className="flex justify-between w-full">
+            <div className="flex justify-between w-full max-w-7xl mx-auto">
               {/* Left side - Menu items */}
               <div className="flex-1">
                 <ul className="space-y-2">
@@ -389,10 +380,10 @@ const Header = () => {
                      .find(item => item.name === activeDropdown)
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
-                                <Link 
-                                  href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
-                                  className="text-white hover:text-primary transition-colors duration-200 text-sm font-light block py-2"
-                                >
+                        <Link 
+                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                          className="text-white/80 hover:text-white transition-colors duration-200 text-sm font-light block py-2 hover:translate-x-1 cursor-pointer"
+                        >
                           {subItem}
                         </Link>
                       </li>
@@ -418,16 +409,16 @@ const Header = () => {
                     }
                     
                     return (
-                      <Link key={index} href={linkTo} className="w-[400px] h-[280px] cursor-pointer group relative overflow-hidden block">
+                      <Link key={index} href={linkTo} className="w-[400px] h-[280px] cursor-pointer group relative overflow-hidden block rounded-sm">
                         <img 
                           src={image.src}
                           alt={image.alt}
-                          className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-90"
+                          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                         />
                         {(activeDropdown === "Shop" || activeDropdown === "New in" || activeDropdown === "About") && (
-                          <div className="absolute bottom-2 left-2 text-white text-xs font-light flex items-center gap-1">
+                          <div className="absolute bottom-4 left-4 text-white text-xs font-light flex items-center gap-1 drop-shadow-md">
                             <span>{image.label}</span>
-                            <ArrowRight size={12} />
+                            <ArrowRight size={12} className="group-hover:translate-x-2 transition-transform" />
                           </div>
                         )}
                       </Link>
@@ -442,7 +433,7 @@ const Header = () => {
       {/* Search overlay */}
       {isSearchOpen && (
         <div 
-          className="absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-80"
+          className="absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-40 animate-in fade-in slide-in-from-top-2"
         >
           <div className="px-6 py-8">
             <div className="max-w-2xl mx-auto">
@@ -468,7 +459,7 @@ const Header = () => {
                   {popularSearches.map((search, index) => (
                     <button
                       key={index}
-                      className="text-white hover:text-primary text-sm font-light py-2 px-4 border border-slate-700 rounded-full transition-colors duration-200 hover:border-primary"
+                      className="text-white hover:text-primary text-sm font-light py-2 px-4 border border-slate-700 rounded-full transition-colors duration-200 hover:border-primary cursor-pointer"
                     >
                       {search}
                     </button>
@@ -482,24 +473,24 @@ const Header = () => {
 
       {/* Mobile navigation menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-80">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-[#222428] border-b border-slate-800 z-50 h-[calc(100vh-4rem)] overflow-y-auto animate-in slide-in-from-top-2 fade-in duration-300">
           <div className="px-6 py-8">
             <div className="space-y-6">
               {navItems.map((item, index) => (
                 <div key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-white hover:text-primary transition-colors duration-200 text-lg font-light block py-2"
+                    className="text-white hover:text-primary transition-colors duration-200 text-lg font-light block py-2 cursor-pointer"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
-                   <div className="mt-3 pl-4 space-y-2">
+                   <div className="mt-3 pl-4 space-y-2 border-l border-slate-700 ml-1">
                      {item.submenuItems.map((subItem, subIndex) => (
                        <Link
                          key={subIndex}
                          href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
-                         className="text-slate-300 hover:text-primary text-sm font-light block py-1"
+                         className="text-slate-300 hover:text-primary text-sm font-light block py-1 cursor-pointer"
                          onClick={() => setIsMobileMenuOpen(false)}
                        >
                          {subItem}
@@ -513,36 +504,28 @@ const Header = () => {
         </div>
       )}
       
-      {/* Shopping Bag Component 
-      <ShoppingBagg
-        isOpen={isShoppingBagOpen}
-        onClose={() => setIsShoppingBagOpen(false)}
-        cartItems={cartItems}
-        updateQuantity={updateQuantity}
-        onViewFavorites={() => {
-          setIsShoppingBagOpen(false);
-          setOffCanvasType('favorites');
-        }}
-      />*/}
+      {/* Shopping Bag Component (Si se usa a futuro) */}
+      {/* <ShoppingBagg ... /> */}
       
       <Cart />
+      
       {/* Favorites Off-canvas overlay */}
       {offCanvasType === 'favorites' && (
-        <div className="fixed inset-0 z-80 h-screen">
+        <div className="fixed inset-0 z-[100] h-screen">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/50 h-screen"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm h-screen"
             onClick={() => setOffCanvasType(null)}
           />
           
           {/* Off-canvas panel */}
-          <div className="absolute right-0 top-0 h-screen w-96 bg-[#222428] border-l border-slate-800 animate-slide-in-right flex flex-col">
+          <div className="absolute right-0 top-0 h-screen w-96 bg-[#222428] border-l border-slate-800 animate-slide-in-right flex flex-col shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-border">
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
               <h2 className="text-lg font-light text-white">Your Favorites</h2>
               <button
                 onClick={() => setOffCanvasType(null)}
-                className="p-2 text-white hover:text-slate-300 transition-colors"
+                className="p-2 text-white hover:text-red-400 transition-colors cursor-pointer"
                 aria-label="Close"
               >
                 <X size={20} />
@@ -551,7 +534,7 @@ const Header = () => {
             
             {/* Content */}
             <div className="p-6">
-              <p className="text-muted-foreground text-sm mb-6">
+              <p className="text-slate-400 text-sm mb-6">
                 You haven't added any favorites yet. Browse our collection and click the heart icon to save items you love.
               </p>
             </div>

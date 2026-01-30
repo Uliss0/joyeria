@@ -1,7 +1,14 @@
 mail no funciona todavia.
 compras no funcionan todavia.(mp)
-cambiar imagenes y colores a los de la pagina de el 
 mail con dominio
+Arreglar buscador de tienda
+mejorar links de header.
+boton novedades redirija a siguiente seccion
+arreglar favoritos
+hacer logica del perfil de usuario
+seguimiento de envio en detalle de compra
+cuando inicias sesion con mail no muestra submenu de la cuenta y se sigue mostrando el boton de inicar sesion
+Cambiar imagenes por estatuas
 
 SEO
 arreglar rutas + categorias
