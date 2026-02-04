@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         // TODO: Re-enable Prisma authentication when env vars are set
-        /*
+        
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           role: user.role,
         };
-        */
+        
 
         throw new Error("Credenciales inválidas");
       },

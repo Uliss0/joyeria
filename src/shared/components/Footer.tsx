@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 
 const footerLinks = {
   coleccion: [
-    { name: "Anillos", href: "/coleccion/anillos" },
-    { name: "Collares", href: "/coleccion/collares" },
-    { name: "Pulseras", href: "/coleccion/pulseras" },
-    { name: "Aros", href: "/coleccion/aros" },
+    { name: "Anillos", href: "/coleccion?categoria=anillos" },
+    { name: "Collares", href: "/coleccion?categoria=collares" },
+    { name: "Pulseras", href: "/coleccion?categoria=pulseras" },
+    { name: "Aros", href: "/coleccion?categoria=aros" },
   ],
   servicio: [
     { name: "Dónde Encontrarnos", href: "/contacto" },

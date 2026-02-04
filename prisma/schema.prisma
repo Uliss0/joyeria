@@ -102,6 +102,7 @@ model Product {
   weight      Decimal?
   dimensions String?
   material    String?
+  gender      String?
   careInstructions String?
   seoTitle    String?
   seoDescription String?

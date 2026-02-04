@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Shield, Truck, Headphones } from "lucide-react";
@@ -35,138 +36,58 @@ interface Product {
 }
 
 // Mock data - replace with API call
+
+
 const mockProducts: Product[] = [
   {
     id: "1",
     name: "Anillo Clásico de Oro",
     slug: "anillo-clasico-oro",
     price: 85000,
-    compareAtPrice: 95000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        alt: "Anillo clásico de oro",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Anillos",
-      slug: "anillos",
-    },
+    images: [{ url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop", alt: "Anillo clásico de oro", isMain: true }],
+    category: { name: "Anillos", slug: "anillos" },
     isFeatured: true,
-    isNew: true,
-    tags: [{ name: "Oro", color: "#FFD700" }],
-    createdAt: "2025-01-15T10:00:00Z",
   },
   {
     id: "2",
-    name: "Collar Minimalista de Plata",
-    slug: "collar-minimalista-plata",
+    name: "Collar Minimalista",
+    slug: "collar-minimalista",
     price: 45000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop",
-        alt: "Collar minimalista de plata",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Collares",
-      slug: "collares",
-    },
-    isFeatured: false,
-    isNew: true,
-    tags: [{ name: "Plata", color: "#C0C0C0" }],
-    createdAt: "2025-01-20T11:00:00Z",
-  },
-  {
-    id: "3",
-    name: "Pulsera Elegante",
-    slug: "pulsera-elegante",
-    price: 65000,
-    compareAtPrice: 75000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
-        alt: "Pulsera elegante",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Pulseras",
-      slug: "pulseras",
-    },
+    images: [{ url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop", alt: "Collar minimalista", isMain: true }],
+    category: { name: "Collares", slug: "collares" },
     isFeatured: true,
-    isNew: false,
-    tags: [{ name: "Oro", color: "#FFD700" }],
-    createdAt: "2025-01-10T09:00:00Z",
-  },
-  {
-    id: "4",
-    name: "Aros Geométricos",
-    slug: "aros-geometricos",
-    price: 35000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=400&h=400&fit=crop",
-        alt: "Aros geométricos",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Aros",
-      slug: "aros",
-    },
-    isFeatured: false,
-    isNew: false,
-    tags: [{ name: "Plata", color: "#C0C0C0" }],
-    createdAt: "2025-01-18T14:30:00Z",
-  },
-  {
-    id: "5",
-    name: "Pendientes de Diamante",
-    slug: "pendientes-diamante",
-    price: 180000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=400&h=400&fit=crop",
-        alt: "Pendientes de diamante",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Pendientes",
-      slug: "pendientes",
-    },
-    isFeatured: true,
-    isNew: true,
-    tags: [{ name: "Diamante", color: "#B9F2FF" }],
-    createdAt: "2025-01-22T16:00:00Z",
-  },
-  {
-    id: "6",
-    name: "Anillo de Compromiso",
-    slug: "anillo-compromiso",
-    price: 250000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        alt: "Anillo de compromiso",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Anillos",
-      slug: "anillos",
-    },
-    isFeatured: true,
-    isNew: false,
-    tags: [{ name: "Oro", color: "#FFD700" }, { name: "Diamante", color: "#B9F2FF" }],
-    createdAt: "2025-01-05T12:00:00Z",
   },
 ];
 
 export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchNewest = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/products?sort=newest&limit=6');
+        if (!res.ok) throw new Error('Failed to fetch newest products');
+        const data = await res.json();
+        if (mounted) {
+          if (data?.products && data.products.length > 0) setProducts(data.products);
+          else setProducts(mockProducts);
+        }
+      } catch (e) {
+        console.error('Error fetching newest products:', e);
+        if (mounted) setProducts(mockProducts);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchNewest();
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -174,12 +95,12 @@ export default function Home() {
         {/* Background Video */}
         <video
           autoPlay
-          loop
+          //loop
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-80" // Ajusta la opacidad si es necesario
         >
-          <source src="/videos/Video_Promocional_Joyería_Elegante.mp4" type="video/mp4" />
+          <source src="/videos/presentacion.mp4" type="video/mp4" />
           Tu navegador no soporta la etiqueta de video.
         </video>
 
@@ -187,14 +108,19 @@ export default function Home() {
 
         <div className="container relative z-20 mx-auto px-4 text-center text-white">
           <motion.div
+          //invertir el lugar de salida
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 1.0, }}
             className="max-w-4xl mx-auto"
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg text-amber-200">
               MOKSHA
             </h1>
+            {/*Logo arriba del video 
+            <img
+              src="/moksha.png"
+              alt="MOKSHA Joyería Premium"></img>*/}
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-sans drop-shadow-md">
               Donde cada joya cuenta una historia.
             </p>
@@ -206,6 +132,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
+              
               <Link href="/novedades">
                 <Button
                   variant="outline"
@@ -222,9 +149,10 @@ export default function Home() {
 
       {/* Product Carousel Section - Popular Products */}
       <ProductCarousel
-        title="Nuestras Piezas Más Populares"
-        subtitle="Descubre la selección que nuestros clientes más aman."
-        products={mockProducts}
+        title="Novedades"
+        subtitle="Las joyas más recientes de nuestra colección."
+        products={products}
+        loading={loading}
         className="py-16"
       />
 

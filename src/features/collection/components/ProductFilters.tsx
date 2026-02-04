@@ -15,12 +15,16 @@ interface FilterOption {
 
 interface ProductFiltersProps {
   className?: string;
+  categoryOptions: FilterOption[];
   selectedCategories: string[];
   onCategoryChange: (category: string) => void;
+  genderOptions: FilterOption[];
   selectedGenders: string[];
   onGenderChange: (gender: string) => void;
+  materialOptions: FilterOption[];
   selectedMaterials: string[];
   onMaterialChange: (material: string) => void;
+  priceRangeOptions: FilterOption[];
   selectedPriceRange: string;
   onPriceRangeChange: (range: string) => void;
   searchTerm: string;
@@ -28,41 +32,18 @@ interface ProductFiltersProps {
   clearAllFilters: () => void;
 }
 
-const categories: FilterOption[] = [
-  { value: "anillos", label: "Anillos", count: 24 },
-  { value: "collares", label: "Collares", count: 18 },
-  { value: "pulseras", label: "Pulseras", count: 15 },
-  { value: "aros", label: "Aros", count: 12 },
-  { value: "pendientes", label: "Pendientes", count: 8 },
-];
-
-const genders: FilterOption[] = [
-  { value: "mujer", label: "Mujer", count: 45 },
-  { value: "hombre", label: "Hombre", count: 22 },
-  { value: "unisex", label: "Unisex", count: 10 },
-];
-
-const materials: FilterOption[] = [
-  { value: "oro", label: "Oro", count: 32 },
-  { value: "plata", label: "Plata", count: 28 },
-  { value: "acero", label: "Acero inoxidable", count: 17 },
-];
-
-const priceRanges = [
-  { value: "0-50000", label: "Hasta $50.000", count: 25 },
-  { value: "50000-150000", label: "$50.000 - $150.000", count: 30 },
-  { value: "150000-300000", label: "$150.000 - $300.000", count: 15 },
-  { value: "300000+", label: "Más de $300.000", count: 7 },
-];
-
 export function ProductFilters({
   className,
+  categoryOptions,
   selectedCategories,
   onCategoryChange,
+  genderOptions,
   selectedGenders,
   onGenderChange,
+  materialOptions,
   selectedMaterials,
   onMaterialChange,
+  priceRangeOptions,
   selectedPriceRange,
   onPriceRangeChange,
   searchTerm,
@@ -168,7 +149,7 @@ export function ProductFilters({
 
       <FilterSection
         title="Categoría"
-        options={categories}
+        options={categoryOptions}
         selectedValues={selectedCategories}
         onChange={onCategoryChange}
         sectionKey="category"
@@ -176,7 +157,7 @@ export function ProductFilters({
 
       <FilterSection
         title="Género"
-        options={genders}
+        options={genderOptions}
         selectedValues={selectedGenders}
         onChange={onGenderChange}
         sectionKey="gender"
@@ -184,7 +165,7 @@ export function ProductFilters({
 
       <FilterSection
         title="Material"
-        options={materials}
+        options={materialOptions}
         selectedValues={selectedMaterials}
         onChange={onMaterialChange}
         sectionKey="material"
@@ -206,7 +187,7 @@ export function ProductFilters({
 
         {expandedSections.price && (
           <div className="space-y-2">
-            {priceRanges.map((range) => (
+            {priceRangeOptions.map((range) => (
               <label key={range.value} className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="radio"
@@ -218,7 +199,9 @@ export function ProductFilters({
                 />
                 <span className="text-sm text-gray-700">
                   {range.label}
-                  <span className="text-gray-400 ml-1">({range.count})</span>
+                  {range.count !== undefined && (
+                    <span className="text-gray-400 ml-1">({range.count})</span>
+                  )}
                 </span>
               </label>
             ))}

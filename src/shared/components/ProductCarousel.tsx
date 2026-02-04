@@ -40,10 +40,11 @@ interface ProductCarouselProps {
   title?: string;
   subtitle?: string;
   className?: string;
+  loading?: boolean;
 }
 
-export function ProductCarousel({ products, title, subtitle, className }: ProductCarouselProps) {
-  if (products.length === 0) return null;
+export function ProductCarousel({ products, title, subtitle, className, loading = false }: ProductCarouselProps) {
+  if (!loading && products.length === 0) return null;
 
   return (
     <section className={cn("py-12 md:py-16 bg-white", className)}>
@@ -80,11 +81,24 @@ export function ProductCarousel({ products, title, subtitle, className }: Produc
             modules={[Navigation, Pagination]}
             className="product-swiper"
           >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
-                <ProductCard product={product} />
-              </SwiperSlide>
-            ))}
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <SwiperSlide key={i}>
+                    <div className="animate-pulse group relative border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                      <div className="relative aspect-square bg-gray-200" />
+                      <div className="p-4 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-3/4" />
+                        <div className="h-6 bg-gray-200 rounded" />
+                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))
+              : products.map((product) => (
+                  <SwiperSlide key={product.id}>
+                    <ProductCard product={product} />
+                  </SwiperSlide>
+                ))}
           </Swiper>
 
           <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -ml-6 bg-gray-100/80 hover:bg-gray-200 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">

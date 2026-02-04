@@ -1,10 +1,14 @@
 mail no funciona todavia.
 compras no funcionan todavia.(mp)
-cambiar imagenes y colores a los de la pagina de el 
 mail con dominio
-importacion nuevos productos funcionando con bd. Pero no carga desde tabla todavia. Adaptar-
-al subir un producto te redirige a /admin y este modulo no existe todavia.
+boton novedades redirija a siguiente seccion
+arreglar favoritos
+hacer logica del perfil de usuario
+seguimiento de envio en detalle de compra
+cuando inicias sesion con mail no muestra submenu de la cuenta y se sigue mostrando el boton de inicar sesion
 SEO
+agregar sexo en importar producto
+
 # Reemplaza en src/app/layout.tsx
 <GoogleAnalytics gaId="TU_ID_DE_GA4" />
 

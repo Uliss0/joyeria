@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo, useDeferredValue } from "react";
+import { useSearchParams } from "next/navigation";
 import { ProductFilters } from "./components/ProductFilters";
 import { ProductGrid } from "./components/ProductGrid";
 import { CollectionHeader } from "./components/CollectionHeader";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 // Definición de la interfaz Product (copiada de ProductGrid para asegurar compatibilidad)
 interface Product {
@@ -13,6 +12,7 @@ interface Product {
   name: string;
   slug: string;
   description?: string; // Added description property
+  material?: string;
   price: number;
   compareAtPrice?: number;
   images: Array<{
@@ -32,135 +32,45 @@ interface Product {
   }>;
 }
 
-// Mock data - replace with API call
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    name: "Anillo Clásico de Oro 18K",
-    slug: "anillo-clasico-oro-18k",
-    price: 85000,
-    compareAtPrice: 95000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        alt: "Anillo clásico de oro",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Anillos",
-      slug: "anillos",
-    },
-    isFeatured: true,
-    isNew: true,
-    tags: [{ name: "Oro", color: "#FFD700" }],
-  },
-  {
-    id: "2",
-    name: "Anillo Moderno de Plata",
-    slug: "anillo-moderno-plata",
-    price: 45000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop",
-        alt: "Anillo moderno de plata",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Anillos",
-      slug: "anillos",
-    },
-    isFeatured: false,
-    isNew: true,
-    tags: [{ name: "Plata", color: "#C0C0C0" }],
-  },
-  {
-    id: "3",
-    name: "Pulsera Elegante",
-    slug: "pulsera-elegante",
-    price: 65000,
-    compareAtPrice: 75000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
-        alt: "Pulsera elegante",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Pulseras",
-      slug: "pulseras",
-    },
-    isFeatured: true,
-    isNew: false,
-    tags: [{ name: "Oro", color: "#FFD700" }],
-  },
-  {
-    id: "4",
-    name: "Aros Geométricos",
-    slug: "aros-geometricos",
-    price: 35000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=400&h=400&fit=crop",
-        alt: "Aros geométricos",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Aros",
-      slug: "aros",
-    },
-    isFeatured: false,
-    isNew: false,
-    tags: [{ name: "Plata", color: "#C0C0C0" }],
-  },
-  {
-    id: "5",
-    name: "Pendientes de Diamante",
-    slug: "pendientes-diamante",
-    price: 180000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=400&h=400&fit=crop",
-        alt: "Pendientes de diamante",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Pendientes",
-      slug: "pendientes",
-    },
-    isFeatured: true,
-    isNew: true,
-    tags: [{ name: "Diamante", color: "#B9F2FF" }],
-  },
-  {
-    id: "6",
-    name: "Anillo de Compromiso",
-    slug: "anillo-compromiso",
-    price: 250000,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        alt: "Anillo de compromiso",
-        isMain: true,
-      },
-    ],
-    category: {
-      name: "Anillos",
-      slug: "anillos",
-    },
-    isFeatured: true,
-    isNew: false,
-    tags: [{ name: "Oro", color: "#FFD700" }, { name: "Diamante", color: "#B9F2FF" }],
-  },
-];
+interface FilterOption {
+  value: string;
+  label: string;
+  count?: number;
+}
+
+const normalizeValue = (value: string) => value.trim().toLowerCase();
+const genderValues = new Set(["mujer", "hombre", "unisex"]);
 
 export default function Collection() {
-  const [displayedProducts, setDisplayedProducts] = useState<Product[]>(mockProducts);
-  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from API on mount
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/products?limit=200');
+        if (!res.ok) throw new Error('Failed to fetch products');
+        const data = await res.json();
+        if (mounted) setAllProducts(data?.products || []);
+      } catch (e) {
+        console.error('Error fetching products:', e);
+        if (mounted) setAllProducts([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -170,80 +80,177 @@ export default function Collection() {
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
-  const applyFilters = useCallback(() => {
-    setLoading(true);
-    setTimeout(() => {
-      let filtered = [...mockProducts];
-
-      // Filter by search term
-      if (searchTerm) {
-        filtered = filtered.filter(product =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      // Filter by category
-      if (selectedCategories.length > 0) {
-        filtered = filtered.filter(product => selectedCategories.includes(product.category.slug));
-      }
-
-      // Filter by gender (assuming gender is also a tag or category, for mock purposes let's check tags)
-      if (selectedGenders.length > 0) {
-        filtered = filtered.filter(product =>
-          product.tags?.some(tag => selectedGenders.includes(tag.name.toLowerCase())) ||
-          selectedGenders.includes(product.category.slug) // Fallback for mock data if gender is in category
-        );
-      }
-
-      // Filter by material (assuming material is a tag)
-      if (selectedMaterials.length > 0) {
-        filtered = filtered.filter(product =>
-          product.tags?.some(tag => selectedMaterials.includes(tag.name.toLowerCase()))
-        );
-      }
-
-      // Filter by price range
-      if (selectedPriceRange) {
-        const [minPriceStr, maxPriceStr] = selectedPriceRange.split('-');
-        const minPrice = parseInt(minPriceStr);
-        const maxPrice = maxPriceStr ? parseInt(maxPriceStr) : Infinity;
-
-        filtered = filtered.filter(product =>
-          product.price >= minPrice && product.price <= maxPrice
-        );
-      }
-
-      // Apply sorting
-      const sorted = filtered.sort((a, b) => {
-        switch (sortBy) {
-          case "price-low":
-            return a.price - b.price;
-          case "price-high":
-            return b.price - a.price;
-          case "name-asc":
-            return a.name.localeCompare(b.name);
-          case "name-desc":
-            return b.name.localeCompare(a.name);
-          case "newest":
-            return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
-          case "featured":
-          default:
-            return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
-        }
-      });
-
-      setDisplayedProducts(sorted);
-      setLoading(false);
-    }, 300); // Simulate API call delay
-  }, [selectedCategories, selectedGenders, selectedMaterials, selectedPriceRange, searchTerm, sortBy]);
-
-  // Apply filters on initial load and when filter states change
   useEffect(() => {
-    applyFilters();
-  }, [applyFilters]);
+    const categoryParam = searchParams.get("categoria") ?? searchParams.get("category");
+    const normalized = categoryParam ? categoryParam.toLowerCase() : "";
+
+    setSelectedCategories((prev) => {
+      if (normalized) {
+        if (prev.length === 1 && prev[0] === normalized) return prev;
+        return [normalized];
+      }
+      if (prev.length === 0) return prev;
+      return [];
+    });
+  }, [searchParams]);
+
+  const categoryOptions = useMemo<FilterOption[]>(() => {
+    const map = new Map<string, FilterOption>();
+    for (const product of allProducts) {
+      const slug = normalizeValue(product.category?.slug || "coleccion");
+      const label = product.category?.name || "Colecci\u00f3n";
+      const current = map.get(slug);
+      if (current) {
+        current.count = (current.count || 0) + 1;
+      } else {
+        map.set(slug, { value: slug, label, count: 1 });
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
+  }, [allProducts]);
+
+  const genderOptions = useMemo<FilterOption[]>(() => {
+    const base = [
+      { value: "mujer", label: "Mujer" },
+      { value: "hombre", label: "Hombre" },
+      { value: "unisex", label: "Unisex" },
+    ];
+    const counts = new Map<string, number>();
+    for (const product of allProducts) {
+      for (const tag of product.tags || []) {
+        const normalized = normalizeValue(tag.name);
+        if (genderValues.has(normalized)) {
+          counts.set(normalized, (counts.get(normalized) || 0) + 1);
+        }
+      }
+    }
+    return base.map((option) => ({
+      ...option,
+      count: counts.get(option.value) || 0,
+    }));
+  }, [allProducts]);
+
+  const materialOptions = useMemo<FilterOption[]>(() => {
+    const map = new Map<string, FilterOption>();
+    const addMaterial = (raw: string | undefined) => {
+      if (!raw) return;
+      const value = normalizeValue(raw);
+      if (!value || genderValues.has(value)) return;
+      const current = map.get(value);
+      if (current) {
+        current.count = (current.count || 0) + 1;
+      } else {
+        map.set(value, { value, label: raw.trim(), count: 1 });
+      }
+    };
+
+    for (const product of allProducts) {
+      addMaterial(product.material);
+      for (const tag of product.tags || []) {
+        addMaterial(tag.name);
+      }
+    }
+
+    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
+  }, [allProducts]);
+
+  const priceRangeOptions = useMemo<FilterOption[]>(() => {
+    const ranges = [
+      { value: "0-50000", label: "Hasta $50.000" },
+      { value: "50000-150000", label: "$50.000 - $150.000" },
+      { value: "150000-300000", label: "$150.000 - $300.000" },
+      { value: "300000+", label: "M\u00e1s de $300.000" },
+    ];
+
+    const counts = new Map<string, number>();
+    for (const product of allProducts) {
+      const price = product.price;
+      if (price <= 50000) counts.set("0-50000", (counts.get("0-50000") || 0) + 1);
+      else if (price <= 150000) counts.set("50000-150000", (counts.get("50000-150000") || 0) + 1);
+      else if (price <= 300000) counts.set("150000-300000", (counts.get("150000-300000") || 0) + 1);
+      else counts.set("300000+", (counts.get("300000+") || 0) + 1);
+    }
+
+    return ranges.map((range) => ({
+      ...range,
+      count: counts.get(range.value) || 0,
+    }));
+  }, [allProducts]);
+
+  const displayedProducts = useMemo(() => {
+    let filtered = [...allProducts];
+
+    if (deferredSearchTerm) {
+      const term = normalizeValue(deferredSearchTerm);
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(term) ||
+        (product.description || "").toLowerCase().includes(term) ||
+        (product.category?.name || "Colecci\u00f3n").toLowerCase().includes(term)
+      );
+    }
+
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(product =>
+        selectedCategories.includes(normalizeValue(product.category.slug))
+      );
+    }
+
+    if (selectedGenders.length > 0) {
+      filtered = filtered.filter(product =>
+        product.tags?.some(tag => selectedGenders.includes(normalizeValue(tag.name))) ||
+        selectedGenders.includes(normalizeValue(product.category.slug))
+      );
+    }
+
+    if (selectedMaterials.length > 0) {
+      filtered = filtered.filter(product => {
+        const normalizedMaterial = product.material ? normalizeValue(product.material) : "";
+        const materialMatches = normalizedMaterial
+          ? selectedMaterials.some((material) => normalizedMaterial.includes(material))
+          : false;
+        const tagMatches = product.tags?.some(tag => selectedMaterials.includes(normalizeValue(tag.name)));
+        return materialMatches || tagMatches;
+      });
+    }
+
+    if (selectedPriceRange) {
+      const [minPriceStr, maxPriceStr] = selectedPriceRange.split("-");
+      const minPrice = parseInt(minPriceStr, 10);
+      const maxPrice = maxPriceStr ? parseInt(maxPriceStr, 10) : Infinity;
+
+      filtered = filtered.filter(product =>
+        product.price >= minPrice && product.price <= maxPrice
+      );
+    }
+
+    return filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "price-low":
+          return a.price - b.price;
+        case "price-high":
+          return b.price - a.price;
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "newest":
+          return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+        case "featured":
+        default:
+          return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+      }
+    });
+  }, [
+    allProducts,
+    deferredSearchTerm,
+    selectedCategories,
+    selectedGenders,
+    selectedMaterials,
+    selectedPriceRange,
+    sortBy,
+  ]);
 
   const handleSortChange = (newSort: string) => {
     setSortBy(newSort);
@@ -303,12 +310,16 @@ export default function Collection() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <ProductFilters
+            categoryOptions={categoryOptions}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
+            genderOptions={genderOptions}
             selectedGenders={selectedGenders}
             onGenderChange={handleGenderChange}
+            materialOptions={materialOptions}
             selectedMaterials={selectedMaterials}
             onMaterialChange={handleMaterialChange}
+            priceRangeOptions={priceRangeOptions}
             selectedPriceRange={selectedPriceRange}
             onPriceRangeChange={handlePriceRangeChange}
             searchTerm={searchTerm}
@@ -339,3 +350,5 @@ export default function Collection() {
     </div>
   );
 }
+
+
