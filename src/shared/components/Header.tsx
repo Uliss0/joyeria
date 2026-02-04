@@ -157,6 +157,40 @@ interface HeaderProps {
   className?: string;
 }
 
+const toCategorySlug = (label: string) => {
+  const normalized = label.toLowerCase().replace(/\s+/g, "-");
+  const overrides: Record<string, string> = {
+    pulceras: "pulseras",
+  };
+  return overrides[normalized] ?? normalized;
+};
+
+const buildSubmenuHref = (menuName: string | null, subItem: string) => {
+  if (menuName === "Tienda") {
+    return `/coleccion?categoria=${toCategorySlug(subItem)}`;
+  }
+  if (menuName === "Nuevos Ingresos") {
+    return "/coleccion";
+  }
+  if (menuName === "Contacto") {
+    return "/contacto";
+  }
+  return "/";
+};
+
+const buildImageHref = (menuName: string | null, label: string) => {
+  if (menuName === "Tienda") {
+    return `/coleccion?categoria=${toCategorySlug(label)}`;
+  }
+  if (menuName === "Nuevos Ingresos") {
+    return "/coleccion";
+  }
+  if (menuName === "Contacto") {
+    return "/contacto";
+  }
+  return "/";
+};
+
 const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -210,11 +244,11 @@ const Header = () => {
   // Preload dropdown images for faster display
   useEffect(() => {
     const imagesToPreload = [
-      "/rings-collection.png",
-      "/earrings-collection.png", 
-      "/arcus-bracelet.png",
-      "/span-bracelet.png",
-      "/founders.png"
+      "/rings-collection\.webp",
+      "/earrings-collection\.webp", 
+      "/arcus-bracelet\.webp",
+      "/span-bracelet\.webp",
+      "/founders\.webp"
     ];
     
     imagesToPreload.forEach(src => {
@@ -234,47 +268,46 @@ const Header = () => {
   
   const navItems = [
     { 
-      name: "Shop", 
+      name: "Tienda", 
       href: "/coleccion",
       submenuItems: [
-        "Rings",
-        "Necklaces", 
-        "Earrings",
-        "Bracelets",
-        "Watches"
+        "Anillos",
+        "Collares", 
+        "Aros",
+        "Pulceras",
+        "Relojes"
       ],
       images: [
-        { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
-        { src: "/earrings-collection.png", alt: "Earrings Collection", label: "Earrings" }
+        { src: "/rings-collection\.webp", alt: "Coleccion de anillos", label: "Anillos" },
+        { src: "/earrings-collection\.webp", alt: "Coleccion de aros", label: "Aros" }
       ]
     },
     { 
-      name: "New in", 
-      href: "/category/new-in",
+      name: "Nuevos Ingresos", 
+      href: "/coleccion/new-in",
       submenuItems: [
-        "This Week's Arrivals",
-        "Spring Collection",
+        "Ultimos lanzamientos",
+        "Esta temporada",
         "Featured Designers",
-        "Limited Edition",
-        "Pre-Orders"
+        "Ediciones limitadas",
+        "Pre-lanzamientos"
       ],
       images: [
-        { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
-        { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" }
+        { src: "/arcus-bracelet\.webp", alt: "Pulcera Arcus", label: "Pulcera Arcus" },
+        { src: "/span-bracelet\.webp", alt: "Pulcera Span", label: "Pulcera Span" }
       ]
     },
     { 
       name: "Contacto", 
       href: "/contacto",
       submenuItems: [
-        "Our Story",
-        "Sustainability",
-        "Size Guide",
-        "Customer Care",
-        "Store Locator"
+        "Quienes somos",
+        "Historia de la marca",
+        "Guia de talles",
+        "Ubicaciones"
       ],
       images: [
-        { src: "/founders.png", alt: "Company Founders", label: "Read our story" }
+        { src: "/founders\.webp", alt: "Fundadores", label: "Historia de la marca" }
       ]
     }
   ];
@@ -381,7 +414,7 @@ const Header = () => {
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
                         <Link 
-                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                          href={buildSubmenuHref(activeDropdown, subItem)}
                           className="text-white/80 hover:text-white transition-colors duration-200 text-sm font-light block py-2 hover:translate-x-1 cursor-pointer"
                         >
                           {subItem}
@@ -396,17 +429,7 @@ const Header = () => {
                 {navItems
                   .find(item => item.name === activeDropdown)
                   ?.images.map((image, index) => {
-                    // Determine the link destination based on dropdown and image
-                    let linkTo = "/";
-                    if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/category/rings";
-                      else if (image.label === "Earrings") linkTo = "/category/earrings";
-                    } else if (activeDropdown === "New in") {
-                      if (image.label === "Arcus Bracelet") linkTo = "/product/arcus-bracelet";
-                      else if (image.label === "Span Bracelet") linkTo = "/product/span-bracelet";
-                    } else if (activeDropdown === "About") {
-                      linkTo = "/about/our-story";
-                    }
+                    const linkTo = buildImageHref(activeDropdown, image.label);
                     
                     return (
                       <Link key={index} href={linkTo} className="w-[400px] h-[280px] cursor-pointer group relative overflow-hidden block rounded-sm">
@@ -415,7 +438,7 @@ const Header = () => {
                           alt={image.alt}
                           className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                         />
-                        {(activeDropdown === "Shop" || activeDropdown === "New in" || activeDropdown === "About") && (
+                        {(activeDropdown === "Tienda" || activeDropdown === "Nuevos Ingresos" || activeDropdown === "About") && (
                           <div className="absolute bottom-4 left-4 text-white text-xs font-light flex items-center gap-1 drop-shadow-md">
                             <span>{image.label}</span>
                             <ArrowRight size={12} className="group-hover:translate-x-2 transition-transform" />
@@ -489,7 +512,7 @@ const Header = () => {
                      {item.submenuItems.map((subItem, subIndex) => (
                        <Link
                          key={subIndex}
-                         href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                         href={buildSubmenuHref(item.name, subItem)}
                          className="text-slate-300 hover:text-primary text-sm font-light block py-1 cursor-pointer"
                          onClick={() => setIsMobileMenuOpen(false)}
                        >

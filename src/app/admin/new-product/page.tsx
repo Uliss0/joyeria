@@ -16,8 +16,10 @@ export default function NewProductPage() {
     price: "",
     quantity: "",
     sizes: "",
+    gender: "",
     metal: "",
     description: "",
+    backgroundType: "none",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -90,6 +92,7 @@ export default function NewProductPage() {
         ...form,
         price: form.price,
         imageDataUrl: dataUrl,
+        
       };
 
       const res = await fetch("/api/admin/products", {
@@ -152,6 +155,16 @@ export default function NewProductPage() {
           <label className="block text-sm font-medium">Talles (coma separados)</label>
           <Input value={form.sizes} onChange={(e) => setForm({ ...form, sizes: e.target.value })} />
         </div>
+      
+          <div>
+          <label className="block text-sm font-medium">Genero</label>
+          <select className="w-full border rounded p-2" value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value })}>
+              <option value="">-- Seleccionar --</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Mujer">Mujer</option>
+              <option value="Unisex">Unisex</option>
+            </select>
+        </div>
 
         <div>
           <label className="block text-sm font-medium">Tipo de metal</label>
@@ -162,6 +175,20 @@ export default function NewProductPage() {
           <label className="block text-sm font-medium">Descripción</label>
           <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
+        {/*elegir o no fondo para la imagen. el valor va a setImageFile*/}
+        <div>
+          <label className="block text-sm font-medium">Fondo de imagen</label>
+          <select
+            className="w-full border rounded p-2"
+            value={form.backgroundType}
+            onChange={(e) => setForm({ ...form, backgroundType: e.target.value })}
+          >
+            <option value="none">Sin fondo</option>
+            <option value="white">Fondo Marmol Blanco</option>
+            <option value="black">Fondo Marmol Negro</option>
+          </select>
+        </div>
+
 
         <div>
           <label className="block text-sm font-medium">Imagen</label>

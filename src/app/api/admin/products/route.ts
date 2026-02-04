@@ -9,7 +9,8 @@ const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 const CLOUDINARY_UPLOAD_PRESET = process.env.CLOUDINARY_UPLOAD_PRESET;
-const CLOUDINARY_URL_PART = process.env.CLOUDINARY_URL_PART || "";
+const CLOUDINARY_URL_PART_BLACKMARBLE = process.env.CLOUDINARY_URL_PART_BLACKMARBLE  || "";
+const CLOUDINARY_URL_PART_WHITEMARBLE = process.env.CLOUDINARY_URL_PART_WHITEMARBLE || "";
 
 function slugify(str: string) {
   return str
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, categoryId, price, quantity, sizes, metal, description, imageDataUrl } = body;
+    const { name, categoryId, price, quantity, sizes, metal, description, imageDataUrl, backgroundType } = body;
 
     if (!name || !categoryId || !price || !imageDataUrl) {
       return NextResponse.json({ message: "Campos requeridos faltantes" }, { status: 400 });
@@ -77,12 +78,22 @@ export async function POST(req: Request) {
     // Upload image to Cloudinary
     const uploadResult = await uploadToCloudinary(imageDataUrl);
     const publicId = uploadResult.public_id;
+    const originalUrl = uploadResult.secure_url || uploadResult.url;
 
     // Build transformed URL using provided template, replacing final public id
     //const transformed = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/d_docs:placeholders:samples:avatar.png/u_unnamed_njbj9m/c_scale,h_1.10,w_1.00/fl_layer_apply,fl_no_overflow,g_center/f_webp/cs_srgb/q_auto:good/dpr_auto/${encodeURIComponent(publicId)}`;
       //const transformed= `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/e_background_removal/u_abstract-marble-black-gold-background_pyjrww/c_scale,fl_relative,w_1.22/fl_layer_apply,fl_no_overflow,g_center,x_181,y_74/ar_4:3,c_auto,w_1024/f_webp/cs_srgb/q_auto/dpr_auto/${encodeURIComponent(publicId)}`;
-      const transformed= `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}${CLOUDINARY_URL_PART}${encodeURIComponent(publicId)}`;
-      
+      const transformedblack= `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}${CLOUDINARY_URL_PART_BLACKMARBLE}${encodeURIComponent(publicId)}`;
+      const tranformedwhite=`https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}${CLOUDINARY_URL_PART_WHITEMARBLE}${encodeURIComponent(publicId)}`;
+
+      const normalizedBackground = typeof backgroundType === "string" ? backgroundType.toLowerCase() : "none";
+      let transformed = originalUrl;
+
+      if (normalizedBackground === "white" && CLOUDINARY_URL_PART_WHITEMARBLE) {
+        transformed = tranformedwhite;
+      } else if (normalizedBackground === "black" && CLOUDINARY_URL_PART_BLACKMARBLE) {
+        transformed = transformedblack;
+      }
       // Generate slug and sku
     const baseSlug = slugify(name || "product");
     const slug = `${baseSlug}-${Date.now().toString().slice(-5)}`;

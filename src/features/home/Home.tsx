@@ -95,12 +95,12 @@ export default function Home() {
         {/* Background Video */}
         <video
           autoPlay
-          loop
+          //loop
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-80" // Ajusta la opacidad si es necesario
         >
-          <source src="/videos/Video_Promocional_Joyería_Elegante.mp4" type="video/mp4" />
+          <source src="/videos/presentacion.mp4" type="video/mp4" />
           Tu navegador no soporta la etiqueta de video.
         </video>
 
@@ -108,14 +108,19 @@ export default function Home() {
 
         <div className="container relative z-20 mx-auto px-4 text-center text-white">
           <motion.div
+          //invertir el lugar de salida
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 1.0, }}
             className="max-w-4xl mx-auto"
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg text-amber-200">
               MOKSHA
             </h1>
+            {/*Logo arriba del video 
+            <img
+              src="/moksha.png"
+              alt="MOKSHA Joyería Premium"></img>*/}
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-sans drop-shadow-md">
               Donde cada joya cuenta una historia.
             </p>

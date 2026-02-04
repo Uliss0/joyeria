@@ -198,7 +198,7 @@ export default function ProductPage({ product, relatedProducts = mockRelatedProd
           <ChevronRight className="w-4 h-4" />
           <Link href="/coleccion" className="hover:text-gold-600">Colección</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href={`/coleccion/${selectedProduct.category.slug}`} className="hover:text-gold-600">
+          <Link href={`/coleccion?categoria=${selectedProduct.category.slug}`} className="hover:text-gold-600">
             {selectedProduct.category.name}
           </Link>
           <ChevronRight className="w-4 h-4" />
