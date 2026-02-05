@@ -61,25 +61,32 @@ export function AuthForm({ mode, className }: AuthFormProps) {
         }
 
         // Auto sign in after successful registration
-        await signIn("credentials", {
+        const signInResult = await signIn("credentials", {
           email: formData.email,
           password: formData.password,
           redirect: false,
+          callbackUrl: "/",
         });
 
-        router.push("/");
+        if (signInResult?.error) {
+          setError("No se pudo iniciar sesiÃ³n automÃ¡ticamente");
+          return;
+        }
+
+        window.location.href = signInResult?.url ?? "/";
       } else {
         // Sign in logic
         const result = await signIn("credentials", {
           email: formData.email,
           password: formData.password,
           redirect: false,
+          callbackUrl: "/",
         });
 
         if (result?.error) {
           setError("Credenciales inválidas");
         } else {
-          router.push("/");
+          window.location.href = result?.url ?? "/";
         }
       }
     } catch (error: any) {

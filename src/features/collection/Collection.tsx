@@ -45,6 +45,8 @@ export default function Collection() {
   const searchParams = useSearchParams();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   // Fetch products from API on mount
   useEffect(() => {
@@ -252,6 +254,16 @@ export default function Collection() {
     sortBy,
   ]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [deferredSearchTerm, selectedCategories, selectedGenders, selectedMaterials, selectedPriceRange, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(displayedProducts.length / itemsPerPage));
+  const clampedPage = Math.min(currentPage, totalPages);
+  const startIndex = (clampedPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = displayedProducts.slice(startIndex, endIndex);
+
   const handleSortChange = (newSort: string) => {
     setSortBy(newSort);
   };
@@ -341,9 +353,50 @@ export default function Collection() {
             />
 
             <ProductGrid
-              products={displayedProducts}
+              products={paginatedProducts}
               loading={loading}
             />
+
+            {!loading && displayedProducts.length > 0 && (
+              <div className="mt-10 flex flex-col items-center gap-4">
+                <p className="text-sm text-gray-600">
+                  Mostrando {startIndex + 1}-{Math.min(endIndex, displayedProducts.length)} de {displayedProducts.length} productos
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                    disabled={clampedPage === 1}
+                    className="px-3 py-2 text-sm border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    Anterior
+                  </button>
+                  {Array.from({ length: totalPages }).map((_, index) => {
+                    const page = index + 1;
+                    const isActive = page === clampedPage;
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-9 h-9 text-sm border rounded-lg transition-colors ${
+                          isActive
+                            ? "bg-gold-600 text-white border-gold-600"
+                            : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                    disabled={clampedPage === totalPages}
+                    className="px-3 py-2 text-sm border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

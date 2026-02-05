@@ -41,13 +41,14 @@ interface ProductCarouselProps {
   subtitle?: string;
   className?: string;
   loading?: boolean;
+  id?: string;
 }
 
-export function ProductCarousel({ products, title, subtitle, className, loading = false }: ProductCarouselProps) {
+export function ProductCarousel({ products, title, subtitle, className, loading = false, id }: ProductCarouselProps) {
   if (!loading && products.length === 0) return null;
 
   return (
-    <section className={cn("py-12 md:py-16 bg-white", className)}>
+    <section id={id} className={cn("py-12 md:py-16 bg-white", className)}>
       <div className="container mx-auto px-4">
         {(title || subtitle) && (
           <div className="text-center mb-10">

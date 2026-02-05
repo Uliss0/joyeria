@@ -1,5 +1,5 @@
 import { NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,7 +7,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: PrismaAdapter(prisma),
+  debug: false,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -63,7 +64,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
   pages: {
     signIn: "/auth/signin",
@@ -77,15 +78,14 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, user }) {
-      if (session.user && user) {
-        (session.user as any).id = user.id;
-        (session.user as any).role = (user as any).role;
+    async session({ session, token }) {
+      if (session.user && token) {
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
       }
       return session;
     },
     async signIn({ user, account, profile }) {
-      console.log("SignIn callback:", { user, account, profile });
       // Allow sign in for all providers
       return true;
     },

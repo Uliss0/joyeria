@@ -17,6 +17,14 @@ import { Badge } from "@/components/ui/badge";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import haloImage from "@/assets/halo.jpg";
+import {
+  useFavoritesItems,
+  useFavoritesIsLoading,
+  useFavoritesSetFavorites,
+  useFavoritesSetLoading,
+  useFavoritesAddFavorite,
+  useFavoritesRemoveFavorite,
+} from "@/shared/store/favoritesStore";
 
 const navigation = [
   { name: "Inicio", href: "/" },
@@ -197,7 +205,13 @@ const Header = () => {
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const favorites = useFavoritesItems();
+  const favoritesLoading = useFavoritesIsLoading();
+  const setFavorites = useFavoritesSetFavorites();
+  const setFavoritesLoading = useFavoritesSetLoading();
+  const addFavorite = useFavoritesAddFavorite();
+  const removeFavorite = useFavoritesRemoveFavorite();
   
   // Shopping bag state with 3 mock items
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -256,6 +270,35 @@ const Header = () => {
       img.src = src;
     });
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadFavorites = async () => {
+      if (!session?.user) {
+        setFavorites([]);
+        return;
+      }
+
+      setFavoritesLoading(true);
+      try {
+        const res = await fetch("/api/favorites");
+        if (!res.ok) throw new Error("Failed to load favorites");
+        const data = await res.json();
+        if (!cancelled) setFavorites(data?.favorites || []);
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+        if (!cancelled) setFavorites([]);
+      } finally {
+        if (!cancelled) setFavoritesLoading(false);
+      }
+    };
+
+    loadFavorites();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user, setFavorites, setFavoritesLoading]);
 
   const popularSearches = [
     "Gold Rings",
@@ -545,7 +588,7 @@ const Header = () => {
           <div className="absolute right-0 top-0 h-screen w-96 bg-[#222428] border-l border-slate-800 animate-slide-in-right flex flex-col shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
-              <h2 className="text-lg font-light text-white">Your Favorites</h2>
+              <h2 className="text-lg font-light text-white">Tus Favoritos</h2>
               <button
                 onClick={() => setOffCanvasType(null)}
                 className="p-2 text-white hover:text-red-400 transition-colors cursor-pointer"
@@ -556,10 +599,91 @@ const Header = () => {
             </div>
             
             {/* Content */}
-            <div className="p-6">
-              <p className="text-slate-400 text-sm mb-6">
-                You haven't added any favorites yet. Browse our collection and click the heart icon to save items you love.
-              </p>
+            <div className="p-6 flex-1 overflow-y-auto">
+              {status === "loading" && (
+                <p className="text-slate-400 text-sm">Cargando sesión...</p>
+              )}
+
+              {status !== "loading" && !session?.user && (
+                <div className="space-y-4">
+                  <p className="text-slate-400 text-sm">
+                    Inicia sesión para ver tus favoritos guardados.
+                  </p>
+                  <Link href="/auth/signin">
+                    <Button size="sm" className="btn-gold w-full">
+                      Iniciar sesión
+                    </Button>
+                  </Link>
+                </div>
+              )}
+
+              {session?.user && favoritesLoading && (
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex items-center space-x-3 animate-pulse">
+                      <div className="h-14 w-14 rounded bg-slate-700/60" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-3 bg-slate-700/60 rounded w-3/4" />
+                        <div className="h-3 bg-slate-700/60 rounded w-1/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {session?.user && !favoritesLoading && favorites.length === 0 && (
+                <p className="text-slate-400 text-sm">
+                  Aún no agregaste favoritos. Navega la colección y tocá el corazón para guardarlos.
+                </p>
+              )}
+
+              {session?.user && !favoritesLoading && favorites.length > 0 && (
+                <div className="space-y-4">
+                  {favorites.map((favorite) => {
+                    const mainImage =
+                      favorite.images.find((img) => img.isMain) || favorite.images[0];
+                    const imageUrl = mainImage?.url || "/placeholder-product.jpg";
+                    const imageAlt = mainImage?.alt || favorite.name;
+
+                    return (
+                      <div key={favorite.id} className="flex items-center space-x-3">
+                        <Link href={`/producto/${favorite.slug}`} className="block">
+                          <img
+                            src={imageUrl}
+                            alt={imageAlt}
+                            className="h-14 w-14 rounded object-cover"
+                          />
+                        </Link>
+                        <div className="flex-1 min-w-0">
+                          <Link
+                            href={`/producto/${favorite.slug}`}
+                            className="text-sm text-white font-light truncate block"
+                          >
+                            {favorite.name}
+                          </Link>
+                          <span className="text-xs text-slate-400">
+                            ${favorite.price.toLocaleString("es-AR")}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            removeFavorite(favorite.id);
+                            fetch(`/api/favorites/${favorite.id}`, {
+                              method: "DELETE",
+                            }).catch(() => {
+                              addFavorite(favorite);
+                            });
+                          }}
+                          className="p-2 text-slate-300 hover:text-red-400 transition-colors"
+                          aria-label="Quitar favorito"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

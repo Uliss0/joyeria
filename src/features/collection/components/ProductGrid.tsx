@@ -10,6 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { IconButton } from "@/shared/components/IconButton";
 import { cn } from "@/lib/utils";
 import { useCartAddItem, useCartToggleCart } from "@/shared/store/cartStore";
+import { useSession } from "next-auth/react";
+import {
+  useFavoritesAddFavorite,
+  useFavoritesItems,
+  useFavoritesRemoveFavorite,
+} from "@/shared/store/favoritesStore";
 
 interface Product {
   id: string;
@@ -42,10 +48,14 @@ interface ProductGridProps {
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const addItem = useCartAddItem();
   const toggleCart = useCartToggleCart();
+  const { data: session, status } = useSession();
+  const favorites = useFavoritesItems();
+  const addFavorite = useFavoritesAddFavorite();
+  const removeFavorite = useFavoritesRemoveFavorite();
+  const isWishlisted = favorites.some((favorite) => favorite.id === product.id);
 
   const mainImage = product.images.find(img => img.isMain) || product.images[0];
   const discountPercentage = product.compareAtPrice
@@ -98,7 +108,41 @@ export const ProductCard = ({ product }: { product: Product }) => {
               size="sm"
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault();
-                setIsWishlisted(!isWishlisted);
+                if (status === "loading") return;
+                if (!session?.user) {
+                  alert("Inicia sesión para guardar favoritos.");
+                  window.location.href = "/auth/signin";
+                  return;
+                }
+
+                const favoritePayload = {
+                  id: product.id,
+                  name: product.name,
+                  slug: product.slug,
+                  price: product.price,
+                  compareAtPrice: product.compareAtPrice,
+                  images: product.images,
+                  category: product.category,
+                  isFeatured: product.isFeatured,
+                  isNew: product.isNew,
+                  tags: product.tags,
+                };
+
+                if (isWishlisted) {
+                  removeFavorite(product.id);
+                  fetch(`/api/favorites/${product.id}`, { method: "DELETE" }).catch(() => {
+                    addFavorite(favoritePayload);
+                  });
+                } else {
+                  addFavorite(favoritePayload);
+                  fetch("/api/favorites", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ productId: product.id }),
+                  }).catch(() => {
+                    removeFavorite(product.id);
+                  });
+                }
               }}
               className={cn(
                 "bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 transition-colors",
