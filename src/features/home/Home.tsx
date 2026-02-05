@@ -133,7 +133,7 @@ export default function Home() {
                 </Button>
               </Link>
               
-              <Link href="/novedades">
+              <Link href="#novedades">
                 <Button
                   variant="outline"
                   size="lg"
@@ -149,6 +149,7 @@ export default function Home() {
 
       {/* Product Carousel Section - Popular Products */}
       <ProductCarousel
+        id="novedades"
         title="Novedades"
         subtitle="Las joyas más recientes de nuestra colección."
         products={products}

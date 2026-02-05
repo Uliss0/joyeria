@@ -7,6 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { IconButton } from "@/shared/components/IconButton";
 import { useCartAddItem, useCartOpenCart } from "@/shared/store/cartStore";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import {
+  useFavoritesAddFavorite,
+  useFavoritesItems,
+  useFavoritesRemoveFavorite,
+} from "@/shared/store/favoritesStore";
 
 interface ProductVariant {
   id: string;
@@ -16,9 +22,21 @@ interface ProductVariant {
   stock?: number;
 }
 
+interface ProductImage {
+  url: string;
+  alt: string;
+  isMain?: boolean;
+}
+
+interface ProductCategory {
+  name: string;
+  slug: string;
+}
+
 interface ProductInfoProps {
   id: string;
   name: string;
+  slug: string;
   price: number;
   compareAtPrice?: number;
   description?: string;
@@ -34,6 +52,8 @@ interface ProductInfoProps {
     name: string;
     color?: string;
   }>;
+  images?: ProductImage[];
+  category?: ProductCategory;
   onAddToCart: (productId: string, quantity: number, selectedVariants: Record<string, string>) => void;
   className?: string;
 }
@@ -58,9 +78,13 @@ export function ProductInfo({
 }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const addItem = useCartAddItem();
   const openCart = useCartOpenCart();
+  const { data: session, status } = useSession();
+  const favorites = useFavoritesItems();
+  const addFavorite = useFavoritesAddFavorite();
+  const removeFavorite = useFavoritesRemoveFavorite();
+  const isWishlisted = favorites.some((favorite) => favorite.id === id);
 
   // Group variants by name
   const variantGroups = variants.reduce((acc, variant) => {
@@ -98,7 +122,7 @@ export function ProductInfo({
     addItem({
       productId: id,
       name,
-      slug: id, // In real app, this would be the actual slug
+      slug,
       price,
       image: "/placeholder-product.jpg", // In real app, get main image
       variants: selectedVariants,
@@ -255,7 +279,43 @@ export function ProductInfo({
           </Button>
           <IconButton
             icon={Heart}
-            onClick={() => setIsWishlisted(!isWishlisted)}
+            onClick={() => {
+              if (status === "loading") return;
+              if (!session?.user) {
+                alert("Inicia sesión para guardar favoritos.");
+                window.location.href = "/auth/signin";
+                return;
+              }
+
+              const favoritePayload = {
+                id,
+                name,
+                slug,
+                price,
+                compareAtPrice,
+                images: images || [],
+                category: category || { name: "Colección", slug: "coleccion" },
+                isFeatured,
+                isNew,
+                tags,
+              };
+
+              if (isWishlisted) {
+                removeFavorite(id);
+                fetch(`/api/favorites/${id}`, { method: "DELETE" }).catch(() => {
+                  addFavorite(favoritePayload);
+                });
+              } else {
+                addFavorite(favoritePayload);
+                fetch("/api/favorites", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ productId: id }),
+                }).catch(() => {
+                  removeFavorite(id);
+                });
+              }
+            }}
             className={cn(
               "border border-gray-200 hover:border-gray-300",
               isWishlisted && "text-red-500 border-red-200"

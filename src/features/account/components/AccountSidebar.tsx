@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, ShoppingBag, MapPin, Heart, Settings, LogOut } from "lucide-react";
+import { User, ShoppingBag, MapPin, Settings, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,6 @@ const navigation = [
   { name: "Mi Perfil", href: "/cuenta/perfil", icon: User },
   { name: "Mis Pedidos", href: "/cuenta/pedidos", icon: ShoppingBag },
   { name: "Direcciones", href: "/cuenta/direcciones", icon: MapPin },
-  { name: "Favoritos", href: "/cuenta/favoritos", icon: Heart },
   { name: "Configuración", href: "/cuenta/configuracion", icon: Settings },
 ];
 

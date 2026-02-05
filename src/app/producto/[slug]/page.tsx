@@ -5,7 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { Product, ProductImage as Image, ProductVariant as Variant, ProductTag as Tag, Category } from "@prisma/client";
 
-type ProductWithDetails = Product & { images: Image[]; variants: Variant[]; tags: Tag[]; category: Category | null };
+type ProductWithDetails = (Product & { gender?: string | null }) & {
+  images: Image[];
+  variants: Variant[];
+  tags: Tag[];
+  category: Category | null;
+  
+};
 
 interface ProductPageProps {
   params: {
@@ -53,8 +59,65 @@ async function mapProductFromDb(p: ProductWithDetails | null) {
   };
 }
 
+const RELATED_LIMIT = 6;
+
+type RelatedProductDb = Product & {
+  images: Image[];
+  tags: Tag[];
+};
+
+function mapRelatedProductsFromDb(products: RelatedProductDb[]) {
+  return products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    price: Number(p.price),
+    compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : undefined,
+    images: (p.images || []).map((img) => ({ id: img.id, url: img.url, alt: img.alt || "", isMain: img.isMain })),
+    isFeatured: p.isFeatured,
+    isNew: false,
+  }));
+}
+
+async function getRelatedProducts(product: ProductWithDetails, limit = RELATED_LIMIT) {
+  const tagIds = (product.tags || []).map((tag) => tag.id);
+
+  const orConditions: any[] = [];
+  if (product.categoryId) orConditions.push({ categoryId: product.categoryId });
+  if (tagIds.length > 0) orConditions.push({ tags: { some: { id: { in: tagIds } } } });
+  if (product.material) orConditions.push({ material: { contains: product.material } });
+  if (product.gender) orConditions.push({ gender: { equals: product.gender } });
+
+  const related = await prisma.product.findMany({
+    where: {
+      isActive: true,
+      id: { not: product.id },
+      ...(orConditions.length > 0 ? { OR: orConditions } : {}),
+    },
+    take: limit,
+    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+    include: { images: true, tags: true },
+  });
+
+  if (related.length >= limit) {
+    return mapRelatedProductsFromDb(related);
+  }
+
+  const fallback = await prisma.product.findMany({
+    where: {
+      isActive: true,
+      id: { notIn: [product.id, ...related.map((p) => p.id)] },
+    },
+    take: limit - related.length,
+    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+    include: { images: true, tags: true },
+  });
+
+  return mapRelatedProductsFromDb([...related, ...fallback]);
+}
+
 export async function generateMetadata({ params }: ProductPageProps) {
-const { slug } = await Promise.resolve(params);
+  const { slug } = await Promise.resolve(params);
 
   const productDb = await getProductBySlug(slug);
   const product = (await mapProductFromDb(productDb))!;
@@ -86,6 +149,7 @@ export default async function Page({ params }: ProductPageProps) {
 
   const productDb = await getProductBySlug(slug);
   const product = (await mapProductFromDb(productDb))!;
+  const relatedProducts = await getRelatedProducts(productDb);
 
   const breadcrumbItems = [
     { name: "Colección", href: "/coleccion" },
@@ -95,7 +159,7 @@ export default async function Page({ params }: ProductPageProps) {
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} className="container mx-auto px-4 py-4" />
-      <ProductPage product={product} />
+      <ProductPage product={product} relatedProducts={relatedProducts} />
     </>
   );
 }

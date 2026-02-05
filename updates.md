@@ -1,14 +1,16 @@
+#ToDo
+Falta la logica de el envio de mail cuando se realiza una compra, junto con la compra guardada en la base, el estado de la misma (pendiente / correcto / fallido / entregado / cancelado / devuelto / devolucion pendiente /enviando)
+Falta ver detalles de una compra.(parecido a lo que se envia por mail)
+
+#ToDO2
+SEO
+El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact
+Luego realizamos los cambios en el sitio
+
+#ToDO3
 mail no funciona todavia.
 compras no funcionan todavia.(mp)
 mail con dominio
-boton novedades redirija a siguiente seccion
-arreglar favoritos
-hacer logica del perfil de usuario
-seguimiento de envio en detalle de compra
-cuando inicias sesion con mail no muestra submenu de la cuenta y se sigue mostrando el boton de inicar sesion
-SEO
-agregar sexo en importar producto
-
 # Reemplaza en src/app/layout.tsx
 <GoogleAnalytics gaId="TU_ID_DE_GA4" />
 
