@@ -18,6 +18,7 @@ export default function NewProductPage() {
     sizes: "",
     gender: "",
     metal: "",
+    themes: "",
     description: "",
     backgroundType: "none",
   });
@@ -169,6 +170,15 @@ export default function NewProductPage() {
         <div>
           <label className="block text-sm font-medium">Tipo de metal</label>
           <Input value={form.metal} onChange={(e) => setForm({ ...form, metal: e.target.value })} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Temáticas (coma separadas)</label>
+          <Input
+            value={form.themes}
+            onChange={(e) => setForm({ ...form, themes: e.target.value })}
+            placeholder="Ej: Esta temporada, San Valentín"
+          />
         </div>
 
         <div>

@@ -24,6 +24,9 @@ interface ProductFiltersProps {
   materialOptions: FilterOption[];
   selectedMaterials: string[];
   onMaterialChange: (material: string) => void;
+  themeOptions: FilterOption[];
+  selectedThemes: string[];
+  onThemeChange: (theme: string) => void;
   priceRangeOptions: FilterOption[];
   selectedPriceRange: string;
   onPriceRangeChange: (range: string) => void;
@@ -43,6 +46,9 @@ export function ProductFilters({
   materialOptions,
   selectedMaterials,
   onMaterialChange,
+  themeOptions,
+  selectedThemes,
+  onThemeChange,
   priceRangeOptions,
   selectedPriceRange,
   onPriceRangeChange,
@@ -54,6 +60,7 @@ export function ProductFilters({
     category: true,
     gender: true,
     material: true,
+    theme: true,
     price: true,
   });
 
@@ -171,6 +178,14 @@ export function ProductFilters({
         sectionKey="material"
       />
 
+      <FilterSection
+        title="Temática"
+        options={themeOptions}
+        selectedValues={selectedThemes}
+        onChange={onThemeChange}
+        sectionKey="theme"
+      />
+
       {/* Price Range - Radio buttons */}
       <div className="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
         <button
@@ -227,9 +242,9 @@ export function ProductFilters({
             <Button variant="outline" className="w-full">
               <SlidersHorizontal className="w-4 h-4 mr-2" />
               Filtros
-              {(selectedCategories.length + selectedGenders.length + selectedMaterials.length + (selectedPriceRange ? 1 : 0) + (searchTerm ? 1 : 0)) > 0 && (
+              {(selectedCategories.length + selectedGenders.length + selectedMaterials.length + selectedThemes.length + (selectedPriceRange ? 1 : 0) + (searchTerm ? 1 : 0)) > 0 && (
                 <span className="ml-2 bg-gold-600 text-white rounded-full px-2 py-0.5 text-xs">
-                  {selectedCategories.length + selectedGenders.length + selectedMaterials.length + (selectedPriceRange ? 1 : 0) + (searchTerm ? 1 : 0)}
+                  {selectedCategories.length + selectedGenders.length + selectedMaterials.length + selectedThemes.length + (selectedPriceRange ? 1 : 0) + (searchTerm ? 1 : 0)}
                 </span>
               )}
             </Button>

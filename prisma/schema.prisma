@@ -170,6 +170,18 @@ model ProductTag {
   @@map("product_tags")
 }
 
+model PromoBanner {
+  id        String   @id @default(cuid())
+  imageUrl  String   @db.Text
+  linkUrl   String?
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("promo_banners")
+}
+
 // Order models
 model Order {
   id            String      @id @default(cuid())

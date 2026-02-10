@@ -5,6 +5,7 @@ import Header from '@/shared/components/Header';
 import { Footer } from '@/shared/components/Footer';
 import { AuthProvider } from '@/lib/auth/provider';
 import { OrganizationStructuredData } from '@/shared/components/OrganizationStructuredData';
+import { WhatsAppFloatingButton } from '@/shared/components/WhatsAppFloatingButton';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -80,6 +81,9 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          <WhatsAppFloatingButton
+            phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
+          />
         </AuthProvider>
         <GoogleAnalytics gaId="GA_MEASUREMENT_ID" />
       </body>

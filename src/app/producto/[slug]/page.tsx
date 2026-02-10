@@ -53,7 +53,7 @@ async function mapProductFromDb(p: ProductWithDetails | null) {
     isNew: false,
     images: (p.images || []).map((img) => ({ id: img.id, url: img.url, alt: img.alt || "", isMain: img.isMain })),
     variants: (p.variants || []).map((v) => ({ id: v.id, name: v.name, value: v.value, stock: v.stock || 0 })),
-    tags: (p.tags || []).map((t) => ({ name: t.name, color: t.color || "#000" })),
+    tags: (p.tags || []).map((t) => ({ name: t.name, slug: t.slug, color: t.color || "#000" })),
     category: p.category ? { name: p.category.name, slug: p.category.slug } : { name: "Colección", slug: "coleccion" },
     rating: { average: 0, count: 0 },
   };

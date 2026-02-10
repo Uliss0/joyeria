@@ -69,7 +69,19 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, categoryId, price, quantity, sizes, metal, description, imageDataUrl, backgroundType } = body;
+    const {
+      name,
+      categoryId,
+      price,
+      quantity,
+      sizes,
+      metal,
+      description,
+      imageDataUrl,
+      backgroundType,
+      gender,
+      themes,
+    } = body;
 
     if (!name || !categoryId || !price || !imageDataUrl) {
       return NextResponse.json({ message: "Campos requeridos faltantes" }, { status: 400 });
@@ -99,6 +111,24 @@ export async function POST(req: Request) {
     const slug = `${baseSlug}-${Date.now().toString().slice(-5)}`;
     const sku = `SKU-${Date.now().toString().slice(-6)}`;
 
+    const themeList = Array.isArray(themes)
+      ? themes
+      : typeof themes === "string"
+        ? themes.split(",")
+        : [];
+
+    const uniqueThemes = Array.from(
+      new Set(themeList.map((theme: string) => theme.trim()).filter(Boolean))
+    );
+
+    const themeConnectOrCreate = uniqueThemes.map((theme: string) => {
+      const slug = slugify(theme);
+      return {
+        where: { slug },
+        create: { name: theme, slug },
+      };
+    });
+
     const product = await prisma.product.create({
       data: {
         name,
@@ -110,9 +140,13 @@ export async function POST(req: Request) {
         stock: parseInt(quantity || "0", 10) || 0,
         category: { connect: { id: categoryId } },
         material: metal || null,
+        gender: gender || null,
         images: {
           create: [{ url: transformed, alt: name, isMain: true }],
         },
+        ...(themeConnectOrCreate.length > 0
+          ? { tags: { connectOrCreate: themeConnectOrCreate } }
+          : {}),
       },
       include: { images: true },
     });

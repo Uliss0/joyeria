@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, Shield, Truck, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCarousel } from "@/shared/components/ProductCarousel";
+import { BannerCarousel } from "@/shared/components/BannerCarousel";
 import dynamic from "next/dynamic";
 
 const InstagramFeedSection = dynamic(() => import("./components/InstagramFeedSection").then((mod) => mod.InstagramFeedSection), { ssr: false });
@@ -158,7 +159,7 @@ export default function Home() {
       />
 
       {/* Value Proposition Section */}
-      <section className="py-24 bg-white">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -177,6 +178,10 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+
+      {/* Banner carousel*/} 
+      <BannerCarousel className="py-10" />
 
       {/* Trust Indicators */}
       <section className="py-16 bg-gold-50">
@@ -235,8 +240,11 @@ export default function Home() {
 
       {/* Instagram Feed Section - Novedades */}
       <InstagramFeedSection className="py-16 bg-gray-50" />
+      
+     
 
-      {/* Testimonials */}
+
+      {/* Testimonials 
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
@@ -268,6 +276,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+        */}
 
       {/* Call to Action */}
       <section className="py-24 bg-gray-900 text-white relative overflow-hidden">

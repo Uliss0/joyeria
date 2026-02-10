@@ -7,12 +7,12 @@ import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon, ArrowRi
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+//import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { IconButton } from "./IconButton";
 import { Cart } from "./Cart";
 import { useCartItemCount, useCartToggleCart } from "@/shared/store/cartStore";
 import { cn } from "@/lib/utils";
-import ShoppingBagg from "./ShoppingBag"; // Mantenemos el import por si se usa a futuro, aunque esté comentado abajo
+//import ShoppingBagg from "./ShoppingBag"; // Mantenemos el import por si se usa a futuro, aunque esté comentado abajo
 import { Badge } from "@/components/ui/badge";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
@@ -173,12 +173,14 @@ const toCategorySlug = (label: string) => {
   return overrides[normalized] ?? normalized;
 };
 
+type SubmenuItem = string | { label: string; href: string };
+
 const buildSubmenuHref = (menuName: string | null, subItem: string) => {
   if (menuName === "Tienda") {
     return `/coleccion?categoria=${toCategorySlug(subItem)}`;
   }
   if (menuName === "Nuevos Ingresos") {
-    return "/coleccion";
+     return "/coleccion";
   }
   if (menuName === "Contacto") {
     return "/contacto";
@@ -191,7 +193,7 @@ const buildImageHref = (menuName: string | null, label: string) => {
     return `/coleccion?categoria=${toCategorySlug(label)}`;
   }
   if (menuName === "Nuevos Ingresos") {
-    return "/coleccion";
+    return "/coleccion?tematica=nuevos-ingresos";
   }
   if (menuName === "Contacto") {
     return "/contacto";
@@ -205,6 +207,7 @@ const Header = () => {
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const favorites = useFavoritesItems();
   const favoritesLoading = useFavoritesIsLoading();
@@ -321,23 +324,23 @@ const Header = () => {
         "Relojes"
       ],
       images: [
-        { src: "/rings-collection\.webp", alt: "Coleccion de anillos", label: "Anillos" },
-        { src: "/earrings-collection\.webp", alt: "Coleccion de aros", label: "Aros" }
+        { src: "/rings-collection.webp", alt: "Coleccion de anillos", label: "Anillos" },
+        { src: "/earrings-collection.webp", alt: "Coleccion de aros", label: "Aros" }
       ]
     },
     { 
       name: "Nuevos Ingresos", 
-      href: "/coleccion/new-in",
+      href: "/coleccion?tematica=nuevos-ingresos",
       submenuItems: [
-        "Ultimos lanzamientos",
-        "Esta temporada",
-        "Featured Designers",
-        "Ediciones limitadas",
-        "Pre-lanzamientos"
+        { label: "Ultimos lanzamientos", href: "/coleccion?tematica=ultimos-lanzamientos" },
+        { label: "Esta temporada", href: "/coleccion?tematica=esta-temporada" },
+        { label: "Diseños especiales", href: "/coleccion?tematica=disenos-especiales" },
+        { label: "Ediciones limitadas", href: "/coleccion?tematica=ediciones-limitadas" },
+        { label: "Pre-lanzamientos", href: "/coleccion?tematica=pre-lanzamientos" }
       ],
       images: [
-        { src: "/arcus-bracelet\.webp", alt: "Pulcera Arcus", label: "Pulcera Arcus" },
-        { src: "/span-bracelet\.webp", alt: "Pulcera Span", label: "Pulcera Span" }
+        { src: "/arcus-bracelet.webp", alt: "Pulcera Arcus", label: "Pulcera Arcus" },
+        { src: "/span-bracelet.webp", alt: "Pulcera Span", label: "Pulcera Span" }
       ]
     },
     { 
@@ -350,7 +353,7 @@ const Header = () => {
         "Ubicaciones"
       ],
       images: [
-        { src: "/founders\.webp", alt: "Fundadores", label: "Historia de la marca" }
+        { src: "/founders.webp", alt: "Fundadores", label: "Historia de la marca" }
       ]
     }
   ];
@@ -431,9 +434,32 @@ const Header = () => {
           <CartButton />
           
           {session?.user?.role === "ADMIN" && (
-            <Link href="/admin/new-product">
-              <Button variant="outline" size="sm" className="cursor-pointer">Subir producto</Button>
-            </Link>
+            <div
+              className="relative"
+              onMouseEnter={() => setIsAdminMenuOpen(true)}
+              onMouseLeave={() => setIsAdminMenuOpen(false)}
+            >
+              <Link href="/admin/new-product">
+                <Button variant="outline" size="sm" className="cursor-pointer">Subir productos</Button>
+              </Link>
+
+              {isAdminMenuOpen && (
+                <div className="absolute right-0  w-48 bg-[#222428] text-gray-100 rounded-lg shadow-lg border border-slate-900 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                  <Link
+                    href="/admin/new-product"
+                    className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
+                  >
+                    Subir producto
+                  </Link>
+                  <Link
+                    href="/admin/banners"
+                    className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
+                  >
+                    Subir banner
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
           <UserMenu />  
         </div>
@@ -454,16 +480,23 @@ const Header = () => {
                 <ul className="space-y-2">
                    {navItems
                      .find(item => item.name === activeDropdown)
-                     ?.submenuItems.map((subItem, index) => (
-                      <li key={index}>
-                        <Link 
-                          href={buildSubmenuHref(activeDropdown, subItem)}
-                          className="text-white/80 hover:text-white transition-colors duration-200 text-sm font-light block py-2 hover:translate-x-1 cursor-pointer"
-                        >
-                          {subItem}
-                        </Link>
-                      </li>
-                   ))}
+                     ?.submenuItems.map((subItem, index) => {
+                      const label = typeof subItem === "string" ? subItem : subItem.label;
+                      const href = typeof subItem === "string"
+                        ? buildSubmenuHref(activeDropdown, subItem)
+                        : subItem.href;
+
+                      return (
+                        <li key={index}>
+                          <Link 
+                            href={href}
+                            className="text-white/80 hover:text-white transition-colors duration-200 text-sm font-light block py-2 hover:translate-x-1 cursor-pointer"
+                          >
+                            {label}
+                          </Link>
+                        </li>
+                      );
+                   })}
                 </ul>
               </div>
 
@@ -552,16 +585,23 @@ const Header = () => {
                     {item.name}
                   </Link>
                    <div className="mt-3 pl-4 space-y-2 border-l border-slate-700 ml-1">
-                     {item.submenuItems.map((subItem, subIndex) => (
-                       <Link
-                         key={subIndex}
-                         href={buildSubmenuHref(item.name, subItem)}
-                         className="text-slate-300 hover:text-primary text-sm font-light block py-1 cursor-pointer"
-                         onClick={() => setIsMobileMenuOpen(false)}
-                       >
-                         {subItem}
-                       </Link>
-                     ))}
+                     {item.submenuItems.map((subItem, subIndex) => {
+                       const label = typeof subItem === "string" ? subItem : subItem.label;
+                       const href = typeof subItem === "string"
+                         ? buildSubmenuHref(item.name, subItem)
+                         : subItem.href;
+
+                       return (
+                         <Link
+                           key={subIndex}
+                           href={href}
+                           className="text-slate-300 hover:text-primary text-sm font-light block py-1 cursor-pointer"
+                           onClick={() => setIsMobileMenuOpen(false)}
+                         >
+                           {label}
+                         </Link>
+                       );
+                     })}
                    </div>
                 </div>
               ))}
@@ -693,3 +733,6 @@ const Header = () => {
 };
 
 export default Header;
+
+
+

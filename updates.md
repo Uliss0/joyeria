@@ -1,6 +1,8 @@
 #ToDo
 Falta la logica de el envio de mail cuando se realiza una compra, junto con la compra guardada en la base, el estado de la misma (pendiente / correcto / fallido / entregado / cancelado / devuelto / devolucion pendiente /enviando)
-Falta ver detalles de una compra.(parecido a lo que se envia por mail)
+Falta ver detalles de una compra.(como lo que se envia por mail)
+
+Agregar tabla de talles
 
 #ToDO2
 SEO

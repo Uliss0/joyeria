@@ -13,6 +13,7 @@ interface Product {
   slug: string;
   description?: string; // Added description property
   material?: string;
+  gender?: string;
   price: number;
   compareAtPrice?: number;
   images: Array<{
@@ -28,6 +29,7 @@ interface Product {
   isNew?: boolean;
   tags?: Array<{
     name: string;
+    slug?: string;
     color?: string;
   }>;
 }
@@ -39,7 +41,19 @@ interface FilterOption {
 }
 
 const normalizeValue = (value: string) => value.trim().toLowerCase();
+const slugifyValue = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 const genderValues = new Set(["mujer", "hombre", "unisex"]);
+const tagToValue = (tag?: { name?: string; slug?: string }) => {
+  const raw = tag?.slug || tag?.name || "";
+  return slugifyValue(raw);
+};
 
 export default function Collection() {
   const searchParams = useSearchParams();
@@ -80,6 +94,7 @@ export default function Collection() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -89,6 +104,24 @@ export default function Collection() {
     const normalized = categoryParam ? categoryParam.toLowerCase() : "";
 
     setSelectedCategories((prev) => {
+      if (normalized) {
+        if (prev.length === 1 && prev[0] === normalized) return prev;
+        return [normalized];
+      }
+      if (prev.length === 0) return prev;
+      return [];
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
+    const themeParam =
+      searchParams.get("tematica") ??
+      searchParams.get("tema") ??
+      searchParams.get("theme") ??
+      searchParams.get("tag");
+    const normalized = themeParam ? slugifyValue(themeParam) : "";
+
+    setSelectedThemes((prev) => {
       if (normalized) {
         if (prev.length === 1 && prev[0] === normalized) return prev;
         return [normalized];
@@ -121,11 +154,9 @@ export default function Collection() {
     ];
     const counts = new Map<string, number>();
     for (const product of allProducts) {
-      for (const tag of product.tags || []) {
-        const normalized = normalizeValue(tag.name);
-        if (genderValues.has(normalized)) {
-          counts.set(normalized, (counts.get(normalized) || 0) + 1);
-        }
+      const normalized = normalizeValue(product.gender || "");
+      if (genderValues.has(normalized)) {
+        counts.set(normalized, (counts.get(normalized) || 0) + 1);
       }
     }
     return base.map((option) => ({
@@ -150,11 +181,25 @@ export default function Collection() {
 
     for (const product of allProducts) {
       addMaterial(product.material);
-      for (const tag of product.tags || []) {
-        addMaterial(tag.name);
-      }
     }
 
+    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
+  }, [allProducts]);
+
+  const themeOptions = useMemo<FilterOption[]>(() => {
+    const map = new Map<string, FilterOption>();
+    for (const product of allProducts) {
+      for (const tag of product.tags || []) {
+        const value = tagToValue(tag);
+        if (!value) continue;
+        const current = map.get(value);
+        if (current) {
+          current.count = (current.count || 0) + 1;
+        } else {
+          map.set(value, { value, label: tag.name.trim(), count: 1 });
+        }
+      }
+    }
     return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
   }, [allProducts]);
 
@@ -201,8 +246,7 @@ export default function Collection() {
 
     if (selectedGenders.length > 0) {
       filtered = filtered.filter(product =>
-        product.tags?.some(tag => selectedGenders.includes(normalizeValue(tag.name))) ||
-        selectedGenders.includes(normalizeValue(product.category.slug))
+        selectedGenders.includes(normalizeValue(product.gender || ""))
       );
     }
 
@@ -212,9 +256,14 @@ export default function Collection() {
         const materialMatches = normalizedMaterial
           ? selectedMaterials.some((material) => normalizedMaterial.includes(material))
           : false;
-        const tagMatches = product.tags?.some(tag => selectedMaterials.includes(normalizeValue(tag.name)));
-        return materialMatches || tagMatches;
+        return materialMatches;
       });
+    }
+
+    if (selectedThemes.length > 0) {
+      filtered = filtered.filter(product =>
+        product.tags?.some(tag => selectedThemes.includes(tagToValue(tag)))
+      );
     }
 
     if (selectedPriceRange) {
@@ -250,13 +299,14 @@ export default function Collection() {
     selectedCategories,
     selectedGenders,
     selectedMaterials,
+    selectedThemes,
     selectedPriceRange,
     sortBy,
   ]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [deferredSearchTerm, selectedCategories, selectedGenders, selectedMaterials, selectedPriceRange, sortBy]);
+  }, [deferredSearchTerm, selectedCategories, selectedGenders, selectedMaterials, selectedThemes, selectedPriceRange, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(displayedProducts.length / itemsPerPage));
   const clampedPage = Math.min(currentPage, totalPages);
@@ -292,6 +342,14 @@ export default function Collection() {
     );
   };
 
+  const handleThemeChange = (theme: string) => {
+    setSelectedThemes(prev =>
+      prev.includes(theme)
+        ? prev.filter(t => t !== theme)
+        : [...prev, theme]
+    );
+  };
+
   const handlePriceRangeChange = (range: string) => {
     setSelectedPriceRange(range);
   };
@@ -304,6 +362,7 @@ export default function Collection() {
     setSelectedCategories([]);
     setSelectedGenders([]);
     setSelectedMaterials([]);
+    setSelectedThemes([]);
     setSelectedPriceRange("");
     setSearchTerm(""); // Clear search term
     setSortBy("featured"); // Reset sorting as well
@@ -331,6 +390,9 @@ export default function Collection() {
             materialOptions={materialOptions}
             selectedMaterials={selectedMaterials}
             onMaterialChange={handleMaterialChange}
+            themeOptions={themeOptions}
+            selectedThemes={selectedThemes}
+            onThemeChange={handleThemeChange}
             priceRangeOptions={priceRangeOptions}
             selectedPriceRange={selectedPriceRange}
             onPriceRangeChange={handlePriceRangeChange}
