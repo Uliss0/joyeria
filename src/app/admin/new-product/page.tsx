@@ -14,6 +14,7 @@ export default function NewProductPage() {
     name: "",
     categoryId: "",
     price: "",
+    compareAtPrice: "",
     quantity: "",
     sizes: "",
     gender: "",
@@ -145,6 +146,15 @@ export default function NewProductPage() {
         <div>
           <label className="block text-sm font-medium">Precio</label>
           <Input value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Precio anterior (opcional)</label>
+          <Input
+            value={form.compareAtPrice}
+            onChange={(e) => setForm({ ...form, compareAtPrice: e.target.value })}
+            placeholder="Ej: 120000"
+          />
         </div>
 
         <div>

@@ -36,6 +36,23 @@ export async function GET(req: Request) {
       include: { images: true, variants: true, tags: true, category: true },
     });
 
+    const ratingMap = new Map<string, { average: number; count: number }>();
+    if (products.length > 0) {
+      const ratingSummaries = await prisma.productRating.groupBy({
+        by: ["productId"],
+        where: { productId: { in: products.map((p) => p.id) } },
+        _avg: { rating: true },
+        _count: { rating: true },
+      });
+
+      ratingSummaries.forEach((summary) => {
+        ratingMap.set(summary.productId, {
+          average: summary._avg.rating ?? 0,
+          count: summary._count.rating ?? 0,
+        });
+      });
+    }
+
     const mapped = products.map((p) => ({
       id: p.id,
       name: p.name,
@@ -55,7 +72,7 @@ export async function GET(req: Request) {
       variants: (p.variants || []).map((v) => ({ id: v.id, name: v.name, value: v.value, stock: v.stock || 0 })),
       tags: (p.tags || []).map((t) => ({ name: t.name, slug: t.slug, color: t.color || '#000' })),
       category: p.category ? { name: p.category.name, slug: p.category.slug } : { name: 'Colección', slug: 'coleccion' },
-      rating: { average: 0, count: 0 },
+      rating: ratingMap.get(p.id) ?? { average: 0, count: 0 },
       createdAt: p.createdAt?.toISOString(),
     }));
 

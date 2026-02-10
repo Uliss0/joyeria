@@ -347,10 +347,10 @@ const Header = () => {
       name: "Contacto", 
       href: "/contacto",
       submenuItems: [
-        "Quienes somos",
-        "Historia de la marca",
-        "Guia de talles",
-        "Ubicaciones"
+      {label: "Quienes somos", href: "/contacto#quienes-somos"},
+        {label: "Historia de la marca", href: "/contacto#historia-de-la-marca"},
+        {label: "Guia de talles", href: "/ring-table.webp"},
+        {label: "Ubicaciones", href: "/contacto#ubicaciones"}
       ],
       images: [
         { src: "/founders.webp", alt: "Fundadores", label: "Historia de la marca" }
@@ -445,6 +445,12 @@ const Header = () => {
 
               {isAdminMenuOpen && (
                 <div className="absolute right-0  w-48 bg-[#222428] text-gray-100 rounded-lg shadow-lg border border-slate-900 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                  <Link
+                    href="/admin/products"
+                    className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
+                  >
+                    Gestionar productos
+                  </Link>
                   <Link
                     href="/admin/new-product"
                     className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"

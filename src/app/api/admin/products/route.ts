@@ -73,6 +73,7 @@ export async function POST(req: Request) {
       name,
       categoryId,
       price,
+      compareAtPrice,
       quantity,
       sizes,
       metal,
@@ -129,6 +130,14 @@ export async function POST(req: Request) {
       };
     });
 
+    const parsedPrice = Number(price);
+    if (!Number.isFinite(parsedPrice)) {
+      return NextResponse.json({ message: "Precio invÃ¡lido" }, { status: 400 });
+    }
+    const parsedCompareAt = compareAtPrice !== undefined && compareAtPrice !== null && `${compareAtPrice}`.length > 0
+      ? Number(compareAtPrice)
+      : null;
+
     const product = await prisma.product.create({
       data: {
         name,
@@ -136,7 +145,8 @@ export async function POST(req: Request) {
         description: description || null,
         shortDescription: description ? description.slice(0, 160) : null,
         sku,
-        price: price.toString(),
+        price: parsedPrice.toString(),
+        compareAtPrice: Number.isFinite(parsedCompareAt) ? parsedCompareAt?.toString() : null,
         stock: parseInt(quantity || "0", 10) || 0,
         category: { connect: { id: categoryId } },
         material: metal || null,
@@ -152,6 +162,37 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(product);
+  } catch (err: any) {
+    return NextResponse.json({ message: err.message || "Error" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  const session = (await getServerSession(authOptions as any)) as Session | null;
+  if (!session || session.user?.role !== "ADMIN") {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: [{ createdAt: "desc" }],
+      include: { images: true, category: true },
+    });
+
+    const mapped = products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      price: Number(p.price),
+      compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+      stock: p.stock,
+      isActive: p.isActive,
+      category: p.category ? { id: p.category.id, name: p.category.name } : null,
+      image: p.images.find((img) => img.isMain)?.url || p.images[0]?.url || null,
+      createdAt: p.createdAt?.toISOString(),
+    }));
+
+    return NextResponse.json({ products: mapped });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Error" }, { status: 500 });
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Star, Share2 } from "lucide-react";
 import { ProductGallery } from "./components/ProductGallery";
@@ -7,6 +8,7 @@ import { ProductInfo } from "./components/ProductInfo";
 import { RelatedProducts } from "./components/RelatedProducts";
 import { IconButton } from "@/shared/components/IconButton";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 interface ProductImage {
   id: string;
@@ -35,6 +37,7 @@ interface ProductCategory {
 interface ProductRating {
   average: number;
   count: number;
+  userRating?: number | null;
 }
 
 interface Product {
@@ -81,6 +84,12 @@ interface ProductPageProps {
 
 export default function ProductPage({ product, relatedProducts = [], className }: ProductPageProps) {
   const selectedProduct = product;
+  const { data: session, status } = useSession();
+  const [ratingAverage, setRatingAverage] = useState(selectedProduct.rating.average);
+  const [ratingCount, setRatingCount] = useState(selectedProduct.rating.count);
+  const [userRating, setUserRating] = useState<number | null>(selectedProduct.rating.userRating ?? null);
+  const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [isSubmittingRating, setIsSubmittingRating] = useState(false);
 
   const handleAddToCart = (
     _productId: string,
@@ -102,6 +111,40 @@ export default function ProductPage({ product, relatedProducts = [], className }
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
       alert("Enlace copiado al portapapeles");
+    }
+  };
+
+  const handleRate = async (rating: number) => {
+    if (status === "loading" || isSubmittingRating) return;
+
+    if (!session?.user) {
+      alert("Inicia sesion para calificar.");
+      window.location.href = "/auth/signin";
+      return;
+    }
+
+    setIsSubmittingRating(true);
+    try {
+      const res = await fetch("/api/ratings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: selectedProduct.id, rating }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to submit rating");
+      }
+
+      const data = await res.json();
+      setRatingAverage(data.average ?? ratingAverage);
+      setRatingCount(data.count ?? ratingCount);
+      setUserRating(data.userRating ?? rating);
+    } catch (error) {
+      console.error("Rating submission error", error);
+      alert("No se pudo guardar tu calificacion. Intenta de nuevo.");
+    } finally {
+      setIsSubmittingRating(false);
+      setHoverRating(null);
     }
   };
 
@@ -135,21 +178,41 @@ export default function ProductPage({ product, relatedProducts = [], className }
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={cn(
-                        "w-4 h-4",
-                        star <= Math.floor(selectedProduct.rating.average)
-                          ? "text-yellow-400 fill-current"
-                          : "text-gray-300"
-                      )}
-                    />
-                  ))}
+                  {(() => {
+                    const effectiveRating = hoverRating ?? userRating ?? Math.round(ratingAverage);
+                    return [1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => handleRate(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(null)}
+                        className="transition-colors disabled:cursor-not-allowed"
+                        disabled={isSubmittingRating}
+                        aria-label={`Puntuar ${star} estrellas`}
+                      >
+                        <Star
+                          className={cn(
+                            "w-4 h-4",
+                            star <= effectiveRating
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          )}
+                        />
+                      </button>
+                    ));
+                  })()}
                 </div>
                 <span className="text-sm text-gray-600">
-                  {selectedProduct.rating.average} ({selectedProduct.rating.count} reseñas)
+                  {ratingCount > 0
+                    ? `${ratingAverage.toFixed(1)} (${ratingCount} reseñas)`
+                    : "Sin reseñas"}
                 </span>
+                {userRating ? (
+                  <span className="text-xs text-gray-500">
+                    Tu puntuacion: {userRating}/5
+                  </span>
+                ) : null}
               </div>
 
               <IconButton

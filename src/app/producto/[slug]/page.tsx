@@ -2,6 +2,8 @@ import { cache } from "react";
 import ProductPage from "@/features/product/ProductPage";
 import { Breadcrumbs } from "@/shared/components/Breadcrumbs";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/config";
 import { notFound } from "next/navigation";
 import type { Product, ProductImage as Image, ProductVariant as Variant, ProductTag as Tag, Category } from "@prisma/client";
 
@@ -33,6 +35,19 @@ const getProductBySlug = cache(async (slug: string) => {
 
   return productDb;
 });
+
+async function getRatingSummary(productId: string) {
+  const summary = await prisma.productRating.aggregate({
+    where: { productId },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
+
+  return {
+    average: summary._avg.rating ?? 0,
+    count: summary._count.rating ?? 0,
+  };
+}
 
 async function mapProductFromDb(p: ProductWithDetails | null) {
   if (!p) return null;
@@ -148,7 +163,25 @@ export default async function Page({ params }: ProductPageProps) {
   if (!slug) notFound();
 
   const productDb = await getProductBySlug(slug);
+  const session = await getServerSession(authOptions);
+  const userId = session?.user ? (session.user as any).id : null;
+  const userRating = userId
+    ? await prisma.productRating.findUnique({
+        where: { userId_productId: { userId, productId: productDb.id } },
+        select: { rating: true },
+      })
+    : null;
+
+  const ratingSummary = await getRatingSummary(productDb.id);
   const product = (await mapProductFromDb(productDb))!;
+  const productWithRating = {
+    ...product,
+    rating: {
+      average: ratingSummary.average,
+      count: ratingSummary.count,
+      userRating: userRating?.rating ?? null,
+    },
+  };
   const relatedProducts = await getRelatedProducts(productDb);
 
   const breadcrumbItems = [
@@ -159,7 +192,7 @@ export default async function Page({ params }: ProductPageProps) {
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} className="container mx-auto px-4 py-4" />
-      <ProductPage product={product} relatedProducts={relatedProducts} />
+      <ProductPage product={productWithRating} relatedProducts={relatedProducts} />
     </>
   );
 }

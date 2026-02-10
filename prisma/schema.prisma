@@ -26,6 +26,7 @@ model User {
   orders        Order[]
   addresses     Address[]
   favorites     Favorite[]
+  ratings       ProductRating[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -114,6 +115,7 @@ model Product {
   tags        ProductTag[]
   orderItems  OrderItem[]
   favorites   Favorite[]
+  ratings     ProductRating[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -130,6 +132,20 @@ model Favorite {
 
   @@unique([userId, productId])
   @@map("favorites")
+}
+
+model ProductRating {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  rating    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+  @@map("product_ratings")
 }
 
 model ProductVariant {

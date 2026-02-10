@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Heart, Minus, Plus, ShoppingCart, Truck, Shield, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,9 @@ import { IconButton } from "@/shared/components/IconButton";
 import { useCartAddItem, useCartOpenCart } from "@/shared/store/cartStore";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   useFavoritesAddFavorite,
   useFavoritesItems,
@@ -73,11 +76,14 @@ export function ProductInfo({
   isFeatured,
   isNew,
   tags,
+  images,
+  category,
   onAddToCart,
   className
 }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [isRingTableOpen, setIsRingTableOpen] = useState(false);
   const addItem = useCartAddItem();
   const openCart = useCartOpenCart();
   const { data: session, status } = useSession();
@@ -85,6 +91,11 @@ export function ProductInfo({
   const addFavorite = useFavoritesAddFavorite();
   const removeFavorite = useFavoritesRemoveFavorite();
   const isWishlisted = favorites.some((favorite) => favorite.id === id);
+  const isRingProduct = useMemo(() => {
+    if (!category) return false;
+    if (category.slug === "anillos") return true;
+    return category.name?.toLowerCase().includes("anillo");
+  }, [category]);
 
   // Group variants by name
   const variantGroups = variants.reduce((acc, variant) => {
@@ -202,12 +213,35 @@ export function ProductInfo({
           )}
         </div>
 
-        {/* Short Description */}
-        {shortDescription && (
-          <p className="text-lg text-gray-600 leading-relaxed">
-            {shortDescription}
-          </p>
-        )}
+      {/* Short Description */}
+      {shortDescription && (
+        <p className="text-lg text-gray-600 leading-relaxed">
+          {shortDescription}
+        </p>
+      )}
+
+      {isRingProduct && (
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsRingTableOpen(true)}
+            className="group relative w-24 h-24 rounded-lg border border-gray-200 overflow-hidden hover:border-gold-600 transition-colors"
+            aria-label="Abrir tabla de talles de anillos"
+          >
+            <Image
+              src="/ring-table.webp"
+              alt="Tabla de talles de anillos"
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="96px"
+            />
+          </button>
+          <div className="text-sm text-gray-600">
+            <p className="font-medium text-gray-900">Guia de talles</p>
+            <p>Click para ver en grande</p>
+          </div>
+        </div>
+      )}
       </div>
 
       {/* Variants */}
@@ -324,6 +358,26 @@ export function ProductInfo({
           />
         </div>
       </div>
+
+      <Dialog open={isRingTableOpen} onOpenChange={setIsRingTableOpen}>
+        <DialogContent className="max-w-4xl w-full h-full max-h-[90vh] p-0">
+          <DialogTitle asChild>
+            <VisuallyHidden>Tabla de talles de anillos</VisuallyHidden>
+          </DialogTitle>
+          <div className="relative w-full h-full bg-black">
+            <div className="relative w-full h-full">
+              <Image
+                src="/ring-table.webp"
+                alt="Tabla de talles de anillos"
+                fill
+                className="object-contain"
+                sizes="100vw"
+                priority
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Trust Indicators */}
       <div className="border-t pt-6">
