@@ -198,6 +198,20 @@ model PromoBanner {
   @@map("promo_banners")
 }
 
+model InstagramFeedCache {
+  id        String   @id @default(cuid())
+  accountId String   @unique
+  payload   Json
+  fetchedAt DateTime
+  expiresAt DateTime
+  lastError String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+  @@map("instagram_feed_cache")
+}
+
 // Order models
 model Order {
   id            String      @id @default(cuid())

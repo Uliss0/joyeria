@@ -62,3 +62,12 @@ El proyecto sigue los principios de Screaming Architecture y Scope Rule:
 ## Licencia
 
 Este proyecto está bajo la Licencia ISC.
+## Variables para Feed de Instagram
+
+Para habilitar el feed de Instagram cacheado en servidor:
+
+- `INSTAGRAM_USER_ID`: ID de la cuenta Business/Creator en Meta Graph API
+- `INSTAGRAM_ACCESS_TOKEN`: token de larga duracion para Graph API
+- `INSTAGRAM_API_VERSION` (opcional): default `v22.0`
+- `INSTAGRAM_FEED_LIMIT` (opcional): default `4`
+- `INSTAGRAM_CACHE_TTL_SECONDS` (opcional): default `3600`

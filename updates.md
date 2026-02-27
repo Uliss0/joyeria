@@ -1,9 +1,10 @@
 #ToDo
-Agregar tabla de talles (/ring-table.webp)( si es un anillo mostrar una miniatura de la imagen de la tabla. Al darle click abrir imagen como modal)
+logica de "mis pedidos" falta aplicar
 
-logica para la carga de imagenes de instagram. Ver como hacer para que se cargue directamente los posteos desde su instagram. En este momento se carga hardcodeando la publicacion dentro de el componente
+añadir posibilidad de que puedan agragar comentarios.
 
-
+Agregar seccion de finanzas. Las ventas totales en un tiempo determinado. Asi tambien en alguna parte de la vista discriminar el pago al desarrollador el cual sera el 4% de las ven
+//pedir api keys de instagram. Api key de correo argentino. cuenta de mail.
 #ToDO2
 SEO
 El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact
@@ -15,7 +16,7 @@ compras no funcionan todavia.(mp)
 Falta la logica de el envio de mail cuando se realiza una compra, junto con la compra guardada en la base, el estado de la misma (pendiente / correcto / fallido / entregado / cancelado / devuelto / devolucion pendiente /enviando)
 Falta ver detalles de una compra.(como lo que se envia por mail)
 mail con dominio
-Agregar seccion de finanzas. Las ventas totales en un tiempo determinado. Asi tambien en alguna parte de la vista discriminar el pago al desarrollador el cual sera el 4% de las ventas.
+tas.
 
 # Reemplaza en src/app/layout.tsx
 <GoogleAnalytics gaId="TU_ID_DE_GA4" />
