@@ -66,7 +66,7 @@ async function mapProductFromDb(p: ProductWithDetails | null) {
     stock: p.stock || 0,
     isFeatured: p.isFeatured,
     isNew: false,
-    images: (p.images || []).map((img) => ({ id: img.id, url: img.url, alt: img.alt || "", isMain: img.isMain })),
+    images: (p.images || []).filter((img) => img.url !== null).map((img) => ({ id: img.id, url: img.url as string, alt: img.alt || "", isMain: img.isMain })),
     variants: (p.variants || []).map((v) => ({ id: v.id, name: v.name, value: v.value, stock: v.stock || 0 })),
     tags: (p.tags || []).map((t) => ({ name: t.name, slug: t.slug, color: t.color || "#000" })),
     category: p.category ? { name: p.category.name, slug: p.category.slug } : { name: "Colección", slug: "coleccion" },
@@ -88,7 +88,7 @@ function mapRelatedProductsFromDb(products: RelatedProductDb[]) {
     slug: p.slug,
     price: Number(p.price),
     compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : undefined,
-    images: (p.images || []).map((img) => ({ id: img.id, url: img.url, alt: img.alt || "", isMain: img.isMain })),
+    images: (p.images || []).filter((img) => img.url !== null).map((img) => ({ id: img.id, url: img.url as string, alt: img.alt || "", isMain: img.isMain })),
     isFeatured: p.isFeatured,
     isNew: false,
   }));
@@ -192,7 +192,7 @@ export default async function Page({ params }: ProductPageProps) {
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} className="container mx-auto px-4 py-4" />
-      <ProductPage product={productWithRating} relatedProducts={relatedProducts} />
+      <ProductPage  product={productWithRating} relatedProducts={relatedProducts}  />
     </>
   );
 }

@@ -108,7 +108,7 @@ export default function AdminEditProductPage() {
   };
 
   const handleDelete = async () => {
-    const ok = window.confirm("Â¿Eliminar este producto? Esta acciÃ³n no se puede deshacer.");
+    const ok = window.confirm("¿Eliminar este producto? Esta accion no se puede deshacer.");
     if (!ok) return;
     setSaving(true);
     try {
@@ -142,7 +142,7 @@ export default function AdminEditProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">CategorÃ­a</label>
+          <label className="block text-sm font-medium">Categorí­a</label>
           <select
             className="w-full border rounded p-2"
             value={form.categoryId}
@@ -194,7 +194,7 @@ export default function AdminEditProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">DescripciÃ³n</label>
+          <label className="block text-sm font-medium">Descripción</label>
           <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
 

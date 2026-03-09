@@ -43,7 +43,7 @@ export default function AdminProductsPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const ok = window.confirm("Â¿Eliminar este producto? Esta acciÃ³n no se puede deshacer.");
+    const ok = window.confirm("¿Eliminar este producto? Esta accion no se puede deshacer.");
     if (!ok) return;
 
     try {
@@ -84,7 +84,7 @@ export default function AdminProductsPage() {
                 <th className="text-left p-3">Producto</th>
                 <th className="text-left p-3">Precio</th>
                 <th className="text-left p-3">Stock</th>
-                <th className="text-left p-3">CategorÃ­a</th>
+                <th className="text-left p-3">Categoría</th>
                 <th className="text-left p-3">Estado</th>
                 <th className="text-right p-3">Acciones</th>
               </tr>

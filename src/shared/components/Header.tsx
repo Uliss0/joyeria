@@ -168,7 +168,7 @@ interface HeaderProps {
 const toCategorySlug = (label: string) => {
   const normalized = label.toLowerCase().replace(/\s+/g, "-");
   const overrides: Record<string, string> = {
-    pulceras: "pulseras",
+    pulseras: "pulseras",
   };
   return overrides[normalized] ?? normalized;
 };
@@ -320,7 +320,7 @@ const Header = () => {
         "Anillos",
         "Collares", 
         "Aros",
-        "Pulceras",
+        "Pulseras",
         "Relojes"
       ],
       images: [
@@ -339,8 +339,8 @@ const Header = () => {
         { label: "Pre-lanzamientos", href: "/coleccion?tematica=pre-lanzamientos" }
       ],
       images: [
-        { src: "/arcus-bracelet.webp", alt: "Pulcera Arcus", label: "Pulcera Arcus" },
-        { src: "/span-bracelet.webp", alt: "Pulcera Span", label: "Pulcera Span" }
+        { src: "/arcus-bracelet.webp", alt: "Pulsera Arcus", label: "Pulsera Arcus" },
+        { src: "/span-bracelet.webp", alt: "Pulsera Span", label: "Pulsera Span" }
       ]
     },
     { 
