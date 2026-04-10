@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth/config";
 
+type RouteContext = {
+  params: Promise<{ productId: string }>;
+};
+
 export async function DELETE(
-  _req: Request,
-  { params }: { params: { productId: string } }
+  _req: NextRequest,
+  { params }: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,7 +17,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const productId = params.productId;
+    const { productId } = await params;
     if (!productId) {
       return NextResponse.json({ error: "productId is required" }, { status: 400 });
     }

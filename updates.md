@@ -1,11 +1,7 @@
 #ToDo
 logica de "mis pedidos" falta aplicar
 
-añadir posibilidad de que puedan agregar comentarios.
-
-Agregar seccion de finanzas. Las ventas totales en un tiempo determinado. Asi tambien en alguna parte de la vista discriminar el pago al desarrollador el cual sera el 4% de las ventas
 //pedir api keys de instagram. Api key de correo argentino. cuenta de mail.
-
 #ToDO2
 SEO
 El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact

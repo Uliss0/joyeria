@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth/config";
 
+type RouteContext = {
+  params: Promise<{ addressId: string }>;
+};
+
 export async function PUT(
-  _req: Request,
-  { params }: { params: { addressId: string } }
+  _req: NextRequest,
+  { params }: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,7 +17,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const addressId = params.addressId;
+    const { addressId } = await params;
     if (!addressId) {
       return NextResponse.json({ error: "addressId is required" }, { status: 400 });
     }

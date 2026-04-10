@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useDeferredValue } from "react";
+import { Suspense, useState, useEffect, useMemo, useDeferredValue } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductFilters } from "./components/ProductFilters";
 import { ProductGrid } from "./components/ProductGrid";
@@ -55,7 +55,7 @@ const tagToValue = (tag?: { name?: string; slug?: string }) => {
   return slugifyValue(raw);
 };
 
-export default function Collection() {
+function CollectionContent() {
   const searchParams = useSearchParams();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -463,6 +463,14 @@ export default function Collection() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Collection() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <CollectionContent />
+    </Suspense>
   );
 }
 

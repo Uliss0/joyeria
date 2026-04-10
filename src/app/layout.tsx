@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Header from '@/shared/components/Header';
 import { Footer } from '@/shared/components/Footer';
@@ -7,8 +6,6 @@ import { AuthProvider } from '@/lib/auth/provider';
 import { OrganizationStructuredData } from '@/shared/components/OrganizationStructuredData';
 import { WhatsAppFloatingButton } from '@/shared/components/WhatsAppFloatingButton';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
@@ -76,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <OrganizationStructuredData />
-      <body className={inter.className}>
+      <body>
         <AuthProvider>
           <Header />
           <main>{children}</main>

@@ -64,6 +64,7 @@ interface ProductInfoProps {
 export function ProductInfo({
   id,
   name,
+  slug,
   price,
   compareAtPrice,
   description,
@@ -91,6 +92,15 @@ export function ProductInfo({
   const addFavorite = useFavoritesAddFavorite();
   const removeFavorite = useFavoritesRemoveFavorite();
   const isWishlisted = favorites.some((favorite) => favorite.id === id);
+  const normalizedImages = (images || []).map((image) => ({
+    url: image.url,
+    alt: image.alt || name,
+    isMain: Boolean(image.isMain),
+  }));
+  const mainImageUrl =
+    normalizedImages.find((image) => image.isMain)?.url ||
+    normalizedImages[0]?.url ||
+    "/placeholder-product.jpg";
   const isRingProduct = useMemo(() => {
     if (!category) return false;
     if (category.slug === "anillos") return true;
@@ -135,7 +145,7 @@ export function ProductInfo({
       name,
       slug,
       price,
-      image: "/placeholder-product.jpg", // In real app, get main image
+      image: mainImageUrl,
       variants: selectedVariants,
       maxStock: stock,
       quantity,
@@ -327,7 +337,7 @@ export function ProductInfo({
                 slug,
                 price,
                 compareAtPrice,
-                images: images || [],
+                images: normalizedImages,
                 category: category || { name: "Colección", slug: "coleccion" },
                 isFeatured,
                 isNew,

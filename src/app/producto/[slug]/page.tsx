@@ -10,9 +10,12 @@ import type { Product, ProductImage as Image, ProductVariant as Variant, Product
 type ProductWithDetails = (Product & { gender?: string | null }) & {
   images: Image[];
   variants: Variant[];
-  tags: Tag[];
+  tags?: Tag[];
   category: Category | null;
-  
+  producttoproducttag: Array<{
+    B: string;
+    product_tags: Tag;
+  }>;
 };
 
 interface ProductPageProps {
@@ -26,7 +29,12 @@ interface ProductPageProps {
 const getProductBySlug = cache(async (slug: string) => {
   const productDb = await prisma.product.findUnique({
     where: { slug },
-    include: { images: true, variants: true, tags: true, category: true },
+    include: {
+      images: true,
+      variants: true,
+      producttoproducttag: { include: { product_tags: true } },
+      category: true,
+    },
   });
 
   if (!productDb) {
@@ -68,7 +76,10 @@ async function mapProductFromDb(p: ProductWithDetails | null) {
     isNew: false,
     images: (p.images || []).filter((img) => img.url !== null).map((img) => ({ id: img.id, url: img.url as string, alt: img.alt || "", isMain: img.isMain })),
     variants: (p.variants || []).map((v) => ({ id: v.id, name: v.name, value: v.value, stock: v.stock || 0 })),
-    tags: (p.tags || []).map((t) => ({ name: t.name, slug: t.slug, color: t.color || "#000" })),
+    tags: (p.producttoproducttag || [])
+      .map((link) => link.product_tags)
+      .filter(Boolean)
+      .map((t) => ({ name: t.name, slug: t.slug, color: t.color || "#000" })),
     category: p.category ? { name: p.category.name, slug: p.category.slug } : { name: "Colección", slug: "coleccion" },
     rating: { average: 0, count: 0 },
   };
@@ -78,7 +89,10 @@ const RELATED_LIMIT = 6;
 
 type RelatedProductDb = Product & {
   images: Image[];
-  tags: Tag[];
+  producttoproducttag: Array<{
+    B: string;
+    product_tags: Tag;
+  }>;
 };
 
 function mapRelatedProductsFromDb(products: RelatedProductDb[]) {
@@ -95,11 +109,11 @@ function mapRelatedProductsFromDb(products: RelatedProductDb[]) {
 }
 
 async function getRelatedProducts(product: ProductWithDetails, limit = RELATED_LIMIT) {
-  const tagIds = (product.tags || []).map((tag) => tag.id);
+  const tagIds = (product.producttoproducttag || []).map((link) => link.B);
 
   const orConditions: any[] = [];
   if (product.categoryId) orConditions.push({ categoryId: product.categoryId });
-  if (tagIds.length > 0) orConditions.push({ tags: { some: { id: { in: tagIds } } } });
+  if (tagIds.length > 0) orConditions.push({ producttoproducttag: { some: { B: { in: tagIds } } } });
   if (product.material) orConditions.push({ material: { contains: product.material } });
   if (product.gender) orConditions.push({ gender: { equals: product.gender } });
 
@@ -111,7 +125,7 @@ async function getRelatedProducts(product: ProductWithDetails, limit = RELATED_L
     },
     take: limit,
     orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-    include: { images: true, tags: true },
+    include: { images: true, producttoproducttag: { include: { product_tags: true } } },
   });
 
   if (related.length >= limit) {
@@ -125,7 +139,7 @@ async function getRelatedProducts(product: ProductWithDetails, limit = RELATED_L
     },
     take: limit - related.length,
     orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-    include: { images: true, tags: true },
+    include: { images: true, producttoproducttag: { include: { product_tags: true } } },
   });
 
   return mapRelatedProductsFromDb([...related, ...fallback]);

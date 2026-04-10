@@ -155,7 +155,15 @@ export async function POST(req: Request) {
           create: [{ url: transformed, alt: name, isMain: true }],
         },
         ...(themeConnectOrCreate.length > 0
-          ? { tags: { connectOrCreate: themeConnectOrCreate } }
+          ? {
+              producttoproducttag: {
+                create: themeConnectOrCreate.map((theme) => ({
+                  product_tags: {
+                    connectOrCreate: theme,
+                  },
+                })),
+              },
+            }
           : {}),
       },
       include: { images: true },

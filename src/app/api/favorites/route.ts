@@ -19,7 +19,10 @@ const mapProduct = (p: any) => ({
     : { name: "Colección", slug: "coleccion" },
   isFeatured: p.isFeatured,
   isNew: false,
-  tags: (p.tags || []).map((t: any) => ({ name: t.name, color: t.color || "#000" })),
+  tags: ((p as any).producttoproducttag || [])
+    .map((link: any) => link.product_tags)
+    .filter(Boolean)
+    .map((t: any) => ({ name: t.name, color: t.color || "#000" })),
 });
 
 export async function GET() {
@@ -31,7 +34,15 @@ export async function GET() {
 
     const favorites = await prisma.favorite.findMany({
       where: { userId: (session.user as any).id },
-      include: { product: { include: { images: true, tags: true, category: true } } },
+      include: {
+        product: {
+          include: {
+            images: true,
+            producttoproducttag: { include: { product_tags: true } },
+            category: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
 

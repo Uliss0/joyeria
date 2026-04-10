@@ -138,6 +138,64 @@
 
 
 @layer components {
+  .admin-shell {
+    background:
+      radial-gradient(circle at top left, rgba(212, 178, 125, 0.18), transparent 32%),
+      linear-gradient(180deg, #1a1b1f 0%, #111215 48%, #0b0c0e 100%);
+    color: #f5efe4;
+  }
+
+  .admin-panel {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(34, 36, 40, 0.95) 0%, rgba(20, 21, 24, 0.98) 100%);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(18px);
+  }
+
+  .admin-panel-soft {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+  }
+
+  .admin-kicker {
+    color: rgba(245, 239, 228, 0.72);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .admin-title {
+    color: #fff8ee;
+    font-family: var(--font-serif);
+  }
+
+  .admin-muted {
+    color: rgba(245, 239, 228, 0.68);
+  }
+
+  .admin-input {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(12, 13, 15, 0.8) !important;
+    color: #f8f1e5 !important;
+  }
+
+  .admin-input::placeholder {
+    color: rgba(245, 239, 228, 0.34);
+  }
+
+  .admin-input:focus-visible {
+    border-color: rgba(212, 178, 125, 0.72) !important;
+    box-shadow: 0 0 0 1px rgba(212, 178, 125, 0.5);
+  }
+
+  .footer-surface {
+    background:
+      radial-gradient(circle at top left, rgba(212, 178, 125, 0.12), transparent 24%),
+      linear-gradient(180deg, #222428 0%, #17181b 100%);
+  }
+
   .btn-gold {
     background-color: var(--color-gold-600);
     color: white;
