@@ -373,7 +373,7 @@ export default function AdminFinancePage() {
             <CardHeader>
               <CardTitle className="text-2xl text-white">Pago del desarrollador</CardTitle>
               <CardDescription className="text-stone-400">
-                Control administrativo del {Math.round((data?.summary.developerFeeRate ?? 0.04) * 100)}% correspondiente a {currentMonthLabel}.
+                Control administrativo del {Math.round((data?.summary.developerFeeRate ?? 0.05) * 100)}% correspondiente a {currentMonthLabel}.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -415,7 +415,7 @@ export default function AdminFinancePage() {
                   <Wallet className="h-5 w-5 text-[#d4b27d]" />
                 </div>
                 <p className="mt-2 text-xs leading-5 text-stone-400">
-                  Este valor se calcula automaticamente como el 4% de las ventas del periodo visible.
+                  Este valor se calcula automaticamente como el 5% de las ventas del periodo visible.
                 </p>
               </div>
 

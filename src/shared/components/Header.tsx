@@ -469,6 +469,12 @@ const Header = () => {
                   >
                     Finanzas
                   </Link>
+                  <Link
+                    href="/admin/orders"
+                    className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
+                  >
+                    Pedidos
+                  </Link>
                 </div>
               )}
             </div>

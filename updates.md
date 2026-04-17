@@ -1,16 +1,14 @@
 #ToDo
-logica de "mis pedidos" falta aplicar
-
+el envio express no aumenta el valor de la compra. Al completar la compra, el resumen muestra el cobro del envio igualmente
 //pedir api keys de instagram. Api key de correo argentino. cuenta de mail.
-#ToDO2
 SEO
 El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact
 Luego realizamos los cambios en el sitio
+Ver novedades, este componente debe mostrar los ultimos articulos agregados con el tag de novedades. Poder editar productos para agregar o sacarle tags.
 
 #ToDO3
 mail no funciona todavia.
 compras no funcionan todavia.(mp)
-Falta la logica de el envio de mail cuando se realiza una compra, junto con la compra guardada en la base, el estado de la misma (pendiente / correcto / fallido / entregado / cancelado / devuelto / devolucion pendiente /enviando)
 Falta ver detalles de una compra.(como lo que se envia por mail)
 mail con dominio
 tas.
