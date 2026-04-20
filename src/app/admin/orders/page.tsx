@@ -783,14 +783,7 @@ export default function AdminOrdersPage() {
           </DialogContent>
         </Dialog>
 
-        <section className="rounded-[1.75rem] border border-white/10 bg-black/20 p-5 text-sm text-stone-300">
-          <p className="font-medium text-stone-100">Criterio aplicado</p>
-          <p className="mt-2 leading-6">
-            Esta vista prioriza el control operativo: rango temporal, estado, tracking y evolucion de pedidos. Las metricas de ventas y
-            ticket promedio quedan en Finanzas para evitar repetir funcionalidades.
-          </p>
-          {isPending ? <p className="mt-3 text-xs uppercase tracking-[0.2em] text-[#d4b27d]">Actualizando vista...</p> : null}
-        </section>
+        
       </div>
     </main>
   );

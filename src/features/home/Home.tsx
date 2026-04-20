@@ -101,7 +101,7 @@ export default function Home() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-80" // Ajusta la opacidad si es necesario
         >
-          <source src="/videos/presentacion.mp4" type="video/mp4" />
+          <source src="/videos/presentacionreverse.mp4" type="video/mp4" />
           Tu navegador no soporta la etiqueta de video.
         </video>
 
