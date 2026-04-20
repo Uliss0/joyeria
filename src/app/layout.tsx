@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://moksha-joyeria.com'), // Cambia esto por tu dominio real
+  metadataBase: new URL('https://mokshajoyeria.com'), // Cambia esto por tu dominio real
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'es_AR',
-    url: 'https://moksha-joyeria.com',
+    url: 'https://mokshajoyeria.com',
     title: 'MOKSHA - Joyería Premium | Diseños Contemporáneos y Elegantes',
     description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos, elegantes y únicos que destacan cada momento especial.',
     siteName: 'MOKSHA Joyería',

@@ -35,7 +35,7 @@ export function Footer({ className }: FooterProps) {
           <div className="space-y-4">
             <h3 className="text-2xl font-bold tracking-[0.22em] text-white">MOKSHA</h3>
             <p className="text-white/68">
-              Joyas que hablan de vos. Disenos contemporaneos, elegantes y pensados para destacar cada momento.
+              Joyas que hablan de vos. Diseños contemporaneos, elegantes y pensados para destacar cada momento.
             </p>
             <div className="flex space-x-4">
               <Link href="#" className="text-white/50 transition-colors hover:text-white" aria-label="Facebook">
@@ -112,7 +112,7 @@ export function Footer({ className }: FooterProps) {
         <div className="mt-8 flex flex-col items-center justify-between border-t border-white/10 pt-8 md:flex-row">
           <p className="text-sm text-white/45">© 2026 MOKSHA. Todos los derechos reservados.</p>
           <p>
-            <a href="https://origam-ia.com" target="_blank" rel="noopener noreferrer" className="text-sm text-white/45 hover:text-white">
+            <a href="https://origamia.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-sm text-white/45 hover:text-white">
               Desarrollado por origam-ia
             </a>
           </p>
