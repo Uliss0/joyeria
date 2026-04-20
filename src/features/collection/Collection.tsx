@@ -40,7 +40,13 @@ interface FilterOption {
   count?: number;
 }
 
-const normalizeValue = (value: string) => value.trim().toLowerCase();
+const normalizeValue = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
 const slugifyValue = (value: string) =>
   value
     .trim()
@@ -50,10 +56,49 @@ const slugifyValue = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 const genderValues = new Set(["mujer", "hombre", "unisex"]);
+const searchStopWords = new Set(["de", "del", "la", "el", "los", "las", "y", "en", "para", "con", "un", "una", "unos", "unas"]);
 const tagToValue = (tag?: { name?: string; slug?: string }) => {
   const raw = tag?.slug || tag?.name || "";
   return slugifyValue(raw);
 };
+
+function getProductSearchText(product: Product) {
+  return [
+    product.name,
+    product.description || "",
+    product.material || "",
+    product.gender || "",
+    product.category?.name || "",
+    product.category?.slug || "",
+    product.slug,
+    product.tags?.map((tag) => tag.name).join(" ") || "",
+    product.tags?.map((tag) => tag.slug || "").join(" ") || "",
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function tokenMatchesSearch(token: string, searchableText: string) {
+  if (!token) return true;
+  return searchableText.includes(token);
+}
+
+function matchesSearchTerm(product: Product, term: string) {
+  const normalizedTerm = normalizeValue(term);
+  if (!normalizedTerm) return true;
+
+  const searchableText = normalizeValue(getProductSearchText(product));
+  if (searchableText.includes(normalizedTerm)) return true;
+
+  const tokens = normalizedTerm
+    .split(/[^a-z0-9]+/g)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 1 && !searchStopWords.has(token));
+
+  if (tokens.length === 0) return searchableText.includes(normalizedTerm);
+
+  return tokens.every((token) => tokenMatchesSearch(token, searchableText));
+}
 
 function CollectionContent() {
   const searchParams = useSearchParams();
@@ -230,12 +275,7 @@ function CollectionContent() {
     let filtered = [...allProducts];
 
     if (deferredSearchTerm) {
-      const term = normalizeValue(deferredSearchTerm);
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(term) ||
-        (product.description || "").toLowerCase().includes(term) ||
-        (product.category?.name || "Colecci\u00f3n").toLowerCase().includes(term)
-      );
+      filtered = filtered.filter((product) => matchesSearchTerm(product, deferredSearchTerm));
     }
 
     if (selectedCategories.length > 0) {
