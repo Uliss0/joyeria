@@ -112,16 +112,19 @@ export default function Home() {
           //invertir el lugar de salida
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut", delay: 1.0, }}
+            transition={{ duration: 1.5, ease: "easeOut", delay: 2.0, }}
             className="max-w-4xl mx-auto"
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg text-amber-200">
+           {/* <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-6 drop-shadow-lg text-amber-200">
               MOKSHA
-            </h1>
-            {/*Logo arriba del video 
+            </h1>*/}
+            {/*Logo arriba del video */}
+            
             <img
-              src="/moksha.png"
-              alt="MOKSHA Joyería Premium"></img>*/}
+              src="/moksha-titulo.png"
+              alt="MOKSHA Joyería Premium"
+              className="mb-8 max-w-full sm:max-w-md md:max-w-xl mx-auto w-full h-auto drop-shadow-lg"
+            />
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-sans drop-shadow-md">
               Donde cada joya cuenta una historia.
             </p>

@@ -4,8 +4,11 @@ el envio express no aumenta el valor de la compra. Al completar la compra, el re
 SEO
 El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact
 Luego realizamos los cambios en el sitio
-Ver novedades, este componente debe mostrar los ultimos articulos agregados con el tag de novedades. Poder editar productos para agregar o sacarle tags.
 
+agregar vista que controle las publicaciones de instagram. guardar los links parecido a el manejo de los banners
+Modificar css pagina
+agregar metatags
+sacar fetchs a instagram/feed que traba la pagina
 #ToDO3
 mail no funciona todavia.
 compras no funcionan todavia.(mp)

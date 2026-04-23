@@ -412,8 +412,9 @@ const Header = () => {
         {/* Center logo - Centrado absoluto en Desktop, centrado de grid en móvil */}
         <div className="flex justify-center items-center lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2">
           <Link href="/" className="block cursor-pointer">
-            {/* Logo con efecto glow suave al hover */}
-            <span className="text-xl font-light tracking-[0.3em] text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">MOKSHA</span>
+            {/* Logo con efecto glow suave al hover 
+            <span className="text-xl font-light tracking-[0.3em] text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">MOKSHA</span>*/}
+            <img src="/moksha-logo.png" alt="MOKSHA Logo" className="h-12 w-auto " />
           </Link>
         </div>
 

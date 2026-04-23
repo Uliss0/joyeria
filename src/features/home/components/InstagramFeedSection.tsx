@@ -12,6 +12,8 @@ interface InstagramFeedSectionProps {
 const FALLBACK_POST_URLS = [
   "https://www.instagram.com/p/DRpLiXQDVBs/",
   "https://www.instagram.com/p/DRxyVKfjV18/",
+  "https://www.instagram.com/p/DXPAsv0DZSl/",
+  "https://www.instagram.com/reel/DTBqai0jTCn/"
 ];
 
 export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
