@@ -80,7 +80,8 @@ const nextConfig = {
       https://www.google-analytics.com
       https://sdk.mercadopago.com
       https://www.instagram.com
-      http://localhost:3000;
+      http://localhost:3000
+      https://www.google.com;
 
     style-src 
       'self' 
@@ -106,13 +107,16 @@ const nextConfig = {
       https://www.google-analytics.com
       https://*.googleapis.com
       https://www.instagram.com
+      https://www.google.com
       http://localhost:3000;
 
     frame-src 
       https://www.mercadopago.com
       https://accounts.google.com
       https://www.instagram.com
-      http://localhost:3000;
+      https://www.google.com
+      http://localhost:3000
+      http://localhost:3001;
 
     media-src
       'self'
