@@ -79,7 +79,8 @@ const nextConfig = {
       https://www.googletagmanager.com
       https://www.google-analytics.com
       https://sdk.mercadopago.com
-      https://www.instagram.com;
+      https://www.instagram.com
+      http://localhost:3000;
 
     style-src 
       'self' 
@@ -104,12 +105,14 @@ const nextConfig = {
       https://api.mercadopago.com
       https://www.google-analytics.com
       https://*.googleapis.com
-      https://www.instagram.com;
+      https://www.instagram.com
+      http://localhost:3000;
 
     frame-src 
       https://www.mercadopago.com
       https://accounts.google.com
-      https://www.instagram.com;
+      https://www.instagram.com
+      http://localhost:3000;
 
     media-src
       'self'

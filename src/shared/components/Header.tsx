@@ -465,6 +465,12 @@ const Header = () => {
                     Subir banner
                   </Link>
                   <Link
+                    href="/admin/instagram"
+                    className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
+                  >
+                    Instagram
+                  </Link>
+                  <Link
                     href="/admin/finance"
                     className="block px-4 py-2 text-sm text-gray-200 hover:bg-slate-700 cursor-pointer"
                   >

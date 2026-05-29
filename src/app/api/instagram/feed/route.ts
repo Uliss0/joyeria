@@ -1,22 +1,26 @@
 import { NextResponse } from "next/server";
-import { getInstagramFeed } from "@/lib/instagram/cache";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const result = await getInstagramFeed();
+    const posts = await prisma.instagramPost.findMany({
+      where: { isActive: true },
+      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    });
 
-    if (result.meta.stale) {
-      console.warn("GET /api/instagram/feed returned stale cache");
-    }
+    const items = posts.map((post) => ({
+      id: post.id,
+      permalink: post.postUrl,
+    }));
 
     return NextResponse.json(
       {
-        items: result.items,
+        items,
         meta: {
-          source: result.meta.source,
-          fetchedAt: result.meta.fetchedAt.toISOString(),
-          expiresAt: result.meta.expiresAt.toISOString(),
-          stale: result.meta.stale,
+          source: "database",
+          fetchedAt: new Date().toISOString(),
+          expiresAt: new Date().toISOString(),
+          stale: false,
         },
       },
       {
@@ -42,3 +46,4 @@ export async function GET() {
     );
   }
 }
+

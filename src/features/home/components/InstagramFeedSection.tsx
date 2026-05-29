@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { InstagramEmbed } from "react-social-media-embed";
 import { motion } from "framer-motion";
-import type { InstagramFeedItem } from "@/lib/instagram/types";
 
 interface InstagramFeedSectionProps {
   className?: string;
@@ -15,6 +13,57 @@ const FALLBACK_POST_URLS = [
   "https://www.instagram.com/p/DXPAsv0DZSl/",
   "https://www.instagram.com/reel/DTBqai0jTCn/"
 ];
+
+function InstagramPostEmbed({ url }: { url: string }) {
+  useEffect(() => {
+    // Asegurar que el script oficial de Instagram esté en la página
+    const hasScript = document.querySelector('script[src="https://www.instagram.com/embed.js"]');
+    if (!hasScript) {
+      const script = document.createElement("script");
+      script.src = "https://www.instagram.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    // Procesar los embeds dinámicos después del montaje
+    try {
+      if ((window as any).instgrm) {
+        (window as any).instgrm.Embeds.process();
+      } else {
+        const timer = setTimeout(() => {
+          if ((window as any).instgrm) {
+            (window as any).instgrm.Embeds.process();
+          }
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    } catch (err) {
+      console.error("Error processing Instagram embeds:", err);
+    }
+  }, [url]);
+
+  return (
+    <div className="w-full max-w-sm mx-auto rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-200/60"
+      style={{ height: "540px" }}
+    >
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={url}
+        data-instgrm-version="14"
+        style={{
+          background: "#FFF",
+          border: "0",
+          borderRadius: "0",
+          boxShadow: "none",
+          display: "block",
+          margin: "0",
+          padding: "0px",
+          width: "100%",
+        }}
+      />
+    </div>
+  );
+}
 
 export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
   const [postUrls, setPostUrls] = useState<string[]>([]);
@@ -35,7 +84,7 @@ export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
           throw new Error("Failed to fetch instagram feed");
         }
 
-        const data = (await response.json()) as { items?: InstagramFeedItem[] };
+        const data = (await response.json()) as { items?: { permalink: string }[] };
         const urls = (data.items ?? [])
           .map((item) => item.permalink)
           .filter((url): url is string => Boolean(url))
@@ -77,10 +126,10 @@ export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
           className="text-center mb-12 max-w-3xl mx-auto"
         >
           <h2 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-6 leading-snug">
-            Nuestras ultimas novedades en Instagram
+            Nuestras últimas novedades en Instagram
           </h2>
           <p className="text-lg text-gray-700 font-sans">
-            Siguenos en Instagram para descubrir nuestras ultimas colecciones y
+            Síguenos en Instagram para descubrir nuestras últimas colecciones y
             momentos especiales.
           </p>
         </motion.div>
@@ -94,8 +143,22 @@ export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="w-full max-w-sm h-[520px] rounded-lg bg-gray-200 animate-pulse"
-                />
+                  className="w-full max-w-sm rounded-2xl bg-white border border-gray-200/60 animate-pulse p-4 flex flex-col justify-between"
+                  style={{ height: "540px" }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-200" />
+                    <div className="space-y-2 flex-1">
+                      <div className="h-3 bg-gray-200 rounded w-1/3" />
+                      <div className="h-2 bg-gray-200 rounded w-1/4" />
+                    </div>
+                  </div>
+                  <div className="h-48 bg-gray-200 rounded-lg w-full flex-1 my-4" />
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-200 rounded w-full" />
+                    <div className="h-3 bg-gray-200 rounded w-5/6" />
+                  </div>
+                </motion.div>
               ))
             : postUrls.map((postUrl, index) => (
                 <motion.div
@@ -106,7 +169,7 @@ export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
                   viewport={{ once: true }}
                   className="w-full max-w-sm"
                 >
-                  <InstagramEmbed url={postUrl} width="100%" />
+                  <InstagramPostEmbed url={postUrl} />
                 </motion.div>
               ))}
         </div>
@@ -114,3 +177,4 @@ export function InstagramFeedSection({ className }: InstagramFeedSectionProps) {
     </section>
   );
 }
+

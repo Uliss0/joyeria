@@ -212,6 +212,18 @@ model InstagramFeedCache {
   @@map("instagram_feed_cache")
 }
 
+model InstagramPost {
+  id        String   @id @default(cuid())
+  postUrl   String   @db.VarChar(512)
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("instagram_posts")
+}
+
+
 model Order {
   id                String      @id @default(cuid())
   userId            String
