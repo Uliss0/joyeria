@@ -18,7 +18,7 @@ export function OrganizationStructuredData() {
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+54-XXX-XXX-XXXX', // Cambia por tu número real
+      telephone: '2915666668', // Cambia por tu número real
       contactType: 'customer service',
       availableLanguage: 'Spanish',
     },

@@ -126,7 +126,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
                 className="pl-10"
-                placeholder="+54 11 1234-5678"
+                placeholder="+54 2915666668"
               />
             </div>
           </div>

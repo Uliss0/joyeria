@@ -130,8 +130,8 @@ export function CheckoutSuccessClient() {
               hola@moksha.com.ar
             </a>
             {" • "}
-            <a href="tel:+541112345678" className="text-gold-600 hover:text-gold-700">
-              +54 11 1234-5678
+            <a href="tel:2915666668" className="text-gold-600 hover:text-gold-700">
+              2915666668
             </a>
           </p>
         </div>

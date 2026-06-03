@@ -35,8 +35,8 @@ export default function ContactoPage() {
                 <div className="rounded-[1.75rem] border border-white/8 bg-black/20 p-5">
                   <Phone className="h-5 w-5 text-gold-600" />
                   <p className="mt-4 text-sm uppercase tracking-[0.25em] text-white/45">Telefono</p>
-                  <a href="tel:+5491136507549" className="mt-3 block text-lg text-white transition hover:text-gold-400">
-                    +54 9 11 3650 7549
+                  <a href="tel:2915666668" className="mt-3 block text-lg text-white transition hover:text-gold-400">
+                    2915666668
                   </a>
                 </div>
 

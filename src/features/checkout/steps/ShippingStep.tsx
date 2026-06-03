@@ -210,7 +210,7 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
               className={cn(errors.phone && "border-red-500")}
-              placeholder="+54 11 1234-5678"
+              placeholder="+54 2915666668"
             />
             {errors.phone && <p className="text-sm text-red-600 mt-1">{errors.phone}</p>}
           </div>

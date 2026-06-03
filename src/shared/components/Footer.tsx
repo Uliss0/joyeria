@@ -82,7 +82,7 @@ export function Footer({ className }: FooterProps) {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 flex-shrink-0 text-gold-400" />
-                <span className="text-sm text-white/55">+54 9 11 3650 7549</span>
+                <span className="text-sm text-white/55">2915666668</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 flex-shrink-0 text-gold-400" />

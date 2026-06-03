@@ -5,12 +5,14 @@ SEO
 El seguimiento de envio se hace registrando en https://www.correoargentino.com.ar/MiCorreo/public/contact
 Luego realizamos los cambios en el sitio
 
-agregar vista que controle las publicaciones de instagram. guardar los links parecido a el manejo de los banners
-
 Modificar css pagina
-agregar metatags
+-chequear metatags y agregar los que faltan, y verificar que esten correctos
+-Chequear SEO
 
-sacar fetchs a instagram/feed que traba la pagina
+-Ver como agregar imagen en la aparicion de la busqueda de google y que el titulo sea Moksha Joyeria - Tienda Oficial
+-Agregar zoom a los productos.
+-Agregar slider de varias imagenes de un mismo producto, tanto en la card como en la vista producto
+
 
 #ToDO3
 mail no funciona todavia.
