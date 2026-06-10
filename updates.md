@@ -11,7 +11,7 @@ Modificar css pagina
 
 -Ver como agregar imagen en la aparicion de la busqueda de google y que el titulo sea Moksha Joyeria - Tienda Oficial
 -Agregar zoom a los productos.
--Agregar slider de varias imagenes de un mismo producto, tanto en la card como en la vista producto
+-Agregar slider de varias imagenes de un mismo producto, tanto en la card como en la vista producto. Si hay que cambiar algo en la base para esta funcionalidad. Aparte de impactarlo en prisma, darme el codigo aparte para aplicarlo en producción.
 
 
 #ToDO3

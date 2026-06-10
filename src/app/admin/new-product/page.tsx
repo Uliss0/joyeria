@@ -23,10 +23,10 @@ export default function NewProductPage() {
     description: "",
     backgroundType: "none",
   });
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadCategories() {
@@ -47,18 +47,29 @@ export default function NewProductPage() {
   }, []);
 
   useEffect(() => {
-    if (!imageFile) {
-      setPreviewUrl(null);
+    if (imageFiles.length === 0) {
+      setPreviewUrls([]);
       return;
     }
 
-    const objectUrl = URL.createObjectURL(imageFile);
-    setPreviewUrl(objectUrl);
+    const objectUrls = imageFiles.map((file) => URL.createObjectURL(file));
+    setPreviewUrls(objectUrls);
 
     return () => {
-      URL.revokeObjectURL(objectUrl);
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [imageFile]);
+  }, [imageFiles]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setImageFiles((prev) => [...prev, ...newFiles]);
+    }
+  };
+
+  const removeImageFile = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, idx) => idx !== index));
+  };
 
   async function seedCategories() {
     setError(null);
@@ -81,25 +92,29 @@ export default function NewProductPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!imageFile) {
-      setError("Seleccione una imagen");
+    if (imageFiles.length === 0) {
+      setError("Seleccione al menos una imagen");
       return;
     }
 
     setLoading(true);
 
     try {
-      const reader = new FileReader();
-      const dataUrl: string = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(imageFile);
-      });
+      const dataUrls = await Promise.all(
+        imageFiles.map((file) => {
+          return new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        })
+      );
 
       const payload = {
         ...form,
         price: form.price,
-        imageDataUrl: dataUrl,
+        imageDataUrls: dataUrls,
       };
 
       const res = await fetch("/api/admin/products", {
@@ -251,21 +266,46 @@ export default function NewProductPage() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-white/90">Fondo de imagen</label>
-                    <select className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm" value={form.backgroundType} onChange={(e) => setForm({ ...form, backgroundType: e.target.value })}>
-                      <option value="none">Sin fondo</option>
-                      <option value="white">Fondo marmol blanco</option>
-                      <option value="black">Fondo marmol negro</option>
-                    </select>
-                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="block text-sm font-medium text-white/90">Imágenes del producto</label>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <select className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm" value={form.backgroundType} onChange={(e) => setForm({ ...form, backgroundType: e.target.value })}>
+                          <option value="none">Sin fondo</option>
+                          <option value="white">Fondo marmol blanco</option>
+                          <option value="black">Fondo marmol negro</option>
+                        </select>
+                      </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-white/90">Imagen</label>
-                    <label className="flex h-10 cursor-pointer items-center justify-center rounded-md border border-dashed border-white/20 bg-black/20 px-4 text-sm text-white/80 transition hover:border-gold-600/60 hover:text-white">
-                      <input type="file" className="hidden" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] ?? null)} />
-                      Seleccionar archivo
-                    </label>
+                      <div>
+                        <label className="flex h-10 cursor-pointer items-center justify-center rounded-md border border-dashed border-white/20 bg-black/20 px-4 text-sm text-white/80 transition hover:border-gold-600/60 hover:text-white">
+                          <input type="file" className="hidden" accept="image/*" multiple onChange={handleFileChange} />
+                          Seleccionar archivos
+                        </label>
+                      </div>
+                    </div>
+
+                    {previewUrls.length > 0 && (
+                      <div className="mt-4 grid grid-cols-4 gap-3">
+                        {previewUrls.map((url, idx) => (
+                          <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-black/40">
+                            <img src={url} alt={`preview-${idx}`} className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeImageFile(idx)}
+                              className="absolute top-1.5 right-1.5 w-5 h-5 bg-black/80 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] transition-colors z-10"
+                            >
+                              ✕
+                            </button>
+                            {idx === 0 && (
+                              <span className="absolute bottom-1.5 left-1.5 bg-gold-600/90 text-white text-[8px] px-1.5 py-0.5 rounded font-sans uppercase tracking-wider font-semibold">
+                                Portada
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </section>
@@ -296,9 +336,16 @@ export default function NewProductPage() {
               </div>
 
               <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20">
-                <div className="flex aspect-[4/5] items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(212,178,125,0.18),_transparent_38%),linear-gradient(180deg,_rgba(34,36,40,1),_rgba(15,16,18,1))]">
-                  {previewUrl ? (
-                    <img src={previewUrl} alt="preview" className="h-full w-full object-cover" />
+                <div className="flex aspect-[4/5] items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(212,178,125,0.18),_transparent_38%),linear-gradient(180deg,_rgba(34,36,40,1),_rgba(15,16,18,1))] relative">
+                  {previewUrls.length > 0 ? (
+                    <div className="relative w-full h-full">
+                      <img src={previewUrls[0]} alt="preview" className="h-full w-full object-cover" />
+                      {previewUrls.length > 1 && (
+                        <div className="absolute bottom-3 right-3 bg-black/75 text-white text-xs px-2.5 py-1 rounded-full font-sans border border-white/10">
+                          + {previewUrls.length - 1} imágenes
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div className="px-8 text-center">
                       <p className="text-sm uppercase tracking-[0.3em] text-white/40">Sin imagen</p>

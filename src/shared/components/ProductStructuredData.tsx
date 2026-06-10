@@ -1,8 +1,3 @@
-import { Article, Product,WithContext } from 'schema-dts';
-import { jsonLdScriptProps } from 'react-schemaorg';
-import Head from 'next/head';
-
-
 interface ProductStructuredDataProps {
   product: {
     id: string;
@@ -22,9 +17,9 @@ interface ProductStructuredDataProps {
 }
 
 export function ProductStructuredData({ product }: ProductStructuredDataProps) {
-  const structuredData: WithContext<Product> = {
-    '@type': 'Product',
+  const structuredData = {
     '@context': 'https://schema.org',
+    '@type': 'Product',
     name: product.name,
     description: product.description,
     image: product.images.map(img => img.url),
@@ -43,14 +38,13 @@ export function ProductStructuredData({ product }: ProductStructuredDataProps) {
       name: 'MOKSHA',
     },
     category: product.category?.name,
-    url: `https://moksha-joyeria.com/producto/${product.slug}`,
+    url: `https://mokshajoyeria.com/producto/${product.slug}`,
   };
 
   return (
-    <Head>
-      <script
-        {...jsonLdScriptProps<Product>(structuredData)}
-      />
-    </Head>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
   );
 }

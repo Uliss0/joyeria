@@ -4,6 +4,35 @@ import { getServerSession } from "next-auth";
 import type { Session } from "next-auth";
 import { authOptions } from "@/lib/auth/config";
 
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+const CLOUDINARY_UPLOAD_PRESET = process.env.CLOUDINARY_UPLOAD_PRESET;
+
+async function uploadToCloudinary(dataUrl: string) {
+  if (!CLOUDINARY_CLOUD_NAME) throw new Error("CLOUDINARY_CLOUD_NAME no configurado");
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+  const body = new FormData();
+  body.append("file", dataUrl);
+  if (CLOUDINARY_UPLOAD_PRESET) {
+    body.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  }
+  const headers: Record<string, string> | undefined = CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET
+    ? {
+        Authorization: `Basic ${Buffer.from(`${CLOUDINARY_API_KEY}:${CLOUDINARY_API_SECRET}`).toString("base64")}`,
+      }
+    : undefined;
+  if (!CLOUDINARY_UPLOAD_PRESET && !headers) {
+    throw new Error("CLOUDINARY_UPLOAD_PRESET no configurado.");
+  }
+  const res = await fetch(url, { method: "POST", body, headers } as any);
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`Cloudinary upload failed: ${txt}`);
+  }
+  return await res.json();
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ productId: string }> }
@@ -37,6 +66,7 @@ export async function GET(
       material: product.material || "",
       isActive: product.isActive,
       image: product.images.find((img) => img.isMain)?.url || product.images[0]?.url || null,
+      images: product.images.map((img) => ({ id: img.id, url: img.url, isMain: img.isMain, order: img.order })),
     });
   } catch (err: any) {
     return NextResponse.json({ message: err.message || "Error" }, { status: 500 });
@@ -65,7 +95,74 @@ export async function PATCH(
       metal,
       description,
       isActive,
+      newImageDataUrls,
+      deletedImageIds,
+      mainImageId,
     } = body;
+
+    // 1. Process deletes if any
+    if (Array.isArray(deletedImageIds) && deletedImageIds.length > 0) {
+      await prisma.productImage.deleteMany({
+        where: {
+          id: { in: deletedImageIds },
+          productId: productId,
+        },
+      });
+    }
+
+    // 2. Process new image uploads if any
+    if (Array.isArray(newImageDataUrls) && newImageDataUrls.length > 0) {
+      const currentImages = await prisma.productImage.findMany({
+        where: { productId },
+        orderBy: { order: "asc" },
+      });
+      let maxOrder = currentImages.reduce((max, img) => Math.max(max, img.order), -1);
+
+      for (const dUrl of newImageDataUrls) {
+        if (dUrl) {
+          const uploadResult = await uploadToCloudinary(dUrl);
+          const originalUrl = uploadResult.secure_url || uploadResult.url;
+          maxOrder++;
+          await prisma.productImage.create({
+            data: {
+              productId,
+              url: originalUrl,
+              alt: name || "Product Image",
+              isMain: false,
+              order: maxOrder,
+            },
+          });
+        }
+      }
+    }
+
+    // 3. Process main image setting if any
+    if (typeof mainImageId === "string" && mainImageId) {
+      await prisma.productImage.updateMany({
+        where: { productId },
+        data: { isMain: false },
+      });
+      await prisma.productImage.updateMany({
+        where: { id: mainImageId, productId },
+        data: { isMain: true },
+      });
+    }
+
+    // 4. Ensure there is exactly one main image if images exist
+    const remainingImages = await prisma.productImage.findMany({
+      where: { productId },
+      orderBy: { order: "asc" },
+    });
+
+    if (remainingImages.length > 0) {
+      const hasMain = remainingImages.some((img) => img.isMain);
+      if (!hasMain) {
+        await prisma.productImage.update({
+          where: { id: remainingImages[0].id },
+          data: { isMain: true },
+        });
+      }
+    }
 
     const data: any = {};
 
@@ -82,7 +179,7 @@ export async function PATCH(
     if (price !== undefined) {
       const parsedPrice = Number(price);
       if (!Number.isFinite(parsedPrice)) {
-        return NextResponse.json({ message: "Precio invÃ¡lido" }, { status: 400 });
+        return NextResponse.json({ message: "Precio invalido" }, { status: 400 });
       }
       data.price = parsedPrice.toString();
     }

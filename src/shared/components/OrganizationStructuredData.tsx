@@ -1,33 +1,29 @@
-import { Organization,WithContext } from 'schema-dts';
-import { jsonLdScriptProps } from 'react-schemaorg';
-import Head from 'next/head';
-
 export function OrganizationStructuredData() {
-  const structuredData: WithContext<Organization> = {
-    '@type': 'Organization',
+  const structuredData = {
     '@context': 'https://schema.org',
+    '@type': 'Organization',
     name: 'MOKSHA Joyería',
-    url: 'https://moksha-joyeria.com',
-    logo: 'https://moksha-joyeria.com/logo.png',
+    url: 'https://mokshajoyeria.com',
+    logo: 'https://mokshajoyeria.com/moksha-logo.png',
     description: 'Joyería premium con diseños contemporáneos y elegantes. Anillos, collares, pulseras y joyas artesanales de alta calidad.',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'AR',
-      addressRegion: 'Buenos Aires', // Cambia según tu ubicación
-      addressLocality: 'Bahia Blanca', // Cambia según tu ubicación
+      addressRegion: 'Buenos Aires',
+      addressLocality: 'Bahia Blanca',
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '2915666668', // Cambia por tu número real
+      telephone: '2915666668',
       contactType: 'customer service',
       availableLanguage: 'Spanish',
     },
     sameAs: [
-      'https://facebook.com/moksha-joyeria', // Cambia por tus redes reales
+      'https://facebook.com/moksha-joyeria',
       'https://instagram.com/moksha_joyeria',
       'https://twitter.com/moksha_joyeria',
     ],
-    foundingDate: '2025', // Cambia por la fecha real
+    foundingDate: '2025',
     knowsAbout: [
       'Joyería artesanal',
       'Diseños contemporáneos',
@@ -39,10 +35,9 @@ export function OrganizationStructuredData() {
   };
 
   return (
-    <Head>
-      <script
-        {...jsonLdScriptProps<Organization>(structuredData)}
-      />
-    </Head>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
   );
 }

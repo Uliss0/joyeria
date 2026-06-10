@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/config";
 import { notFound } from "next/navigation";
 import type { Product, ProductImage as Image, ProductVariant as Variant, ProductTag as Tag, Category } from "@prisma/client";
+import { ProductStructuredData } from "@/shared/components/ProductStructuredData";
 
 type ProductWithDetails = (Product & { gender?: string | null }) & {
   images: Image[];
@@ -205,6 +206,7 @@ export default async function Page({ params }: ProductPageProps) {
 
   return (
     <>
+      <ProductStructuredData product={product} />
       <Breadcrumbs items={breadcrumbItems} className="container mx-auto px-4 py-4" />
       <ProductPage  product={productWithRating} relatedProducts={relatedProducts}  />
     </>

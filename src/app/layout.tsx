@@ -9,8 +9,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'MOKSHA - Joyería Premium | Diseños Contemporáneos y Elegantes',
-    template: '%s | MOKSHA - Joyería Premium'
+    default: 'Moksha Joyeria - Tienda Oficial',
+    template: '%s | Moksha Joyeria'
   },
   description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos, elegantes y únicos que destacan cada momento especial. Anillos, collares, pulseras y joyas artesanales de alta calidad.',
   keywords: ['joyería', 'joyas', 'anillos', 'collares', 'pulseras', 'oro', 'plata', 'diamantes', 'joyería premium', 'joyería artesanal', 'MOKSHA'],
@@ -26,27 +26,36 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/moksha-logo.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/moksha-logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     type: 'website',
     locale: 'es_AR',
     url: 'https://mokshajoyeria.com',
-    title: 'MOKSHA - Joyería Premium | Diseños Contemporáneos y Elegantes',
+    title: 'Moksha Joyeria - Tienda Oficial',
     description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos, elegantes y únicos que destacan cada momento especial.',
-    siteName: 'MOKSHA Joyería',
+    siteName: 'Moksha Joyería',
     images: [
       {
-        url: '/og-image.jpg', // Agrega esta imagen a public/
+        url: '/moksha-joyeria.png',
         width: 1200,
         height: 630,
-        alt: 'MOKSHA - Joyería Premium',
+        alt: 'Moksha Joyeria - Tienda Oficial',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MOKSHA - Joyería Premium | Diseños Contemporáneos y Elegantes',
+    title: 'Moksha Joyeria - Tienda Oficial',
     description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos, elegantes y únicos.',
-    images: ['/og-image.jpg'],
+    images: ['/moksha-joyeria.png'],
     creator: '@moksha_joyeria', // Cambia por tu cuenta de Twitter
   },
   robots: {
@@ -72,8 +81,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <OrganizationStructuredData />
       <body>
+        <OrganizationStructuredData />
         <AuthProvider>
           <Header />
           <main>{children}</main>

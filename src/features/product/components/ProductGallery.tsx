@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { IconButton } from "@/shared/components/IconButton";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductImage {
   id: string;
@@ -26,6 +27,15 @@ export function ProductGallery({ images, productName, className }: ProductGaller
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
   const [zoomedImageIndex, setZoomedImageIndex] = useState(0);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [isHoveredMain, setIsHoveredMain] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomPosition({ x, y });
+  };
 
   const handlePrevious = () => {
     setSelectedImageIndex((prev) =>
@@ -70,18 +80,49 @@ export function ProductGallery({ images, productName, className }: ProductGaller
     <>
       <div className={cn("space-y-4", className)}>
         {/* Main Image */}
-        <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden group cursor-pointer">
-          <Image
-            src={selectedImage.url}
-            alt={selectedImage.alt || productName}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            priority
+        <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden group cursor-zoom-in">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={selectedImageIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={selectedImage.url}
+                alt={selectedImage.alt || productName}
+                fill
+                style={
+                  isHoveredMain
+                    ? {
+                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                        transform: "scale(2.2)",
+                      }
+                    : undefined
+                }
+                className={cn(
+                  "object-cover transition-transform duration-100 ease-out",
+                  !isHoveredMain && "group-hover:scale-105"
+                )}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Interactive Zoom Hover Overlay */}
+          <div
+            className="absolute inset-0 z-10"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHoveredMain(true)}
+            onMouseLeave={() => setIsHoveredMain(false)}
+            onClick={() => handleZoom(selectedImageIndex)}
           />
 
           {/* Zoom Button */}
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-20">
             <IconButton
               icon={ZoomIn}
               onClick={() => handleZoom(selectedImageIndex)}
@@ -94,15 +135,21 @@ export function ProductGallery({ images, productName, className }: ProductGaller
           {images.length > 1 && (
             <>
               <button
-                onClick={handlePrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevious();
+                }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 aria-label="Imagen anterior"
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
               </button>
               <button
-                onClick={handleNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 aria-label="Imagen siguiente"
               >
                 <ChevronRight className="w-5 h-5 text-gray-700" />

@@ -1,9 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -30,10 +29,24 @@ interface RelatedProductsProps {
 }
 
 const ProductCard = ({ product }: { product: RelatedProduct }) => {
-  const mainImage = product.images.find(img => img.isMain) || product.images[0];
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const discountPercentage = product.compareAtPrice
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0;
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? product.images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === product.images.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <motion.div
@@ -44,15 +57,71 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
       className="group"
     >
       <Link href={`/producto/${product.slug}`}>
-        <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden mb-3 cursor-pointer">
-          {mainImage && (
-            <Image
-              src={mainImage.url}
-              alt={mainImage.alt || product.name}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
+        <div
+          className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden mb-3 cursor-pointer"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={currentImageIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0"
+            >
+              {product.images && product.images.length > 0 ? (
+                <Image
+                  src={product.images[currentImageIndex]?.url}
+                  alt={product.images[currentImageIndex]?.alt || product.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">Sin imagen</div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Multi-image Navigation Controls */}
+          {product.images && product.images.length > 1 && isHovered && (
+            <>
+              <button
+                onClick={handlePrevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                aria-label="Imagen anterior"
+              >
+                <ChevronLeft className="w-4 h-4 text-gray-700" />
+              </button>
+              <button
+                onClick={handleNextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                aria-label="Imagen siguiente"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-700" />
+              </button>
+
+              {/* Indicators */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex space-x-1">
+                {product.images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentImageIndex(idx);
+                    }}
+                    className={cn(
+                      "w-1.5 h-1.5 rounded-full transition-all",
+                      currentImageIndex === idx ? "bg-gold-600 scale-125" : "bg-gray-300"
+                    )}
+                    aria-label={`Ver imagen ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </>
           )}
 
           {/* Badges */}
