@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, X, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { IconButton } from "./IconButton";
 import { useCartItems, useCartSubtotal, useCartUpdateQuantity, useCartRemoveItem, useCartClearCart, useCartCloseCart, useCartIsOpen } from "@/shared/store/cartStore";
 import { cn } from "@/lib/utils";
@@ -34,7 +33,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
     if (newQuantity < 1 || newQuantity > item.maxStock) return;
 
     setIsUpdating(true);
-    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 200));
     onUpdateQuantity(item.id, newQuantity);
     setIsUpdating(false);
@@ -52,8 +50,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       exit={{ opacity: 0, y: -20 }}
       className="flex space-x-4 py-4 border-b border-border/40 last:border-b-0"
     >
-      
-
       {/* Product Image */}
       <Link href={`/producto/${item.slug}`} className="flex-shrink-0">
         <div className="relative w-16 h-16 bg-muted/40 rounded-lg overflow-hidden">
@@ -64,7 +60,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             className="object-cover"
             sizes="64px"
           />
-          
         </div>
       </Link>
 
@@ -143,46 +138,85 @@ export function Cart({ className }: CartProps) {
   const removeItem = useCartRemoveItem();
   const clearCart = useCartClearCart();
   const closeCart = useCartCloseCart();
-  const shippingThreshold = 50000; // Free shipping over $50,000
+  const shippingThreshold = 50000;
   const shipping = subtotal >= shippingThreshold ? 0 : 5000;
   const total = subtotal + shipping;
 
+  // Detect active theme to match panel bg like the favorites panel
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    setIsLight(document.documentElement.classList.contains("light"));
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.classList.contains("light"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const panelBg = isLight ? "#faf8f5" : "#222428";
+  const panelColor = isLight ? "#1e1a14" : "#f5efe4";
+  const borderColor = isLight ? "rgba(193,150,89,0.18)" : "rgba(255,255,255,0.08)";
+
   const handleCheckout = () => {
     closeCart();
-    // Navigate to checkout
     window.location.href = '/checkout';
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col">
-        <SheetHeader className="border-b border-border pb-4">
-          <SheetTitle className="flex items-center space-x-2">
-            <ShoppingBag className="w-5 h-5" />
-            <span>Carrito de Compras</span>
-            <span className="text-sm font-normal text-muted-foreground">
-              ({items.length} {items.length === 1 ? 'producto' : 'productos'})
-            </span>
-          </SheetTitle>
-        </SheetHeader>
+    <div className="fixed inset-0 z-[100] h-screen">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 h-screen"
+        onClick={closeCart}
+      />
+
+      {/* Panel */}
+      <div
+        className="absolute right-0 top-0 h-screen w-full sm:w-[28rem] animate-slide-in-right flex flex-col shadow-2xl"
+        style={{ backgroundColor: panelBg, color: panelColor }}
+      >
+
+        {/* Header */}
+        <div className="flex items-center gap-3 p-6" style={{ borderBottom: `1px solid ${borderColor}` }}>
+          <ShoppingBag className="w-5 h-5 text-primary flex-shrink-0" />
+          <h2 className="font-serif text-xl font-semibold tracking-wide flex-1" style={{ color: panelColor }}>
+            Carrito de Compras
+          </h2>
+          <span className="text-xs font-sans font-medium opacity-60">
+            {items.length} {items.length === 1 ? 'producto' : 'productos'}
+          </span>
+          <button
+            onClick={closeCart}
+            className="p-1.5 opacity-60 hover:opacity-100 transition-opacity"
+            aria-label="Cerrar carrito"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
         {items.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-            <ShoppingBag className="w-16 h-16 text-muted-foreground/30 mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">
+          <div className="flex-1 flex flex-col items-center justify-center text-center py-12 px-6">
+            <ShoppingBag className="w-16 h-16 mb-4 opacity-20" />
+            <h3 className="text-lg font-medium mb-2">
               Tu carrito está vacío
             </h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="opacity-60 mb-6">
               Descubre nuestras joyas premium y agrega tus favoritas.
             </p>
-            <Button onClick={closeCart} asChild>
+            <Button
+              onClick={closeCart}
+              className="bg-gold-600 hover:bg-gold-700 text-white font-medium"
+              asChild
+            >
               <Link href="/coleccion">Explorar Colección</Link>
             </Button>
           </div>
         ) : (
           <>
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto py-4">
+            <div className="flex-1 overflow-y-auto px-6 py-4">
               <AnimatePresence>
                 {items.map((item) => (
                   <CartItem
@@ -196,11 +230,11 @@ export function Cart({ className }: CartProps) {
             </div>
 
             {/* Cart Summary */}
-            <div className="border-t border-border pt-4 space-y-4">
+            <div className="px-6 pb-6 pt-4 space-y-4" style={{ borderTop: `1px solid ${borderColor}` }}>
               {/* Shipping Notice */}
               {subtotal < shippingThreshold && (
-                <div className="bg-primary/10 border border-primary/25 rounded-lg p-3">
-                  <p className="text-sm text-foreground">
+                <div className="bg-primary/10 rounded-lg p-3">
+                  <p className="text-sm">
                     Agrega ${(shippingThreshold - subtotal).toLocaleString('es-AR')} más para envío gratuito
                   </p>
                 </div>
@@ -209,16 +243,16 @@ export function Cart({ className }: CartProps) {
               {/* Totals */}
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal</span>
+                  <span className="opacity-60">Subtotal</span>
                   <span>${subtotal.toLocaleString('es-AR')}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Envío</span>
-                  <span className={shipping === 0 ? 'text-green-600' : ''}>
+                  <span className="opacity-60">Envío</span>
+                  <span className={shipping === 0 ? 'text-green-500' : ''}>
                     {shipping === 0 ? 'Gratis' : `$${shipping.toLocaleString('es-AR')}`}
                   </span>
                 </div>
-                <div className="flex justify-between font-semibold text-lg border-t border-border pt-2">
+                <div className="flex justify-between font-semibold text-base pt-2" style={{ borderTop: `1px solid ${borderColor}` }}>
                   <span>Total</span>
                   <span>${total.toLocaleString('es-AR')}</span>
                 </div>
@@ -236,7 +270,8 @@ export function Cart({ className }: CartProps) {
                 <Button
                   variant="outline"
                   onClick={closeCart}
-                  className="w-full"
+                  className="w-full font-medium"
+                  style={{ borderColor: '#c19659', color: '#c19659' }}
                   asChild
                 >
                   <Link href="/coleccion">Continuar Comprando</Link>
@@ -251,7 +286,7 @@ export function Cart({ className }: CartProps) {
               </div>
 
               {/* Trust Indicators */}
-              <div className="text-center text-xs text-muted-foreground space-y-1">
+              <div className="text-center text-xs opacity-50 space-y-1">
                 <p>✓ Pagos seguros con encriptación SSL</p>
                 <p>✓ Envío gratuito en compras mayores a $50.000</p>
                 <p>✓ Devoluciones gratuitas por 30 días</p>
@@ -259,7 +294,7 @@ export function Cart({ className }: CartProps) {
             </div>
           </>
         )}
-      </SheetContent>
-    </Sheet>
+      </div>
+    </div>
   );
 }

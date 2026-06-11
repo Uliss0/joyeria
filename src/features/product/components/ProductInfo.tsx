@@ -315,7 +315,8 @@ export function ProductInfo({
           <Button
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 transition-colors cursor-pointer"
+            className="flex-1 py-3 transition-colors cursor-pointer text-white font-medium"
+            style={{ backgroundColor: isOutOfStock ? undefined : '#c19659' }}
             size="lg"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
