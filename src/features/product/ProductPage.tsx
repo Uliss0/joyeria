@@ -149,31 +149,32 @@ export default function ProductPage({ product, relatedProducts = [], className }
   };
 
   return (
-    <div className={cn("min-h-screen bg-white", className)}>
+    <div className={cn("min-h-screen bg-background text-foreground transition-colors duration-300", className)}>
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
-          <Link href="/" className="hover:text-gold-600">Inicio</Link>
-          <ChevronRight className="w-4 h-4" />
-          <Link href="/coleccion" className="hover:text-gold-600">Colección</Link>
-          <ChevronRight className="w-4 h-4" />
-          <Link href={`/coleccion?categoria=${selectedProduct.category.slug}`} className="hover:text-gold-600">
+        <nav className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-muted-foreground mb-8">
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
+          <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+          <Link href="/coleccion" className="hover:text-primary transition-colors">Colección</Link>
+          <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+          <Link href={`/coleccion?categoria=${selectedProduct.category.slug}`} className="hover:text-primary transition-colors">
             {selectedProduct.category.name}
           </Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900">{selectedProduct.name}</span>
+          <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+          <span className="text-foreground font-medium truncate max-w-[200px] md:max-w-none">{selectedProduct.name}</span>
         </nav>
-
+ 
         {/* Product Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-16">
           {/* Product Gallery */}
           <ProductGallery
             images={selectedProduct.images}
             productName={selectedProduct.name}
+            className="lg:col-span-7"
           />
-
+ 
           {/* Product Information */}
-          <div className="space-y-6">
+          <div className="lg:col-span-5 space-y-6">
             {/* Rating and Share */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">

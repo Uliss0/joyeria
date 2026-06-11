@@ -55,34 +55,34 @@ function FilterSection({
   toggleSection,
 }: FilterSectionProps) {
   return (
-    <div className="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
+    <div className="border-b border-border pb-4 mb-4 last:border-b-0">
       <button
         type="button"
         onClick={() => toggleSection(sectionKey)}
-        className="mb-3 flex w-full items-center justify-between text-left font-serif text-lg font-semibold text-gray-900 transition-colors hover:text-gold-700"
+        className="mb-3 flex w-full items-center justify-between text-left font-serif text-lg font-semibold text-foreground transition-colors hover:text-primary cursor-pointer"
       >
         {title}
         {expandedSections[sectionKey] ? (
-          <ChevronUp className="h-5 w-5 text-gray-600" />
+          <ChevronUp className="h-5 w-5 text-muted-foreground" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-600" />
+          <ChevronDown className="h-5 w-5 text-muted-foreground" />
         )}
       </button>
 
       {expandedSections[sectionKey] && (
         <div className="space-y-2">
           {options.map((option) => (
-            <label key={option.value} className="group flex cursor-pointer items-center space-x-2">
+            <label key={option.value} className="group flex cursor-pointer items-center space-x-2 select-none">
               <input
                 type="checkbox"
                 checked={selectedValues.includes(option.value)}
                 onChange={() => onChange(option.value)}
-                className="h-4 w-4 cursor-pointer rounded border-gray-300 text-gold-600 focus:ring-gold-500 focus:ring-offset-0"
+                className="h-4 w-4 cursor-pointer rounded border-border text-primary focus:ring-primary focus:ring-offset-0 bg-transparent"
               />
-              <span className="font-sans text-base text-gray-700 transition-colors group-hover:text-gold-600">
+              <span className="font-sans text-base text-foreground transition-colors group-hover:text-primary">
                 {option.label}
                 {option.count !== undefined && (
-                  <span className="ml-1 text-sm text-gray-500">({option.count})</span>
+                  <span className="ml-1 text-sm text-muted-foreground/80">({option.count})</span>
                 )}
               </span>
             </label>
@@ -123,11 +123,11 @@ function FiltersContent({
   return (
     <div className="space-y-6">
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
         <Input
           type="text"
           placeholder="Buscar productos..."
-          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm font-sans shadow-sm focus:border-gold-500 focus:outline-none focus:ring-gold-500"
+          className="w-full rounded-md border border-border bg-muted/30 py-2 pl-9 pr-3 text-sm font-sans shadow-sm focus:border-primary focus:outline-none focus:ring-primary text-foreground placeholder:text-muted-foreground/50"
           value={searchTerm}
           onChange={(e) => onSearchTermChange(e.target.value)}
         />
@@ -137,7 +137,7 @@ function FiltersContent({
             variant="ghost"
             size="sm"
             onClick={() => onSearchTermChange("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground hover:bg-transparent"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -145,13 +145,13 @@ function FiltersContent({
       </div>
 
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Filtros</h3>
+        <h3 className="text-lg font-semibold text-foreground">Filtros</h3>
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={clearAllFilters}
-          className="text-gold-600 hover:text-gold-700"
+          className="text-primary hover:text-primary/80 hover:bg-transparent cursor-pointer"
         >
           Limpiar todo
         </Button>
@@ -197,36 +197,36 @@ function FiltersContent({
         toggleSection={toggleSection}
       />
 
-      <div className="border-b border-gray-200 pb-4 last:border-b-0">
+      <div className="border-b border-border pb-4 last:border-b-0">
         <button
           type="button"
           onClick={() => toggleSection("price")}
-          className="mb-3 flex w-full items-center justify-between text-left font-medium text-gray-900 transition-colors hover:text-gold-700"
+          className="mb-3 flex w-full items-center justify-between text-left font-medium text-foreground transition-colors hover:text-primary cursor-pointer"
         >
           Precio
           {expandedSections.price ? (
-            <ChevronUp className="h-4 w-4" />
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
           ) : (
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
           )}
         </button>
 
         {expandedSections.price && (
           <div className="space-y-2">
             {priceRangeOptions.map((range) => (
-              <label key={range.value} className="flex cursor-pointer items-center space-x-2">
+              <label key={range.value} className="flex cursor-pointer items-center space-x-2 select-none">
                 <input
                   type="radio"
                   name="priceRange"
                   value={range.value}
                   checked={selectedPriceRange === range.value}
                   onChange={(e) => onPriceRangeChange(e.target.value)}
-                  className="border-gray-300 text-gold-600 focus:ring-gold-500"
+                  className="border-border text-primary focus:ring-primary focus:ring-offset-0 bg-transparent"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-foreground">
                   {range.label}
                   {range.count !== undefined && (
-                    <span className="ml-1 text-gray-400">({range.count})</span>
+                    <span className="ml-1 text-muted-foreground/80">({range.count})</span>
                   )}
                 </span>
               </label>
@@ -277,7 +277,7 @@ export function ProductFilters({
   return (
     <>
       <div className={cn("hidden w-64 flex-shrink-0 lg:block", className)}>
-        <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="sticky top-20 rounded-[1.25rem] border border-border bg-card p-6 shadow-sm">
           <FiltersContent
             categoryOptions={categoryOptions}
             selectedCategories={selectedCategories}
@@ -306,7 +306,7 @@ export function ProductFilters({
       <div className="mb-6 lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button type="button" variant="outline" className="w-full">
+            <Button type="button" variant="outline" className="w-full bg-card border-border hover:bg-muted text-foreground transition-colors cursor-pointer">
               <SlidersHorizontal className="mr-2 h-4 w-4" />
               Filtros
               {(selectedCategories.length +
@@ -315,7 +315,7 @@ export function ProductFilters({
                 selectedThemes.length +
                 (selectedPriceRange ? 1 : 0) +
                 (searchTerm ? 1 : 0)) > 0 && (
-                <span className="ml-2 rounded-full bg-gold-600 px-2 py-0.5 text-xs text-white">
+                <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
                   {selectedCategories.length +
                     selectedGenders.length +
                     selectedMaterials.length +
@@ -326,8 +326,8 @@ export function ProductFilters({
               )}
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-80">
-            <SheetTitle className="sr-only">Filtros de productos</SheetTitle>
+          <SheetContent side="left" className="w-80 bg-card border-r border-border text-foreground overflow-y-auto">
+            <SheetTitle className="sr-only text-foreground">Filtros de productos</SheetTitle>
             <FiltersContent
               categoryOptions={categoryOptions}
               selectedCategories={selectedCategories}

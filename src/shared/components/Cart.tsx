@@ -50,13 +50,13 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex space-x-4 py-4 border-b border-gray-100 last:border-b-0"
+      className="flex space-x-4 py-4 border-b border-border/40 last:border-b-0"
     >
       
 
       {/* Product Image */}
       <Link href={`/producto/${item.slug}`} className="flex-shrink-0">
-        <div className="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden">
+        <div className="relative w-16 h-16 bg-muted/40 rounded-lg overflow-hidden">
           <Image
             src={item.image}
             alt={item.name}
@@ -71,27 +71,27 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       {/* Product Details */}
       <div className="flex-1 min-w-0">
         <Link href={`/producto/${item.slug}`}>
-          <h4 className="font-medium text-gray-900 hover:text-gold-600 transition-colors line-clamp-2">
+          <h4 className="font-medium text-foreground hover:text-gold-600 transition-colors line-clamp-2">
             {item.name}
           </h4>
         </Link>
 
         {selectedVariants && (
-          <p className="text-sm text-gray-500 mt-1">{selectedVariants}</p>
+          <p className="text-sm text-muted-foreground mt-1">{selectedVariants}</p>
         )}
 
         <div className="flex items-center justify-between mt-2">
-          <span className="font-semibold text-gray-900">
+          <span className="font-semibold text-foreground">
             ${item.price.toLocaleString('es-AR')}
           </span>
 
           {/* Quantity Controls */}
           <div className="flex items-center space-x-2">
-            <div className="flex items-center border border-gray-200 rounded-md">
+            <div className="flex items-center border border-border rounded-md">
               <button
                 onClick={() => handleQuantityChange(item.quantity - 1)}
                 disabled={item.quantity <= 1 || isUpdating}
-                className="p-1 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1 hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Disminuir cantidad"
               >
                 <Minus className="w-3 h-3" />
@@ -105,7 +105,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
               <button
                 onClick={() => handleQuantityChange(item.quantity + 1)}
                 disabled={item.quantity >= item.maxStock || isUpdating}
-                className="p-1 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1 hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Aumentar cantidad"
               >
                 <Plus className="w-3 h-3" />
@@ -116,14 +116,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
               icon={X}
               size="sm"
               onClick={() => onRemove(item.id)}
-              className="text-gray-400 hover:text-red-500"
+              className="text-muted-foreground hover:text-red-500"
               aria-label="Remover producto"
             />
           </div>
         </div>
 
         {/* Subtotal */}
-        <div className="text-sm text-gray-600 mt-1">
+        <div className="text-sm text-muted-foreground mt-1">
           Subtotal: ${(item.price * item.quantity).toLocaleString('es-AR')}
         </div>
       </div>
@@ -156,11 +156,11 @@ export function Cart({ className }: CartProps) {
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
       <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col">
-        <SheetHeader className="border-b border-gray-100 pb-4">
+        <SheetHeader className="border-b border-border pb-4">
           <SheetTitle className="flex items-center space-x-2">
             <ShoppingBag className="w-5 h-5" />
             <span>Carrito de Compras</span>
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted-foreground">
               ({items.length} {items.length === 1 ? 'producto' : 'productos'})
             </span>
           </SheetTitle>
@@ -168,11 +168,11 @@ export function Cart({ className }: CartProps) {
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-            <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <ShoppingBag className="w-16 h-16 text-muted-foreground/30 mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               Tu carrito está vacío
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-muted-foreground mb-6">
               Descubre nuestras joyas premium y agrega tus favoritas.
             </p>
             <Button onClick={closeCart} asChild>
@@ -196,11 +196,11 @@ export function Cart({ className }: CartProps) {
             </div>
 
             {/* Cart Summary */}
-            <div className="border-t border-gray-100 pt-4 space-y-4">
+            <div className="border-t border-border pt-4 space-y-4">
               {/* Shipping Notice */}
               {subtotal < shippingThreshold && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800">
+                <div className="bg-primary/10 border border-primary/25 rounded-lg p-3">
+                  <p className="text-sm text-foreground">
                     Agrega ${(shippingThreshold - subtotal).toLocaleString('es-AR')} más para envío gratuito
                   </p>
                 </div>
@@ -218,7 +218,7 @@ export function Cart({ className }: CartProps) {
                     {shipping === 0 ? 'Gratis' : `$${shipping.toLocaleString('es-AR')}`}
                   </span>
                 </div>
-                <div className="flex justify-between font-semibold text-lg border-t border-gray-200 pt-2">
+                <div className="flex justify-between font-semibold text-lg border-t border-border pt-2">
                   <span>Total</span>
                   <span>${total.toLocaleString('es-AR')}</span>
                 </div>
@@ -244,14 +244,14 @@ export function Cart({ className }: CartProps) {
                 <Button
                   variant="ghost"
                   onClick={clearCart}
-                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="w-full text-red-500 hover:text-red-600 hover:bg-red-500/10"
                 >
                   Vaciar Carrito
                 </Button>
               </div>
 
               {/* Trust Indicators */}
-              <div className="text-center text-xs text-gray-500 space-y-1">
+              <div className="text-center text-xs text-muted-foreground space-y-1">
                 <p>✓ Pagos seguros con encriptación SSL</p>
                 <p>✓ Envío gratuito en compras mayores a $50.000</p>
                 <p>✓ Devoluciones gratuitas por 30 días</p>

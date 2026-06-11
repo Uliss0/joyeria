@@ -68,8 +68,8 @@ export function ProductGallery({ images, productName, className }: ProductGaller
 
   if (!images || images.length === 0) {
     return (
-      <div className={cn("aspect-square bg-gray-100 rounded-lg flex items-center justify-center", className)}>
-        <span className="text-gray-400">Sin imagen</span>
+      <div className={cn("aspect-square bg-muted rounded-lg flex items-center justify-center", className)}>
+        <span className="text-muted-foreground">Sin imagen</span>
       </div>
     );
   }
@@ -80,7 +80,7 @@ export function ProductGallery({ images, productName, className }: ProductGaller
     <>
       <div className={cn("space-y-4", className)}>
         {/* Main Image */}
-        <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden group cursor-zoom-in">
+        <div className="relative aspect-square bg-muted rounded-lg overflow-hidden group cursor-zoom-in border border-border/40">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={selectedImageIndex}
@@ -126,7 +126,7 @@ export function ProductGallery({ images, productName, className }: ProductGaller
             <IconButton
               icon={ZoomIn}
               onClick={() => handleZoom(selectedImageIndex)}
-              className="bg-white/90 hover:bg-white shadow-lg"
+              className="bg-card/95 hover:bg-card border border-border text-foreground shadow-lg transition-colors"
               aria-label="Ampliar imagen"
             />
           </div>
@@ -139,20 +139,20 @@ export function ProductGallery({ images, productName, className }: ProductGaller
                   e.stopPropagation();
                   handlePrevious();
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 aria-label="Imagen anterior"
               >
-                <ChevronLeft className="w-5 h-5 text-gray-700" />
+                <ChevronLeft className="w-5 h-5 text-foreground" />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNext();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 aria-label="Imagen siguiente"
               >
-                <ChevronRight className="w-5 h-5 text-gray-700" />
+                <ChevronRight className="w-5 h-5 text-foreground" />
               </button>
             </>
           )}
@@ -168,8 +168,8 @@ export function ProductGallery({ images, productName, className }: ProductGaller
                 className={cn(
                   "relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all",
                   selectedImageIndex === index
-                    ? "border-gold-600 shadow-md"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? "border-primary shadow-md"
+                    : "border-border hover:border-primary/50"
                 )}
               >
                 <Image

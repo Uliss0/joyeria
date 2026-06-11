@@ -80,11 +80,11 @@ export const ProductCard = ({ product }: { product: Product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="group relative border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+      className="group relative premium-card rounded-xl overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300"
     >
       <Link href={`/producto/${product.slug}`} className="block">
         <div
-          className="relative aspect-square bg-gray-50 overflow-hidden cursor-pointer"
+          className="relative aspect-square bg-muted/40 overflow-hidden cursor-pointer"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -106,7 +106,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">Sin imagen</div>
+                <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground/60">Sin imagen</div>
               )}
             </motion.div>
           </AnimatePresence>
@@ -116,17 +116,17 @@ export const ProductCard = ({ product }: { product: Product }) => {
             <>
               <button
                 onClick={handlePrevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-md transition-all"
                 aria-label="Imagen anterior"
               >
-                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                <ChevronLeft className="w-4 h-4 text-foreground" />
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-md transition-all"
                 aria-label="Imagen siguiente"
               >
-                <ChevronRight className="w-4 h-4 text-gray-700" />
+                <ChevronRight className="w-4 h-4 text-foreground" />
               </button>
 
               {/* Indicators */}
@@ -141,7 +141,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
                     }}
                     className={cn(
                       "w-1.5 h-1.5 rounded-full transition-all",
-                      currentImageIndex === idx ? "bg-gold-600 scale-125" : "bg-gray-300"
+                      currentImageIndex === idx ? "bg-primary scale-125" : "bg-muted-foreground/40"
                     )}
                     aria-label={`Ver imagen ${idx + 1}`}
                   />
@@ -153,13 +153,13 @@ export const ProductCard = ({ product }: { product: Product }) => {
           {/* Badges */}
           <div className="absolute top-3 left-3 space-y-2 z-10">
             {product.isNew && (
-              <Badge className="bg-gold-600 hover:bg-gold-700 text-white font-sans text-xs px-2 py-1">Nuevo</Badge>
+              <Badge className="bg-green-600 hover:bg-green-700 text-white font-sans text-xs px-2 py-1 border-0">Nuevo</Badge>
             )}
             {product.isFeatured && (
-              <Badge className="bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs px-2 py-1">Destacado</Badge>
+              <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans text-xs px-2 py-1 border-0">Destacado</Badge>
             )}
             {discountPercentage > 0 && (
-              <Badge className="bg-red-600 hover:bg-red-700 text-white font-sans text-xs px-2 py-1">-{discountPercentage}%</Badge>
+              <Badge className="bg-red-600 hover:bg-red-700 text-white font-sans text-xs px-2 py-1 border-0">-{discountPercentage}%</Badge>
             )}
           </div>
 
@@ -210,22 +210,22 @@ export const ProductCard = ({ product }: { product: Product }) => {
                 }
               }}
               className={cn(
-                "bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 transition-colors",
-                isWishlisted && "text-red-500"
+                "bg-card/95 hover:bg-card border border-border text-foreground hover:text-red-500 transition-colors",
+                isWishlisted && "text-red-500 border-red-200 bg-red-500/5 hover:border-red-300"
               )}
               aria-label="Agregar a favoritos"
             />
             <IconButton
               icon={Eye}
               size="sm"
-              className="bg-white/90 hover:bg-white text-gray-700 hover:text-gold-700 transition-colors"
+              className="bg-card/95 hover:bg-card border border-border text-foreground hover:text-primary transition-colors"
               aria-label="Vista rápida"
             />
           </div>
 
           {/* Hover Overlay */}
           <div className={cn(
-            "absolute inset-0 bg-black/20 transition-opacity duration-300 z-0",
+            "absolute inset-0 bg-black/10 transition-opacity duration-300 z-0",
             isHovered ? "opacity-100" : "opacity-0"
           )} />
 
@@ -236,7 +236,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
           )}>
             <Button
               size="sm"
-              className="w-full btn-gold shadow-md"
+              className="w-full btn-gold shadow-md cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 addItem({
@@ -260,9 +260,9 @@ export const ProductCard = ({ product }: { product: Product }) => {
       </Link>
 
       {/* Product Info */}
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-2 bg-transparent">
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500 uppercase tracking-wide font-sans">
+          <span className="text-xs text-muted-foreground uppercase tracking-wide font-sans">
             {product.category.name}
           </span>
           {product.tags && product.tags.length > 0 && (
@@ -271,8 +271,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
                 <Badge
                   key={tag.name}
                   variant="secondary"
-                  className="text-xs px-1.5 py-0.5 font-sans"
-                  style={{ backgroundColor: tag.color ? `${tag.color}20` : undefined, color: tag.color }}
+                  className="text-xs px-1.5 py-0.5 font-sans bg-muted text-muted-foreground border-border"
+                  style={{ backgroundColor: tag.color ? `${tag.color}15` : undefined, color: tag.color }}
                 >
                   {tag.name}
                 </Badge>
@@ -282,17 +282,17 @@ export const ProductCard = ({ product }: { product: Product }) => {
         </div>
 
         <Link href={`/producto/${product.slug}`}>
-          <h3 className="font-serif text-lg font-medium text-gray-900 hover:text-gold-700 transition-colors line-clamp-2">
+          <h3 className="font-serif text-lg font-medium text-foreground hover:text-primary transition-colors line-clamp-2">
             {product.name}
           </h3>
         </Link>
 
         <div className="flex items-center space-x-2 pt-1">
-          <span className="text-xl font-serif font-semibold text-gray-900">
+          <span className="text-xl font-serif font-semibold text-foreground">
             ${product.price.toLocaleString('es-AR')}
           </span>
           {product.compareAtPrice && (
-            <span className="text-sm text-gray-500 line-through font-sans">
+            <span className="text-sm text-muted-foreground line-through font-sans">
               ${product.compareAtPrice.toLocaleString('es-AR')}
             </span>
           )}
@@ -307,12 +307,12 @@ export function ProductGrid({ products, loading = false, className }: ProductGri
     return (
       <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8", className)}>
         {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="animate-pulse rounded-lg overflow-hidden border border-gray-100 shadow-sm">
-            <div className="aspect-square bg-gray-200 mb-4"></div>
+          <div key={i} className="animate-pulse rounded-xl overflow-hidden border border-border bg-card shadow-sm">
+            <div className="aspect-square bg-muted mb-4"></div>
             <div className="p-4 space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-muted rounded w-3/4"></div>
+              <div className="h-6 bg-muted rounded"></div>
+              <div className="h-4 bg-muted rounded w-1/2"></div>
             </div>
           </div>
         ))}
@@ -322,17 +322,17 @@ export function ProductGrid({ products, loading = false, className }: ProductGri
 
   if (products.length === 0) {
     return (
-      <div className={cn("flex flex-col items-center justify-center py-20 text-center bg-gray-50 rounded-lg shadow-inner", className)}>
-        <div className="w-24 h-24 bg-gold-100 rounded-full flex items-center justify-center mb-6">
-          <ShoppingCart className="w-12 h-12 text-gold-600" />
+      <div className={cn("flex flex-col items-center justify-center py-20 text-center bg-muted/20 border border-border rounded-2xl", className)}>
+        <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+          <ShoppingCart className="w-12 h-12 text-primary" />
         </div>
-        <h3 className="text-2xl font-serif font-medium text-gray-900 mb-3">
+        <h3 className="text-2xl font-serif font-medium text-foreground mb-3">
           No se encontraron productos
         </h3>
-        <p className="text-lg text-gray-700 font-sans mb-8 max-w-md">
+        <p className="text-lg text-muted-foreground font-sans mb-8 max-w-md">
           Intenta ajustar tus filtros o explora otras categorías.
         </p>
-        <Button variant="outline" className="btn-gold-outline">
+        <Button variant="outline" className="border-border text-foreground hover:bg-muted bg-card cursor-pointer">
           Limpiar filtros
         </Button>
       </div>

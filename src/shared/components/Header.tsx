@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon, ArrowRight, Minus, Plus } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, User as UserIcon, ArrowRight, Minus, Plus, Sun, Moon } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -202,6 +202,36 @@ const buildImageHref = (menuName: string | null, label: string) => {
 };
 
 const Header = () => {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const isLight = savedTheme === "light" || (!savedTheme && document.documentElement.classList.contains("light"));
+    if (isLight) {
+      setTheme("light");
+      document.documentElement.classList.add("light");
+      document.documentElement.classList.remove("dark");
+    } else {
+      setTheme("dark");
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+      document.documentElement.classList.add("light");
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      setTheme("dark");
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+  };
+
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
@@ -420,6 +450,19 @@ const Header = () => {
 
         {/* Right icons */}
         <div className="flex items-center space-x-2 justify-end">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-white/95 hover:text-white transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] cursor-pointer"
+            aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+          </button>
+
           {/* Favorites Icon */}
           <button 
             // Punto 6 y 8: Glow effect y cursor pointer

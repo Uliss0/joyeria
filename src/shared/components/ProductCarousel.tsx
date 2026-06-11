@@ -48,17 +48,17 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
   if (!loading && products.length === 0) return null;
 
   return (
-    <section id={id} className={cn("py-12 md:py-16 bg-white", className)}>
+    <section id={id} className={cn("py-12 md:py-16 bg-transparent", className)}>
       <div className="container mx-auto px-4">
         {(title || subtitle) && (
           <div className="text-center mb-10">
             {title && (
-              <h2 className="text-3xl md:text-4xl font-serif font-light text-gray-900 mb-3">
+              <h2 className="text-3xl md:text-4xl font-serif font-light text-foreground mb-3">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-lg text-gray-700 font-sans max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground font-sans max-w-2xl mx-auto">
                 {subtitle}
               </p>
             )}
@@ -102,11 +102,11 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
                 ))}
           </Swiper>
 
-          <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -ml-6 bg-gray-100/80 hover:bg-gray-200 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -ml-6 bg-card/80 hover:bg-card border border-border z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
+            <ChevronLeft className="w-5 h-5 text-foreground" />
           </div>
-          <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 -mr-6 bg-gray-100/80 hover:bg-gray-200 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+          <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 -mr-6 bg-card/80 hover:bg-card border border-border z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
+            <ChevronRight className="w-5 h-5 text-foreground" />
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import { cache } from "react";
 import ProductPage from "@/features/product/ProductPage";
-import { Breadcrumbs } from "@/shared/components/Breadcrumbs";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/config";
@@ -199,16 +198,45 @@ export default async function Page({ params }: ProductPageProps) {
   };
   const relatedProducts = await getRelatedProducts(productDb);
 
-  const breadcrumbItems = [
-    { name: "Colección", href: "/coleccion" },
-    { name: product.name, href: `/producto/${slug}` },
-  ];
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://mokshajoyeria.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Colección",
+        "item": "https://mokshajoyeria.com/coleccion"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.category?.name || "Colección",
+        "item": `https://mokshajoyeria.com/coleccion?categoria=${product.category?.slug || "coleccion"}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": product.name,
+        "item": `https://mokshajoyeria.com/producto/${slug}`
+      }
+    ]
+  };
 
   return (
     <>
       <ProductStructuredData product={product} />
-      <Breadcrumbs items={breadcrumbItems} className="container mx-auto px-4 py-4" />
-      <ProductPage  product={productWithRating} relatedProducts={relatedProducts}  />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <ProductPage product={productWithRating} relatedProducts={relatedProducts} />
     </>
   );
 }

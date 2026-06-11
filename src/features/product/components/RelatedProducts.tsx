@@ -58,7 +58,7 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
     >
       <Link href={`/producto/${product.slug}`}>
         <div
-          className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden mb-3 cursor-pointer"
+          className="relative aspect-square bg-muted rounded-lg overflow-hidden mb-3 cursor-pointer border border-border/40"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -80,29 +80,29 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">Sin imagen</div>
+                <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground/60">Sin imagen</div>
               )}
             </motion.div>
           </AnimatePresence>
-
+ 
           {/* Multi-image Navigation Controls */}
           {product.images && product.images.length > 1 && isHovered && (
             <>
               <button
                 onClick={handlePrevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-md transition-all"
                 aria-label="Imagen anterior"
               >
-                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                <ChevronLeft className="w-4 h-4 text-foreground" />
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 bg-card/95 hover:bg-card border border-border rounded-full flex items-center justify-center shadow-md transition-all"
                 aria-label="Imagen siguiente"
               >
-                <ChevronRight className="w-4 h-4 text-gray-700" />
+                <ChevronRight className="w-4 h-4 text-foreground" />
               </button>
-
+ 
               {/* Indicators */}
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex space-x-1">
                 {product.images.map((_, idx) => (
@@ -115,7 +115,7 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
                     }}
                     className={cn(
                       "w-1.5 h-1.5 rounded-full transition-all",
-                      currentImageIndex === idx ? "bg-gold-600 scale-125" : "bg-gray-300"
+                      currentImageIndex === idx ? "bg-primary scale-125" : "bg-muted-foreground/40"
                     )}
                     aria-label={`Ver imagen ${idx + 1}`}
                   />
@@ -123,7 +123,7 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
               </div>
             </>
           )}
-
+ 
           {/* Badges */}
           <div className="absolute top-2 left-2 space-y-1">
             {product.isNew && (
@@ -132,7 +132,7 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
               </Badge>
             )}
             {product.isFeatured && (
-              <Badge className="bg-gold-600 hover:bg-gold-700 text-xs px-1.5 py-0.5">
+              <Badge className="bg-primary hover:bg-primary/90 text-xs px-1.5 py-0.5 text-primary-foreground">
                 Destacado
               </Badge>
             )}
@@ -145,15 +145,15 @@ const ProductCard = ({ product }: { product: RelatedProduct }) => {
         </div>
 
         <div className="space-y-1">
-          <h3 className="font-medium text-gray-900 hover:text-gold-600 transition-colors line-clamp-2 text-sm">
+          <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2 text-sm">
             {product.name}
           </h3>
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-semibold text-foreground">
               ${product.price.toLocaleString('es-AR')}
             </span>
             {product.compareAtPrice && (
-              <span className="text-xs text-gray-500 line-through">
+              <span className="text-xs text-muted-foreground/80 line-through">
                 ${product.compareAtPrice.toLocaleString('es-AR')}
               </span>
             )}
@@ -174,18 +174,18 @@ export function RelatedProducts({
   }
 
   return (
-    <section className={cn("py-12 bg-gray-50", className)}>
+    <section className={cn("py-12 bg-muted/30 border-t border-border/40", className)}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-light text-gray-900">
+          <h2 className="text-2xl md:text-3xl font-light text-foreground">
             {title}
           </h2>
-          <Button variant="ghost" className="text-gold-600 hover:text-gold-700">
+          <Button variant="ghost" className="text-primary hover:text-primary/90 cursor-pointer">
             Ver todos
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
-
+ 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />

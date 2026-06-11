@@ -409,13 +409,13 @@ function CollectionContent() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb 
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8 font-sans">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8 font-sans">
           <Link href="/">Inicio</Link>
           <span>/</span>
-          <span className="text-gray-900">Colección</span>
+          <span className="text-foreground">Colección</span>
         </nav>*/}
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -461,14 +461,14 @@ function CollectionContent() {
 
             {!loading && displayedProducts.length > 0 && (
               <div className="mt-10 flex flex-col items-center gap-4">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Mostrando {startIndex + 1}-{Math.min(endIndex, displayedProducts.length)} de {displayedProducts.length} productos
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                     disabled={clampedPage === 1}
-                    className="px-3 py-2 text-sm border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="px-3 py-2 text-sm border border-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted text-foreground bg-card transition-colors"
                   >
                     Anterior
                   </button>
@@ -481,8 +481,8 @@ function CollectionContent() {
                         onClick={() => setCurrentPage(page)}
                         className={`w-9 h-9 text-sm border rounded-lg transition-colors ${
                           isActive
-                            ? "bg-gold-600 text-white border-gold-600"
-                            : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "border-border text-foreground bg-card hover:bg-muted"
                         }`}
                       >
                         {page}
@@ -492,7 +492,7 @@ function CollectionContent() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                     disabled={clampedPage === totalPages}
-                    className="px-3 py-2 text-sm border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="px-3 py-2 text-sm border border-border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted text-foreground bg-card transition-colors"
                   >
                     Siguiente
                   </button>
@@ -508,10 +508,8 @@ function CollectionContent() {
 
 export default function Collection() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <CollectionContent />
     </Suspense>
   );
 }
-
-

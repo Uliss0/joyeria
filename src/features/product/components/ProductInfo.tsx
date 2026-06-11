@@ -174,7 +174,7 @@ export function ProductInfo({
         {/* Badges */}
         <div className="flex items-center space-x-2">
           {isNew && <Badge className="bg-green-600 hover:bg-green-700">Nuevo</Badge>}
-          {isFeatured && <Badge className="bg-gold-600 hover:bg-gold-700">Destacado</Badge>}
+          {isFeatured && <Badge className="bg-primary hover:bg-primary/90">Destacado</Badge>}
           {discountPercentage > 0 && (
             <Badge className="bg-red-600 hover:bg-red-700">-{discountPercentage}%</Badge>
           )}
@@ -187,11 +187,11 @@ export function ProductInfo({
 
         {/* Title and SKU */}
         <div>
-          <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2">
+          <h1 className="text-3xl md:text-4xl font-light text-foreground mb-2">
             {name}
           </h1>
           {sku && (
-            <p className="text-sm text-gray-500">SKU: {sku}</p>
+            <p className="text-sm text-muted-foreground/80">SKU: {sku}</p>
           )}
         </div>
 
@@ -202,8 +202,8 @@ export function ProductInfo({
               <Badge
                 key={tag.name}
                 variant="secondary"
-                className="text-xs"
-                style={{ backgroundColor: tag.color ? `${tag.color}20` : undefined }}
+                className="text-xs bg-muted text-muted-foreground border-border"
+                style={{ backgroundColor: tag.color ? `${tag.color}15` : undefined, color: tag.color }}
               >
                 {tag.name}
               </Badge>
@@ -213,11 +213,11 @@ export function ProductInfo({
 
         {/* Price */}
         <div className="flex items-center space-x-3">
-          <span className="text-3xl font-semibold text-gray-900">
+          <span className="text-3xl font-semibold text-foreground">
             ${price.toLocaleString('es-AR')}
           </span>
           {compareAtPrice && (
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-xl text-muted-foreground/75 line-through">
               ${compareAtPrice.toLocaleString('es-AR')}
             </span>
           )}
@@ -225,7 +225,7 @@ export function ProductInfo({
 
       {/* Short Description */}
       {shortDescription && (
-        <p className="text-lg text-gray-600 leading-relaxed">
+        <p className="text-lg text-muted-foreground leading-relaxed">
           {shortDescription}
         </p>
       )}
@@ -235,7 +235,7 @@ export function ProductInfo({
           <button
             type="button"
             onClick={() => setIsRingTableOpen(true)}
-            className="group relative w-24 h-24 rounded-lg border border-gray-200 overflow-hidden hover:border-gold-600 transition-colors"
+            className="group relative w-24 h-24 rounded-lg border border-border overflow-hidden hover:border-primary transition-colors"
             aria-label="Abrir tabla de talles de anillos"
           >
             <Image
@@ -246,8 +246,8 @@ export function ProductInfo({
               sizes="96px"
             />
           </button>
-          <div className="text-sm text-gray-600">
-            <p className="font-medium text-gray-900">Guia de talles</p>
+          <div className="text-sm text-muted-foreground">
+            <p className="font-medium text-foreground">Guia de talles</p>
             <p>Click para ver en grande</p>
           </div>
         </div>
@@ -257,7 +257,7 @@ export function ProductInfo({
       {/* Variants */}
       {Object.entries(variantGroups).map(([variantName, variantOptions]) => (
         <div key={variantName} className="space-y-3">
-          <h3 className="font-medium text-gray-900">{variantName}</h3>
+          <h3 className="font-medium text-foreground">{variantName}</h3>
           <div className="flex flex-wrap gap-2">
             {variantOptions.map((variant) => (
               <button
@@ -266,8 +266,8 @@ export function ProductInfo({
                 className={cn(
                   "px-4 py-2 border rounded-lg text-sm font-medium transition-colors",
                   selectedVariants[variantName] === variant.value
-                    ? "border-gold-600 bg-gold-50 text-gold-700"
-                    : "border-gray-200 hover:border-gray-300 text-gray-700"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:border-primary/50 text-foreground"
                 )}
                 disabled={variant.stock === 0}
               >
@@ -283,29 +283,29 @@ export function ProductInfo({
       <div className="space-y-4">
         {/* Quantity Selector */}
         <div className="flex items-center space-x-4">
-          <span className="font-medium text-gray-900">Cantidad:</span>
-          <div className="flex items-center border border-gray-200 rounded-lg">
+          <span className="font-medium text-foreground">Cantidad:</span>
+          <div className="flex items-center border border-border rounded-lg bg-card">
             <button
               onClick={() => handleQuantityChange(quantity - 1)}
               disabled={quantity <= 1}
-              className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 hover:bg-muted text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               aria-label="Disminuir cantidad"
             >
               <Minus className="w-4 h-4" />
             </button>
-            <span className="px-4 py-2 font-medium min-w-[3rem] text-center">
+            <span className="px-4 py-2 font-medium min-w-[3rem] text-center text-foreground">
               {quantity}
             </span>
             <button
               onClick={() => handleQuantityChange(quantity + 1)}
               disabled={quantity >= stock}
-              className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 hover:bg-muted text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               aria-label="Aumentar cantidad"
             >
               <Plus className="w-4 h-4" />
             </button>
           </div>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-muted-foreground/85">
             {stock} disponibles
           </span>
         </div>
@@ -315,7 +315,7 @@ export function ProductInfo({
           <Button
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className="flex-1 bg-gold-600 hover:bg-gold-700 text-white py-3"
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 transition-colors cursor-pointer"
             size="lg"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
@@ -361,8 +361,8 @@ export function ProductInfo({
               }
             }}
             className={cn(
-              "border border-gray-200 hover:border-gray-300",
-              isWishlisted && "text-red-500 border-red-200"
+              "border border-border hover:border-primary/50 text-foreground transition-all",
+              isWishlisted && "text-red-500 border-red-200 bg-red-500/5 hover:border-red-300"
             )}
             aria-label="Agregar a favoritos"
           />
@@ -390,17 +390,17 @@ export function ProductInfo({
       </Dialog>
 
       {/* Trust Indicators */}
-      <div className="border-t pt-6">
+      <div className="border-t border-border pt-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center space-x-3 text-sm text-gray-600">
+          <div className="flex items-center space-x-3 text-sm text-muted-foreground">
             <Truck className="w-5 h-5 text-green-600 flex-shrink-0" />
             <span>Envío gratuito en compras mayores a $50.000</span>
           </div>
-          <div className="flex items-center space-x-3 text-sm text-gray-600">
+          <div className="flex items-center space-x-3 text-sm text-muted-foreground">
             <Shield className="w-5 h-5 text-blue-600 flex-shrink-0" />
             <span>Garantía de autenticidad</span>
           </div>
-          <div className="flex items-center space-x-3 text-sm text-gray-600">
+          <div className="flex items-center space-x-3 text-sm text-muted-foreground">
             <RotateCcw className="w-5 h-5 text-orange-600 flex-shrink-0" />
             <span>Devoluciones gratuitas por 30 días</span>
           </div>
@@ -408,13 +408,13 @@ export function ProductInfo({
       </div>
 
       {/* Additional Information */}
-      <div className="border-t pt-6 space-y-4">
+      <div className="border-t border-border pt-6 space-y-4">
         {/* Description */}
         {description && (
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Descripción</h3>
+            <h3 className="font-semibold text-foreground mb-2">Descripción</h3>
             <div
-              className="text-gray-600 leading-relaxed prose prose-sm max-w-none"
+              className="text-muted-foreground leading-relaxed prose prose-sm max-w-none prose-headings:text-foreground prose-a:text-primary"
               dangerouslySetInnerHTML={{ __html: description }}
             />
           </div>
@@ -423,16 +423,16 @@ export function ProductInfo({
         {/* Material */}
         {material && (
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Material</h3>
-            <p className="text-gray-600">{material}</p>
+            <h3 className="font-semibold text-foreground mb-2">Material</h3>
+            <p className="text-muted-foreground">{material}</p>
           </div>
         )}
 
         {/* Care Instructions */}
         {careInstructions && (
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Cuidados</h3>
-            <p className="text-gray-600">{careInstructions}</p>
+            <h3 className="font-semibold text-foreground mb-2">Cuidados</h3>
+            <p className="text-muted-foreground">{careInstructions}</p>
           </div>
         )}
       </div>

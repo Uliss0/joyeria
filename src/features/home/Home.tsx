@@ -10,6 +10,7 @@ import { BannerCarousel } from "@/shared/components/BannerCarousel";
 import dynamic from "next/dynamic";
 
 const InstagramFeedSection = dynamic(() => import("./components/InstagramFeedSection").then((mod) => mod.InstagramFeedSection), { ssr: false });
+const TestimonialsSection = dynamic(() => import("./components/TestimonialsSection").then((mod) => mod.TestimonialsSection), { ssr: false });
 
 // Definición de la interfaz Product (copiada de ProductGrid para asegurar compatibilidad)
 interface Product {
@@ -158,11 +159,12 @@ export default function Home() {
         subtitle="Las joyas más recientes de nuestra colección."
         products={products}
         loading={loading}
-        className="py-16"
+        className="hero-fade py-16"
       />
 
+
       {/* Value Proposition Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -171,10 +173,10 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-6 leading-snug">
+            <h2 className="text-4xl md:text-5xl font-serif font-light text-foreground mb-6 leading-snug">
               Diseño Exquisito. Artesanía Inigualable.
             </h2>
-            <p className="text-lg md:text-xl text-gray-700 font-sans leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground font-sans leading-relaxed">
               Cada pieza de MOKSHA es una obra de arte, meticulosamente diseñada
               y elaborada para capturar la esencia de la elegancia y la belleza atemporal.
             </p>
@@ -187,7 +189,7 @@ export default function Home() {
       <BannerCarousel className="py-10" />
 
       {/* Trust Indicators */}
-      <section className="py-16 bg-gold-50">
+      <section className="py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
             <motion.div
@@ -195,13 +197,16 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
-              className="flex flex-col items-center p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+              className="flex flex-col items-center p-6 rounded-xl bg-card shadow-sm hover:shadow-md transition-shadow"
+              style={{ boxShadow: "0 2px 12px rgba(164,122,74,0.10)" }}
             >
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-4">
-                <Shield className="w-8 h-8 text-gold-600" />
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4 trust-icon-bg"
+              >
+                <Shield className="w-8 h-8" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-900 mb-2">Pagos Seguros</h3>
-              <p className="text-gray-700 text-sm font-sans">
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-2">Pagos Seguros</h3>
+              <p className="text-muted-foreground text-sm font-sans">
                 Transacciones protegidas con encriptación de nivel bancario.
               </p>
             </motion.div>
@@ -211,13 +216,16 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="flex flex-col items-center p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+              className="flex flex-col items-center p-6 rounded-xl bg-card shadow-sm hover:shadow-md transition-shadow"
+              style={{ boxShadow: "0 2px 12px rgba(164,122,74,0.10)" }}
             >
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-4">
-                <Truck className="w-8 h-8 text-gold-600" />
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4 trust-icon-bg"
+              >
+                <Truck className="w-8 h-8" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-900 mb-2">Envíos Rápidos</h3>
-              <p className="text-gray-700 text-sm font-sans">
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-2">Envíos Rápidos</h3>
+              <p className="text-muted-foreground text-sm font-sans">
                 Entrega eficiente y seguimiento detallado hasta tu puerta.
               </p>
             </motion.div>
@@ -227,13 +235,16 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
-              className="flex flex-col items-center p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+              className="flex flex-col items-center p-6 rounded-xl bg-card shadow-sm hover:shadow-md transition-shadow"
+              style={{ boxShadow: "0 2px 12px rgba(164,122,74,0.10)" }}
             >
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-4">
-                <Headphones className="w-8 h-8 text-gold-600" />
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4 trust-icon-bg"
+              >
+                <Headphones className="w-8 h-8" />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-gray-900 mb-2">Soporte Premium</h3>
-              <p className="text-gray-700 text-sm font-sans">
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-2">Soporte Premium</h3>
+              <p className="text-muted-foreground text-sm font-sans">
                 Atención al cliente dedicada para una experiencia sin igual.
               </p>
             </motion.div>
@@ -241,51 +252,31 @@ export default function Home() {
         </div>
       </section>
 
+
+
       {/* Instagram Feed Section - Novedades */}
-      <InstagramFeedSection className="py-16 bg-gray-50" />
+      <InstagramFeedSection className="py-16" />
+
       
      
 
 
-      {/* Testimonials 
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="text-center mb-16 max-w-3xl mx-auto"
-          >
-            <h2 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-6 leading-snug">
-              Nuestros Clientes lo Confirman
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center p-8 bg-gold-50 rounded-lg shadow-lg"
-          >
-            <blockquote className="text-xl md:text-2xl text-gray-800 italic mb-6 leading-relaxed font-serif">
-              “Desde la búsqueda hasta la entrega, cada paso fue una experiencia de lujo.
-              La joya superó mis expectativas. Absolutamente recomendable.”
-            </blockquote>
-            <cite className="block text-gold-700 font-sans text-lg font-semibold">
-              — Ana M., Compradora Verificada
-            </cite>
-          </motion.div>
-        </div>
-      </section>
-
-        */}
+      {/* Testimonials */}
+      <TestimonialsSection />
 
       {/* Call to Action */}
-      <section className="py-24 bg-gray-900 text-white relative overflow-hidden">
-        {/* Decorative overlay */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-800 to-gray-950 opacity-90"></div>
+      <section className="cta-section py-24">
+        {/* Shimmer decoration */}
+        <div className="cta-shimmer" aria-hidden="true" />
+        {/* Floating gold orb */}
+        <div
+          className="absolute right-[12%] top-[18%] w-56 h-56 rounded-full pointer-events-none z-0"
+          style={{
+            background: "radial-gradient(circle, rgba(212,178,125,0.13) 0%, transparent 70%)",
+            animation: "float-orb 7s ease-in-out infinite",
+          }}
+          aria-hidden="true"
+        />
         <div className="container relative z-10 mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -294,10 +285,11 @@ export default function Home() {
             viewport={{ once: true }}
             className="max-w-3xl mx-auto"
           >
+            <p className="admin-kicker mb-4">Colección exclusiva</p>
             <h2 className="text-4xl md:text-5xl font-serif font-light mb-8 leading-snug">
               Descubre tu Próxima Joya Atemporal
             </h2>
-            <p className="text-xl md:text-2xl text-gray-300 mb-10 font-sans leading-relaxed">
+            <p className="cta-body-text text-xl md:text-2xl mb-10 font-sans leading-relaxed">
               Explora nuestra colección exclusiva y encuentra esa pieza
               única que te acompañará en cada momento especial.
             </p>
@@ -313,6 +305,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
     </main>
   );
 }

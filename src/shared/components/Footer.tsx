@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollToTopButton } from "./ScrollToTopButton";
 
 const footerLinks = {
   coleccion: [
@@ -93,19 +94,23 @@ export function Footer({ className }: FooterProps) {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-8">
-          <div className="max-w-md">
-            <h4 className="mb-2 font-semibold text-white">Mantente al dia</h4>
-            <p className="mb-4 text-sm text-white/55">Recibi las ultimas novedades y ofertas exclusivas.</p>
-            <div className="flex space-x-2">
-              <input
-                type="email"
-                placeholder="Tu email"
-                className="flex-1 rounded border border-white/12 bg-black/20 px-3 py-2 text-white placeholder:text-white/35 focus:border-gold-400 focus:outline-none"
-              />
-              <button className="rounded bg-gold-600 px-4 py-2 text-white transition-colors hover:bg-gold-700">
-                Suscribirse
-              </button>
+          <div className="flex items-end justify-between">
+            <div className="max-w-md">
+              <h4 className="mb-2 font-semibold text-white">Mantente al dia</h4>
+              <p className="mb-4 text-sm text-white/55">Recibi las ultimas novedades y ofertas exclusivas.</p>
+              <div className="flex space-x-2">
+                <input
+                  type="email"
+                  placeholder="Tu email"
+                  className="flex-1 rounded border border-white/12 bg-black/20 px-3 py-2 text-white placeholder:text-white/35 focus:border-gold-400 focus:outline-none"
+                />
+                <button className="rounded bg-gold-600 px-4 py-2 text-white transition-colors hover:bg-gold-700">
+                  Suscribirse
+                </button>
+              </div>
             </div>
+
+            <ScrollToTopButton />
           </div>
         </div>
 
