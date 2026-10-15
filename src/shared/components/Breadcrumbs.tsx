@@ -1,6 +1,3 @@
-import { BreadcrumbList,WithContext } from 'schema-dts';
-import { jsonLdScriptProps } from 'react-schemaorg';
-import Head from 'next/head';
 import Link from 'next/link';
 
 interface BreadcrumbItem {
@@ -15,24 +12,23 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
   // Crear datos estructurados para breadcrumbs
-  const structuredData:  WithContext<BreadcrumbList> = {
-    '@type': 'BreadcrumbList',
+  const structuredData = {
     '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: `https://moksha-joyeria.com${item.href}`,
+      item: `https://mokshajoyeria.com${item.href}`,
     })),
   };
 
   return (
     <>
-      <Head>
-        <script
-          {...jsonLdScriptProps<BreadcrumbList>(structuredData)}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
 
       {/* Breadcrumbs visuales */}
       <nav aria-label="Breadcrumb" className={`flex ${className}`}>

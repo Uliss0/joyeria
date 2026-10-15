@@ -14,7 +14,7 @@ export function OrganizationStructuredData() {
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '2915666668',
+      telephone: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+54 9 2915666668',
       contactType: 'customer service',
       availableLanguage: 'Spanish',
     },

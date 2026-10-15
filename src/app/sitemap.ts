@@ -1,19 +1,20 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+import { prisma } from '@/lib/prisma';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://moksha-joyeria.com' // Cambia esto por tu dominio real
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mokshajoyeria.com';
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/coleccion`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 0.9,
     },
     {
@@ -21,20 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
-    },
-    // Agrega más URLs según tu estructura
-    // En una app real, generarías estas URLs dinámicamente desde tu base de datos
-    {
-      url: `${baseUrl}/privacidad`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/terminos`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
     },
     {
       url: `${baseUrl}/envios`,
@@ -49,10 +36,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/producto/anillo-clasico-oro-18k`,
+      url: `${baseUrl}/privacidad`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
-  ]
+    {
+      url: `${baseUrl}/terminos`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.4,
+    },
+  ];
+
+  try {
+    const products = await prisma.product.findMany({
+      where: { isActive: true },
+      select: { slug: true, updatedAt: true },
+    });
+
+    const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
+      url: `${baseUrl}/producto/${product.slug}`,
+      lastModified: product.updatedAt || new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+
+    const categories = await prisma.category.findMany({
+      select: { slug: true, updatedAt: true },
+    });
+
+    const categoryRoutes: MetadataRoute.Sitemap = categories.map((cat) => ({
+      url: `${baseUrl}/coleccion?categoria=${cat.slug}`,
+      lastModified: cat.updatedAt || new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    }));
+
+    return [...staticRoutes, ...categoryRoutes, ...productRoutes];
+  } catch (error) {
+    console.error('Error generando sitemap dinámico:', error);
+    return staticRoutes;
+  }
 }

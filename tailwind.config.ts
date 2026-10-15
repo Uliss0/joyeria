@@ -107,10 +107,10 @@ export default {
         },
         "slide-in-right": {
           from: {
-            transform: "translateX(100%)",
+            transform: "translate3d(100%, 0, 0)",
           },
           to: {
-            transform: "translateX(0)",
+            transform: "translate3d(0, 0, 0)",
           },
         },
         "fade-in": {
@@ -126,7 +126,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out", 
         "slide-in": "slide-in 0.3s ease-out",
-        "slide-in-right": "slide-in-right 0.3s ease-out",
+        "slide-in-right": "slide-in-right 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
         "fade-in": "fade-in 0.2s ease-out",
       },
       transitionTimingFunction: {

@@ -1,6 +1,14 @@
 import { Suspense } from "react";
 import { CheckoutSuccessClient } from "./CheckoutSuccessClient";
 
+export const metadata = {
+  title: "Confirmación de Pedido | MOKSHA - Joyería Premium",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default function CheckoutSuccessPage() {
   return (
     <Suspense

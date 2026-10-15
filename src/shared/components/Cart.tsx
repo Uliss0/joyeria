@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, X, ShoppingBag } from "lucide-react";
@@ -44,11 +44,10 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="flex space-x-4 py-4 border-b border-border/40 last:border-b-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex space-x-4 py-4 border-b border-[var(--cart-border,rgba(255,255,255,0.08))] last:border-b-0"
     >
       {/* Product Image */}
       <Link href={`/producto/${item.slug}`} className="flex-shrink-0">
@@ -142,21 +141,6 @@ export function Cart({ className }: CartProps) {
   const shipping = subtotal >= shippingThreshold ? 0 : 5000;
   const total = subtotal + shipping;
 
-  // Detect active theme to match panel bg like the favorites panel
-  const [isLight, setIsLight] = useState(false);
-  useEffect(() => {
-    setIsLight(document.documentElement.classList.contains("light"));
-    const observer = new MutationObserver(() => {
-      setIsLight(document.documentElement.classList.contains("light"));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  const panelBg = isLight ? "#faf8f5" : "#222428";
-  const panelColor = isLight ? "#1e1a14" : "#f5efe4";
-  const borderColor = isLight ? "rgba(193,150,89,0.18)" : "rgba(255,255,255,0.08)";
-
   const handleCheckout = () => {
     closeCart();
     window.location.href = '/checkout';
@@ -168,20 +152,19 @@ export function Cart({ className }: CartProps) {
     <div className="fixed inset-0 z-[100] h-screen">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 h-screen"
+        className="absolute inset-0 bg-black/60 animate-fade-in h-screen"
         onClick={closeCart}
       />
 
       {/* Panel */}
       <div
-        className="absolute right-0 top-0 h-screen w-full sm:w-[28rem] animate-slide-in-right flex flex-col shadow-2xl"
-        style={{ backgroundColor: panelBg, color: panelColor }}
+        className="cart-panel absolute right-0 top-0 h-screen w-full sm:w-[28rem] animate-slide-in-right flex flex-col shadow-2xl"
       >
 
         {/* Header */}
-        <div className="flex items-center gap-3 p-6" style={{ borderBottom: `1px solid ${borderColor}` }}>
+        <div className="flex items-center gap-3 p-6 border-b border-[var(--cart-border,rgba(255,255,255,0.08))]">
           <ShoppingBag className="w-5 h-5 text-primary flex-shrink-0" />
-          <h2 className="font-serif text-xl font-semibold tracking-wide flex-1" style={{ color: panelColor }}>
+          <h2 className="font-serif text-xl font-semibold tracking-wide flex-1">
             Carrito de Compras
           </h2>
           <span className="text-xs font-sans font-medium opacity-60">
@@ -230,7 +213,7 @@ export function Cart({ className }: CartProps) {
             </div>
 
             {/* Cart Summary */}
-            <div className="px-6 pb-6 pt-4 space-y-4" style={{ borderTop: `1px solid ${borderColor}` }}>
+            <div className="px-6 pb-6 pt-4 space-y-4 border-t border-[var(--cart-border,rgba(255,255,255,0.08))]">
               {/* Shipping Notice */}
               {subtotal < shippingThreshold && (
                 <div className="bg-primary/10 rounded-lg p-3">
@@ -252,7 +235,7 @@ export function Cart({ className }: CartProps) {
                     {shipping === 0 ? 'Gratis' : `$${shipping.toLocaleString('es-AR')}`}
                   </span>
                 </div>
-                <div className="flex justify-between font-semibold text-base pt-2" style={{ borderTop: `1px solid ${borderColor}` }}>
+                <div className="flex justify-between font-semibold text-base pt-2 border-t border-[var(--cart-border,rgba(255,255,255,0.08))]">
                   <span>Total</span>
                   <span>${total.toLocaleString('es-AR')}</span>
                 </div>

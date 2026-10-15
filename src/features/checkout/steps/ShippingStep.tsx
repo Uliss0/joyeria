@@ -92,20 +92,20 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
   };
 
   return (
-    <div className={cn("max-w-2xl mx-auto", className)}>
+    <div className={cn("max-w-2xl mx-auto bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm text-foreground", className)}>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Contact Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Información de contacto</h3>
+          <h3 className="text-lg font-serif font-semibold text-foreground border-b border-border/50 pb-2">Información de contacto</h3>
 
           <div>
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email" className="text-foreground font-medium text-sm">Email *</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className={cn(errors.email && "border-red-500")}
+              className={cn("mt-1.5", errors.email && "border-red-500")}
               placeholder="tu@email.com"
             />
             {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
@@ -114,69 +114,70 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
 
         {/* Shipping Address */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Dirección de envío</h3>
+          <h3 className="text-lg font-serif font-semibold text-foreground border-b border-border/50 pb-2">Dirección de envío</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="firstName">Nombre *</Label>
+              <Label htmlFor="firstName" className="text-foreground font-medium text-sm">Nombre *</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
-                className={cn(errors.firstName && "border-red-500")}
+                className={cn("mt-1.5", errors.firstName && "border-red-500")}
               />
               {errors.firstName && <p className="text-sm text-red-600 mt-1">{errors.firstName}</p>}
             </div>
 
             <div>
-              <Label htmlFor="lastName">Apellido *</Label>
+              <Label htmlFor="lastName" className="text-foreground font-medium text-sm">Apellido *</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
-                className={cn(errors.lastName && "border-red-500")}
+                className={cn("mt-1.5", errors.lastName && "border-red-500")}
               />
               {errors.lastName && <p className="text-sm text-red-600 mt-1">{errors.lastName}</p>}
             </div>
           </div>
 
           <div>
-            <Label htmlFor="address1">Dirección *</Label>
+            <Label htmlFor="address1" className="text-foreground font-medium text-sm">Dirección *</Label>
             <Input
               id="address1"
               value={formData.address1}
               onChange={(e) => handleInputChange('address1', e.target.value)}
-              className={cn(errors.address1 && "border-red-500")}
+              className={cn("mt-1.5", errors.address1 && "border-red-500")}
               placeholder="Calle y número"
             />
             {errors.address1 && <p className="text-sm text-red-600 mt-1">{errors.address1}</p>}
           </div>
 
           <div>
-            <Label htmlFor="address2">Apartamento, piso, etc. (opcional)</Label>
+            <Label htmlFor="address2" className="text-foreground font-medium text-sm">Apartamento, piso, etc. (opcional)</Label>
             <Input
               id="address2"
               value={formData.address2}
               onChange={(e) => handleInputChange('address2', e.target.value)}
+              className="mt-1.5"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <Label htmlFor="city">Ciudad *</Label>
+              <Label htmlFor="city" className="text-foreground font-medium text-sm">Ciudad *</Label>
               <Input
                 id="city"
                 value={formData.city}
                 onChange={(e) => handleInputChange('city', e.target.value)}
-                className={cn(errors.city && "border-red-500")}
+                className={cn("mt-1.5", errors.city && "border-red-500")}
               />
               {errors.city && <p className="text-sm text-red-600 mt-1">{errors.city}</p>}
             </div>
 
             <div>
-              <Label htmlFor="state">Provincia *</Label>
+              <Label htmlFor="state" className="text-foreground font-medium text-sm">Provincia *</Label>
               <Select value={formData.state} onValueChange={(value) => handleInputChange('state', value)}>
-                <SelectTrigger className={cn(errors.state && "border-red-500")}>
+                <SelectTrigger className={cn("mt-1.5", errors.state && "border-red-500")}>
                   <SelectValue placeholder="Seleccionar provincia" />
                 </SelectTrigger>
                 <SelectContent>
@@ -191,25 +192,25 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
             </div>
 
             <div>
-              <Label htmlFor="zipCode">Código postal *</Label>
+              <Label htmlFor="zipCode" className="text-foreground font-medium text-sm">Código postal *</Label>
               <Input
                 id="zipCode"
                 value={formData.zipCode}
                 onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                className={cn(errors.zipCode && "border-red-500")}
+                className={cn("mt-1.5", errors.zipCode && "border-red-500")}
               />
               {errors.zipCode && <p className="text-sm text-red-600 mt-1">{errors.zipCode}</p>}
             </div>
           </div>
 
           <div>
-            <Label htmlFor="phone">Teléfono *</Label>
+            <Label htmlFor="phone" className="text-foreground font-medium text-sm">Teléfono *</Label>
             <Input
               id="phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
-              className={cn(errors.phone && "border-red-500")}
+              className={cn("mt-1.5", errors.phone && "border-red-500")}
               placeholder="+54 2915666668"
             />
             {errors.phone && <p className="text-sm text-red-600 mt-1">{errors.phone}</p>}
@@ -218,10 +219,15 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
 
         {/* Shipping Options */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Método de envío</h3>
+          <h3 className="text-lg font-serif font-semibold text-foreground border-b border-border/50 pb-2">Método de envío</h3>
 
           <div className="space-y-3">
-            <label className="flex items-center space-x-3 cursor-pointer">
+            <label className={cn(
+              "flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer",
+              formData.shippingMethod === 'standard'
+                ? "bg-gold-500/10 border-gold-500 shadow-sm"
+                : "bg-background/60 border-border hover:border-border/80"
+            )}>
               <input
                 type="radio"
                 name="shipping"
@@ -232,14 +238,19 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
               />
               <div className="flex-1">
                 <div className="flex justify-between">
-                  <span className="font-medium">Envío estándar</span>
-                  <span className="font-medium">$5.000</span>
+                  <span className="font-medium text-foreground">Envío estándar</span>
+                  <span className="font-medium text-foreground">$5.000</span>
                 </div>
-                <p className="text-sm text-gray-600">5-7 días hábiles</p>
+                <p className="text-sm text-muted-foreground">5-7 días hábiles</p>
               </div>
             </label>
 
-            <label className="flex items-center space-x-3 cursor-pointer">
+            <label className={cn(
+              "flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer",
+              formData.shippingMethod === 'express'
+                ? "bg-gold-500/10 border-gold-500 shadow-sm"
+                : "bg-background/60 border-border hover:border-border/80"
+            )}>
               <input
                 type="radio"
                 name="shipping"
@@ -250,35 +261,35 @@ export function ShippingStep({ initialData, onNext, onBack, className }: Shippin
               />
               <div className="flex-1">
                 <div className="flex justify-between">
-                  <span className="font-medium">Envío express</span>
-                  <span className="font-medium">$12.000</span>
+                  <span className="font-medium text-foreground">Envío express</span>
+                  <span className="font-medium text-foreground">$12.000</span>
                 </div>
-                <p className="text-sm text-gray-600">2-3 días hábiles</p>
+                <p className="text-sm text-muted-foreground">2-3 días hábiles</p>
               </div>
             </label>
           </div>
         </div>
 
         {/* Save Address */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 pt-2">
           <Checkbox
             id="saveAddress"
             checked={formData.saveAddress}
             onCheckedChange={(checked) => handleInputChange('saveAddress', !!checked)}
           />
-          <Label htmlFor="saveAddress" className="text-sm">
+          <Label htmlFor="saveAddress" className="text-sm text-foreground cursor-pointer">
             Guardar esta dirección para futuras compras
           </Label>
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between pt-6">
+        <div className="flex justify-between pt-6 border-t border-border">
           {onBack && (
-            <Button type="button" variant="outline" onClick={onBack}>
+            <Button type="button" variant="outline" onClick={onBack} className="border-border text-foreground hover:bg-muted cursor-pointer">
               Volver al carrito
             </Button>
           )}
-          <Button type="submit" className="bg-gold-600 hover:bg-gold-700 ml-auto">
+          <Button type="submit" className="btn-gold text-white ml-auto cursor-pointer">
             Continuar al pago
           </Button>
         </div>

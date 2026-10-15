@@ -98,26 +98,26 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-transparent py-6 md:py-10 text-foreground">
+      <div className="container mx-auto px-4">
         {items.length === 0 ? (
-          <div className="mx-auto flex max-w-2xl flex-col items-center rounded-[2rem] border border-white/10 bg-white p-10 text-center shadow-sm">
-            <div className="mb-4 rounded-full bg-gold-50 p-4 text-gold-600">
+          <div className="mx-auto flex max-w-2xl flex-col items-center rounded-3xl border border-border bg-card p-10 text-center shadow-md">
+            <div className="mb-4 rounded-full bg-gold-500/10 p-4 text-gold-600 dark:text-gold-400">
               <ShoppingBag className="h-8 w-8" />
             </div>
-            <h1 className="text-3xl font-semibold text-gray-900">Tu carrito está vacío</h1>
-            <p className="mt-3 max-w-lg text-gray-600">
+            <h1 className="text-3xl font-serif font-light text-foreground">Tu carrito está vacío</h1>
+            <p className="mt-3 max-w-lg text-muted-foreground font-sans">
               Agregá productos antes de continuar al checkout. Así podemos generar un pedido real con tu selección.
             </p>
-            <Button asChild className="mt-6 bg-gold-600 hover:bg-gold-700">
+            <Button asChild className="mt-6 btn-gold text-white">
               <Link href="/coleccion">Explorar colección</Link>
             </Button>
           </div>
         ) : (
           <>
-            <div className="mb-8 text-center">
-              <h1 className="mb-2 text-3xl font-light text-gray-900">Checkout</h1>
-              <p className="text-gray-600">Completa tu pedido de manera segura</p>
+            <div className="mb-10 text-center">
+              <h1 className="mb-2 text-3xl md:text-4xl font-serif font-light text-foreground">Checkout</h1>
+              <p className="text-muted-foreground font-sans">Completa tu pedido de manera segura</p>
             </div>
 
             <CheckoutSteps currentStep={currentStep} steps={steps} />

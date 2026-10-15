@@ -64,19 +64,19 @@ export function ReviewStep({ shippingData, paymentData, items, onComplete, onBac
   };
 
   return (
-    <div className={cn("max-w-4xl mx-auto", className)}>
+    <div className={cn("max-w-4xl mx-auto text-foreground", className)}>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-gray-900">Revisar y confirmar</h3>
+            <h3 className="mb-4 text-xl font-serif font-light text-foreground">Revisar y confirmar</h3>
 
-            <div className="mb-4 rounded-2xl bg-gray-50 p-4">
-              <div className="mb-3 flex items-center space-x-2">
-                <MapPin className="h-5 w-5 text-gray-600" />
-                <h4 className="font-medium text-gray-900">Dirección de envío</h4>
+            <div className="mb-4 rounded-2xl bg-card border border-border p-5 shadow-sm">
+              <div className="mb-3 flex items-center space-x-2 border-b border-border/50 pb-2">
+                <MapPin className="h-5 w-5 text-gold-600 dark:text-gold-400" />
+                <h4 className="font-medium text-foreground">Dirección de envío</h4>
               </div>
-              <div className="space-y-1 text-sm text-gray-600">
-                <p>
+              <div className="space-y-1 text-sm text-muted-foreground font-sans">
+                <p className="font-medium text-foreground">
                   {shippingData.firstName} {shippingData.lastName}
                 </p>
                 <p>{shippingData.address1}</p>
@@ -86,45 +86,45 @@ export function ReviewStep({ shippingData, paymentData, items, onComplete, onBac
                 </p>
                 <p>Argentina</p>
               </div>
-              <div className="mt-2 flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-600">{shippingData.phone}</span>
+              <div className="mt-3 flex items-center space-x-2 pt-2 border-t border-border/40">
+                <Phone className="h-4 w-4 text-gold-600/70 dark:text-gold-400/70" />
+                <span className="text-sm text-muted-foreground">{shippingData.phone}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-600">{shippingData.email}</span>
+              <div className="flex items-center space-x-2 mt-1">
+                <Mail className="h-4 w-4 text-gold-600/70 dark:text-gold-400/70" />
+                <span className="text-sm text-muted-foreground">{shippingData.email}</span>
               </div>
             </div>
 
-            <div className="mb-4 rounded-2xl bg-gray-50 p-4">
-              <div className="mb-3 flex items-center space-x-2">
-                <Truck className="h-5 w-5 text-gray-600" />
-                <h4 className="font-medium text-gray-900">Método de envío</h4>
+            <div className="mb-4 rounded-2xl bg-card border border-border p-5 shadow-sm">
+              <div className="mb-3 flex items-center space-x-2 border-b border-border/50 pb-2">
+                <Truck className="h-5 w-5 text-gold-600 dark:text-gold-400" />
+                <h4 className="font-medium text-foreground">Método de envío</h4>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">
                   {shippingData.shippingMethod === "express" ? "Envío express" : "Envío estándar"}
                 </span>
-                <span className="text-sm font-medium text-gray-900">{formatCurrency(shippingCost)}</span>
+                <span className="text-sm font-medium text-foreground">{formatCurrency(shippingCost)}</span>
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-muted-foreground/80 font-sans">
                 {shippingData.shippingMethod === "express" ? "2-3 días hábiles" : "5-7 días hábiles"}
               </p>
             </div>
 
-            <div className="rounded-2xl bg-gray-50 p-4">
-              <div className="mb-3 flex items-center space-x-2">
-                <CreditCard className="h-5 w-5 text-gray-600" />
-                <h4 className="font-medium text-gray-900">Método de pago</h4>
+            <div className="rounded-2xl bg-card border border-border p-5 shadow-sm">
+              <div className="mb-3 flex items-center space-x-2 border-b border-border/50 pb-2">
+                <CreditCard className="h-5 w-5 text-gold-600 dark:text-gold-400" />
+                <h4 className="font-medium text-foreground">Método de pago</h4>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">{paymentLabel}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">{paymentLabel}</span>
                 {isCardPaymentMethod(paymentData.paymentMethod) && paymentData.cardNumber ? (
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm font-medium text-foreground">
                     •••• •••• •••• {paymentData.cardNumber.slice(-4)}
                   </span>
                 ) : (
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm font-medium text-foreground">
                     {paymentData.paymentMethod === "MERCADO_PAGO"
                       ? "Cobro online"
                       : paymentData.paymentMethod === "TRANSFERENCIA"
@@ -134,26 +134,28 @@ export function ReviewStep({ shippingData, paymentData, items, onComplete, onBac
                 )}
               </div>
               {isCardPaymentMethod(paymentData.paymentMethod) && paymentData.cardholderName && (
-                <p className="mt-1 text-xs text-gray-500">{paymentData.cardholderName}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{paymentData.cardholderName}</p>
               )}
             </div>
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <div className="sticky top-4 rounded-2xl bg-gray-50 p-4">
-            <h4 className="mb-4 font-medium text-gray-900">Resumen del pedido</h4>
+          <div className="sticky top-4 rounded-2xl bg-card border border-border p-6 shadow-sm">
+            <h4 className="mb-4 font-serif font-semibold text-lg text-foreground border-b border-border/50 pb-2">
+              Resumen del pedido
+            </h4>
 
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2.5 text-sm">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
+                <span className="text-muted-foreground">Subtotal</span>
+                <span className="font-medium text-foreground">{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Envío</span>
-                <span>{formatCurrency(shippingCost)}</span>
+                <span className="text-muted-foreground">Envío</span>
+                <span className="font-medium text-foreground">{formatCurrency(shippingCost)}</span>
               </div>
-              <div className="mt-2 flex justify-between border-t border-gray-200 pt-2 text-base font-semibold">
+              <div className="mt-3 flex justify-between border-t border-border pt-3 text-lg font-serif font-semibold text-foreground">
                 <span>Total</span>
                 <span>{formatCurrency(total)}</span>
               </div>
@@ -163,7 +165,7 @@ export function ReviewStep({ shippingData, paymentData, items, onComplete, onBac
               <Button
                 onClick={handleCompleteOrder}
                 disabled={isProcessing}
-                className="w-full bg-gold-600 hover:bg-gold-700"
+                className="w-full btn-gold text-white cursor-pointer shadow-md"
                 size="lg"
               >
                 {isProcessing ? (
@@ -184,18 +186,18 @@ export function ReviewStep({ shippingData, paymentData, items, onComplete, onBac
                 variant="outline"
                 onClick={onBack}
                 disabled={isProcessing}
-                className="w-full"
+                className="w-full border-border text-foreground hover:bg-muted cursor-pointer"
               >
                 Volver
               </Button>
             </div>
 
-            <div className="mt-4 text-center text-xs text-gray-500">
+            <div className="mt-4 text-center text-xs text-muted-foreground">
               <p>Al confirmar, aceptas nuestros términos y condiciones.</p>
             </div>
 
             {error && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
                 {error}
               </div>
             )}

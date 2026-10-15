@@ -46,12 +46,25 @@ export async function GET(
     const { productId } = await params;
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      include: { images: true, category: true },
+      include: {
+        images: true,
+        category: true,
+        producttoproducttag: {
+          include: {
+            product_tags: true,
+          },
+        },
+      },
     });
 
     if (!product) {
       return NextResponse.json({ message: "Producto no encontrado" }, { status: 404 });
     }
+
+    const themesStr = (product.producttoproducttag || [])
+      .map((link) => link.product_tags?.name)
+      .filter(Boolean)
+      .join(", ");
 
     return NextResponse.json({
       id: product.id,
@@ -64,6 +77,7 @@ export async function GET(
       categoryId: product.categoryId,
       gender: product.gender || "",
       material: product.material || "",
+      themes: themesStr,
       isActive: product.isActive,
       image: product.images.find((img) => img.isMain)?.url || product.images[0]?.url || null,
       images: product.images.map((img) => ({ id: img.id, url: img.url, isMain: img.isMain, order: img.order })),
@@ -94,6 +108,7 @@ export async function PATCH(
       gender,
       metal,
       description,
+      themes,
       isActive,
       newImageDataUrls,
       deletedImageIds,
@@ -199,6 +214,38 @@ export async function PATCH(
       where: { id: productId },
       data,
     });
+
+    if (themes !== undefined) {
+      await prisma.producttoproducttag.deleteMany({
+        where: { A: productId },
+      });
+      const themeList = Array.isArray(themes)
+        ? themes
+        : typeof themes === "string"
+          ? themes.split(",")
+          : [];
+      const uniqueThemes = Array.from(
+        new Set(themeList.map((t: string) => t.trim()).filter(Boolean))
+      );
+      for (const theme of uniqueThemes) {
+        const slug = theme
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, "");
+        if (slug) {
+          const tag = await prisma.productTag.upsert({
+            where: { slug },
+            update: { name: theme },
+            create: { name: theme, slug },
+          });
+          await prisma.producttoproducttag.create({
+            data: { A: productId, B: tag.id },
+          });
+        }
+      }
+    }
 
     return NextResponse.json({ ok: true, id: product.id });
   } catch (err: any) {

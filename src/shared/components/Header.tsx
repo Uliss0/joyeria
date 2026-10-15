@@ -166,9 +166,18 @@ interface HeaderProps {
 }
 
 const toCategorySlug = (label: string) => {
-  const normalized = label.toLowerCase().replace(/\s+/g, "-");
+  const normalized = label
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
   const overrides: Record<string, string> = {
     pulseras: "pulseras",
+    relojeria: "relojes",
+    relojes: "relojes",
+    "piezas-unicas": "piezas-unicas",
   };
   return overrides[normalized] ?? normalized;
 };
@@ -351,7 +360,8 @@ const Header = () => {
         "Collares", 
         "Aros",
         "Pulseras",
-        "Relojes"
+        "Relojes",
+        "Piezas Únicas"
       ],
       images: [
         { src: "/rings-collection.webp", alt: "Coleccion de anillos", label: "Anillos" },
@@ -484,7 +494,13 @@ const Header = () => {
               onMouseLeave={() => setIsAdminMenuOpen(false)}
             >
               <Link href="/admin/new-product">
-                <Button variant="outline" size="sm" className="cursor-pointer">Subir productos</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="cursor-pointer border-slate-700 bg-[#18191c] text-white hover:bg-slate-700 hover:text-white"
+                >
+                  Subir productos
+                </Button>
               </Link>
 
               {isAdminMenuOpen && (
@@ -688,7 +704,7 @@ const Header = () => {
         <div className="fixed inset-0 z-[100] h-screen">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm h-screen"
+            className="absolute inset-0 bg-black/60 animate-fade-in h-screen"
             onClick={() => setOffCanvasType(null)}
           />
           

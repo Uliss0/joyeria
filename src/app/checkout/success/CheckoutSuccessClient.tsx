@@ -47,90 +47,94 @@ export function CheckoutSuccessClient() {
   }, [orderId]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-transparent px-4 py-12 text-foreground">
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle className="h-8 w-8 text-green-600" />
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+          <CheckCircle className="h-8 w-8" />
         </div>
 
-        <h1 className="mb-2 text-2xl font-bold text-gray-900">
+        <h1 className="mb-2 text-2xl md:text-3xl font-serif font-light text-foreground">
           {loading ? "Confirmando pedido..." : "¡Pedido confirmado!"}
         </h1>
-        <p className="mb-8 text-gray-600">
+        <p className="mb-8 text-muted-foreground font-sans text-sm md:text-base">
           Gracias por tu compra. Hemos recibido tu pedido y lo estamos procesando.
         </p>
 
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-900">Detalles del pedido</h2>
+        <div className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <h2 className="mb-4 font-serif font-medium text-lg text-foreground border-b border-border/50 pb-2">
+            Detalles del pedido
+          </h2>
 
           {loading ? (
-            <p className="text-sm text-gray-500">Estamos recuperando el resumen del pedido...</p>
+            <p className="text-sm text-muted-foreground">Estamos recuperando el resumen del pedido...</p>
           ) : error ? (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           ) : order ? (
             <div className="space-y-3 text-sm">
               <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Número de pedido:</span>
-                <span className="font-medium text-gray-900">#{order.orderNumber}</span>
+                <span className="text-muted-foreground">Número de pedido:</span>
+                <span className="font-medium text-foreground">#{order.orderNumber}</span>
               </div>
               <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Estado:</span>
-                <span className="font-medium text-gray-900">{getOrderStatusLabel(order.status)}</span>
+                <span className="text-muted-foreground">Estado:</span>
+                <span className="font-medium text-foreground">{getOrderStatusLabel(order.status)}</span>
               </div>
               <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Método de pago:</span>
-                <span className="font-medium text-gray-900">{getPaymentMethodLabel(order.paymentMethod)}</span>
+                <span className="text-muted-foreground">Método de pago:</span>
+                <span className="font-medium text-foreground">{getPaymentMethodLabel(order.paymentMethod)}</span>
               </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Total:</span>
-                <span className="font-medium text-gray-900">{formatCurrency(order.total)}</span>
+              <div className="flex justify-between gap-4 border-t border-border/50 pt-2 font-semibold">
+                <span className="text-muted-foreground">Total:</span>
+                <span className="text-foreground">{formatCurrency(order.total)}</span>
               </div>
             </div>
           ) : (
             <div className="space-y-3 text-sm">
               <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Número de pedido:</span>
-                <span className="font-medium text-gray-900">Pendiente de sincronización</span>
+                <span className="text-muted-foreground">Número de pedido:</span>
+                <span className="font-medium text-foreground">Pendiente de sincronización</span>
               </div>
             </div>
           )}
         </div>
 
-        <div className="mb-8 rounded-lg border border-blue-200 bg-blue-50 p-4 text-left">
-          <h3 className="mb-3 font-semibold text-blue-900">¿Qué sucede ahora?</h3>
-          <div className="space-y-3 text-sm text-blue-800">
+        <div className="mb-8 rounded-2xl border border-gold-500/30 bg-gold-500/10 p-5 text-left">
+          <h3 className="mb-3 font-serif font-semibold text-foreground text-sm uppercase tracking-wide">
+            ¿Qué sucede ahora?
+          </h3>
+          <div className="space-y-3 text-sm text-foreground/80 font-sans">
             <div className="flex items-start gap-3">
-              <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600" />
+              <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold-600 dark:text-gold-400" />
               <span>Recibirás un email de confirmación con los detalles de tu pedido</span>
             </div>
             <div className="flex items-start gap-3">
-              <Package className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600" />
+              <Package className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold-600 dark:text-gold-400" />
               <span>Procesaremos tu pedido en 1-2 días hábiles</span>
             </div>
             <div className="flex items-start gap-3">
-              <Truck className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600" />
+              <Truck className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold-600 dark:text-gold-400" />
               <span>Te enviaremos actualizaciones de envío por email</span>
             </div>
           </div>
         </div>
 
         <div className="space-y-3">
-          <Button asChild className="w-full bg-gold-600 hover:bg-gold-700">
+          <Button asChild className="w-full btn-gold text-white cursor-pointer shadow-md">
             <Link href="/cuenta/pedidos">Ver estado del pedido</Link>
           </Button>
-          <Button variant="outline" asChild className="w-full">
+          <Button variant="outline" asChild className="w-full border-border text-foreground hover:bg-muted cursor-pointer">
             <Link href="/coleccion">Continuar comprando</Link>
           </Button>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-xs text-muted-foreground">
           <p>¿Necesitas ayuda? Contactanos:</p>
           <p className="mt-1">
-            <a href="mailto:hola@moksha.com.ar" className="text-gold-600 hover:text-gold-700">
+            <a href="mailto:hola@moksha.com.ar" className="text-gold-600 hover:text-gold-700 dark:text-gold-400">
               hola@moksha.com.ar
             </a>
             {" • "}
-            <a href="tel:2915666668" className="text-gold-600 hover:text-gold-700">
+            <a href="tel:2915666668" className="text-gold-600 hover:text-gold-700 dark:text-gold-400">
               2915666668
             </a>
           </p>

@@ -80,11 +80,11 @@ export const ProductCard = ({ product }: { product: Product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="group relative premium-card rounded-xl overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300"
+      className="group relative premium-card rounded-xl overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 h-full flex flex-col justify-between"
     >
-      <Link href={`/producto/${product.slug}`} className="block">
+      <Link href={`/producto/${product.slug}`} className="block flex-shrink-0">
         <div
-          className="relative aspect-square bg-muted/40 overflow-hidden cursor-pointer"
+          className="relative aspect-square w-full bg-muted/40 overflow-hidden cursor-pointer"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -260,19 +260,23 @@ export const ProductCard = ({ product }: { product: Product }) => {
       </Link>
 
       {/* Product Info */}
-      <div className="p-4 space-y-2 bg-transparent">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground uppercase tracking-wide font-sans">
+      <div className="p-4 flex flex-col flex-1 justify-between gap-2.5 bg-transparent">
+        <div className="flex items-center justify-between gap-1 min-h-[1.75rem]">
+          <span className="text-xs text-muted-foreground uppercase tracking-wide font-sans truncate">
             {product.category.name}
           </span>
           {product.tags && product.tags.length > 0 && (
-            <div className="flex space-x-1">
+            <div className="flex flex-wrap gap-1 items-center justify-end max-w-[65%]">
               {product.tags.slice(0, 2).map((tag) => (
                 <Badge
                   key={tag.name}
                   variant="secondary"
-                  className="text-xs px-1.5 py-0.5 font-sans bg-muted text-muted-foreground border-border"
-                  style={{ backgroundColor: tag.color ? `${tag.color}15` : undefined, color: tag.color }}
+                  className="text-[10px] px-1.5 py-0.5 font-sans rounded-md bg-gold-500/15 text-gold-700 dark:text-gold-300 border border-gold-500/30 font-medium tracking-tight whitespace-nowrap"
+                  style={
+                    tag.color && tag.color !== "#000" && tag.color !== "#000000"
+                      ? { backgroundColor: `${tag.color}20`, borderColor: `${tag.color}40`, color: tag.color }
+                      : undefined
+                  }
                 >
                   {tag.name}
                 </Badge>
@@ -281,19 +285,19 @@ export const ProductCard = ({ product }: { product: Product }) => {
           )}
         </div>
 
-        <Link href={`/producto/${product.slug}`}>
-          <h3 className="font-serif text-lg font-medium text-foreground hover:text-primary transition-colors line-clamp-2">
+        <Link href={`/producto/${product.slug}`} className="block">
+          <h3 className="font-serif text-base md:text-lg font-medium text-foreground hover:text-primary transition-colors line-clamp-2 min-h-[2.75rem] flex items-center leading-snug">
             {product.name}
           </h3>
         </Link>
 
-        <div className="flex items-center space-x-2 pt-1">
-          <span className="text-xl font-serif font-semibold text-foreground">
-            ${product.price.toLocaleString('es-AR')}
+        <div className="flex items-baseline space-x-2 pt-1 mt-auto border-t border-border/30">
+          <span className="text-lg md:text-xl font-serif font-semibold text-foreground">
+            ${product.price.toLocaleString("es-AR")}
           </span>
-          {product.compareAtPrice && (
-            <span className="text-sm text-muted-foreground line-through font-sans">
-              ${product.compareAtPrice.toLocaleString('es-AR')}
+          {product.compareAtPrice && product.compareAtPrice > product.price && (
+            <span className="text-xs md:text-sm text-muted-foreground line-through font-sans">
+              ${product.compareAtPrice.toLocaleString("es-AR")}
             </span>
           )}
         </div>

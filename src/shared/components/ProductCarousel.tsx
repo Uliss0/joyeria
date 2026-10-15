@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,11 @@ interface ProductCarouselProps {
 }
 
 export function ProductCarousel({ products, title, subtitle, className, loading = false, id }: ProductCarouselProps) {
+  const rawId = useId();
+  const safeId = rawId.replace(/[^a-zA-Z0-9_-]/g, "");
+  const prevBtnClass = `swiper-prev-${safeId}`;
+  const nextBtnClass = `swiper-next-${safeId}`;
+
   if (!loading && products.length === 0) return null;
 
   return (
@@ -65,13 +71,13 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
           </div>
         )}
 
-        <div className="relative">
+        <div className="relative group/carousel">
           <Swiper
             slidesPerView={1}
             spaceBetween={20}
             navigation={{
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
+              nextEl: `.${nextBtnClass}`,
+              prevEl: `.${prevBtnClass}`,
             }}
             pagination={false}
             breakpoints={{
@@ -85,27 +91,37 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
             {loading
               ? Array.from({ length: 6 }).map((_, i) => (
                   <SwiperSlide key={i}>
-                    <div className="animate-pulse group relative border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-                      <div className="relative aspect-square bg-gray-200" />
+                    <div className="animate-pulse group relative border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                      <div className="relative aspect-square bg-muted" />
                       <div className="p-4 space-y-2">
-                        <div className="h-4 bg-gray-200 rounded w-3/4" />
-                        <div className="h-6 bg-gray-200 rounded" />
-                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                        <div className="h-4 bg-muted rounded w-3/4" />
+                        <div className="h-6 bg-muted rounded" />
+                        <div className="h-4 bg-muted rounded w-1/2" />
                       </div>
                     </div>
                   </SwiperSlide>
                 ))
               : products.map((product) => (
-                  <SwiperSlide key={product.id}>
+                  <SwiperSlide key={product.id} className="h-auto pb-2">
                     <ProductCard product={product} />
                   </SwiperSlide>
                 ))}
           </Swiper>
 
-          <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 -ml-6 bg-card/80 hover:bg-card border border-border z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
+          <div
+            className={cn(
+              prevBtnClass,
+              "absolute left-0 top-1/2 -translate-y-1/2 -ml-3 md:-ml-5 bg-card/90 hover:bg-card border border-border z-10 opacity-70 group-hover/carousel:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex"
+            )}
+          >
             <ChevronLeft className="w-5 h-5 text-foreground" />
           </div>
-          <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 -mr-6 bg-card/80 hover:bg-card border border-border z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex">
+          <div
+            className={cn(
+              nextBtnClass,
+              "absolute right-0 top-1/2 -translate-y-1/2 -mr-3 md:-mr-5 bg-card/90 hover:bg-card border border-border z-10 opacity-70 group-hover/carousel:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex"
+            )}
+          >
             <ChevronRight className="w-5 h-5 text-foreground" />
           </div>
         </div>

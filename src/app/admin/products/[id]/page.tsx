@@ -18,6 +18,7 @@ type ProductForm = {
   gender: string;
   metal: string;
   description: string;
+  themes: string;
   isActive: boolean;
 };
 
@@ -40,6 +41,7 @@ export default function AdminEditProductPage() {
     gender: "",
     metal: "",
     description: "",
+    themes: "",
     isActive: true,
   });
 
@@ -79,6 +81,7 @@ export default function AdminEditProductPage() {
           gender: product.gender || "",
           metal: product.material || "",
           description: product.description || "",
+          themes: product.themes || "",
           isActive: product.isActive !== false,
         });
 
@@ -318,6 +321,21 @@ export default function AdminEditProductPage() {
                   <div className="md:col-span-2">
                     <label className="mb-2 block text-sm font-medium text-white/90">Cantidad disponible</label>
                     <Input className="admin-input" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} placeholder="Ej: 12" />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-white/90">
+                      Temáticas y Atributos (separados por coma)
+                    </label>
+                    <Input
+                      className="admin-input"
+                      value={form.themes}
+                      onChange={(e) => setForm({ ...form, themes: e.target.value })}
+                      placeholder="Ej: Automático, Malla Milanesa, Suizo, Pieza Única, 1 de 1"
+                    />
+                    <p className="admin-muted text-xs mt-1">
+                      Para relojes podés incluir marca (Rolex, Cartier...), tipo (Automático, Cuarzo) y tipo de malla.
+                    </p>
                   </div>
                 </div>
               </section>

@@ -11,7 +11,7 @@ export const metadata = {
     description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos y elegantes para momentos especiales.',
     images: [
       {
-        url: '/moksha-joyeria.png',
+        url: '/home-og.jpg',
         width: 1200,
         height: 630,
         alt: 'Colección de joyería MOKSHA',
@@ -23,4 +23,3 @@ export const metadata = {
 export default function Page() {
   return <Home />;
 }
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"></link>

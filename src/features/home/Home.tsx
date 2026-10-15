@@ -11,6 +11,8 @@ import dynamic from "next/dynamic";
 
 const InstagramFeedSection = dynamic(() => import("./components/InstagramFeedSection").then((mod) => mod.InstagramFeedSection), { ssr: false });
 const TestimonialsSection = dynamic(() => import("./components/TestimonialsSection").then((mod) => mod.TestimonialsSection), { ssr: false });
+import { UniquePiecesSection } from "./components/UniquePiecesSection";
+import { WatchesSection } from "./components/WatchesSection";
 
 // Definición de la interfaz Product (copiada de ProductGrid para asegurar compatibilidad)
 interface Product {
@@ -142,7 +144,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-white text-white hover:bg-white hover:text-gray-900 transition-colors duration-300"
+                  className="bg-transparent border-white text-white hover:bg-white hover:text-gray-900 transition-colors duration-300"
                 >
                   Ver Novedades
                 </Button>
@@ -151,6 +153,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      
 
       {/* Product Carousel Section - Popular Products */}
       <ProductCarousel
@@ -161,7 +165,11 @@ export default function Home() {
         loading={loading}
         className="hero-fade py-16"
       />
-
+      {/* Banner carousel*/} 
+      <BannerCarousel className="py-10" />
+      
+      {/* Unique Pieces Showcase Section - Alta Joyería 1 de 1 */}
+      <UniquePiecesSection />
 
       {/* Value Proposition Section */}
       <section className="py-16 bg-transparent">
@@ -184,9 +192,10 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Watches Section - Haute Horlogerie & Status */}
+      <WatchesSection />
 
-      {/* Banner carousel*/} 
-      <BannerCarousel className="py-10" />
+      
 
       {/* Trust Indicators */}
       <section className="py-16 bg-transparent">

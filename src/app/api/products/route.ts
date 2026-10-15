@@ -82,7 +82,11 @@ export async function GET(req: Request) {
       tags: ((p as any).producttoproducttag || [])
         .map((link: any) => link.product_tags)
         .filter(Boolean)
-        .map((t: any) => ({ name: t.name, slug: t.slug, color: t.color || '#000' })),
+        .map((t: any) => ({
+          name: t.name,
+          slug: t.slug,
+          color: t.color && t.color !== '#000' && t.color !== '#000000' ? t.color : undefined,
+        })),
       category: p.category ? { name: p.category.name, slug: p.category.slug } : { name: 'Colección', slug: 'coleccion' },
       rating: ratingMap.get(p.id) ?? { average: 0, count: 0 },
       createdAt: p.createdAt?.toISOString(),

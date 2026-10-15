@@ -32,12 +32,10 @@ export function CheckoutSteps({ currentStep, steps, className }: CheckoutStepsPr
                   {/* Step Circle */}
                   <div
                     className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors",
-                      {
-                        "border-gold-600 bg-gold-600 text-white": isCompleted,
-                        "border-gold-600 bg-white text-gold-600": isCurrent,
-                        "border-gray-300 bg-white text-gray-400": !isCompleted && !isCurrent,
-                      }
+                      "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-200",
+                      isCompleted && "border-gold-600 bg-gold-600 text-white shadow-sm",
+                      isCurrent && "border-gold-500 bg-card text-gold-600 dark:text-gold-400 ring-4 ring-gold-500/20 font-semibold shadow-md",
+                      !isCompleted && !isCurrent && "border-border bg-card text-muted-foreground opacity-60"
                     )}
                   >
                     {isCompleted ? (
@@ -52,21 +50,15 @@ export function CheckoutSteps({ currentStep, steps, className }: CheckoutStepsPr
                     <div
                       className={cn(
                         "text-sm font-medium transition-colors",
-                        {
-                          "text-gold-600": isCompleted || isCurrent,
-                          "text-gray-500": !isCompleted && !isCurrent,
-                        }
+                        isCompleted || isCurrent ? "text-gold-600 dark:text-gold-400 font-semibold" : "text-muted-foreground"
                       )}
                     >
                       {step.title}
                     </div>
                     <div
                       className={cn(
-                        "text-xs transition-colors",
-                        {
-                          "text-gold-600": isCompleted || isCurrent,
-                          "text-gray-400": !isCompleted && !isCurrent,
-                        }
+                        "text-xs transition-colors hidden sm:block",
+                        isCompleted || isCurrent ? "text-foreground font-normal" : "text-muted-foreground/70"
                       )}
                     >
                       {step.description}
@@ -78,11 +70,8 @@ export function CheckoutSteps({ currentStep, steps, className }: CheckoutStepsPr
                 {index < steps.length - 1 && (
                   <div
                     className={cn(
-                      "mx-4 h-px w-16 transition-colors",
-                      {
-                        "bg-gold-600": isCompleted,
-                        "bg-gray-300": !isCompleted,
-                      }
+                      "mx-3 sm:mx-4 h-0.5 w-12 sm:w-20 transition-colors",
+                      isCompleted ? "bg-gold-600" : "bg-border"
                     )}
                   />
                 )}

@@ -23,6 +23,11 @@ export default function NewProductPage() {
     description: "",
     backgroundType: "none",
   });
+  const [watchDetails, setWatchDetails] = useState({
+    brand: "",
+    type: "",
+    strap: "",
+  });
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -111,8 +116,21 @@ export default function NewProductPage() {
         })
       );
 
+      const combinedThemes = [
+        form.themes,
+        watchDetails.brand ? `Marca: ${watchDetails.brand}` : "",
+        watchDetails.brand,
+        watchDetails.type,
+        watchDetails.strap,
+        selectedCategory === "Piezas Únicas" ? "Pieza Única, 1 de 1, Alta Joyería" : "",
+      ]
+        .filter(Boolean)
+        .join(", ");
+
       const payload = {
         ...form,
+        themes: combinedThemes,
+        metal: form.metal || (selectedCategory === "Relojes" && watchDetails.strap ? watchDetails.strap : form.metal),
         price: form.price,
         imageDataUrls: dataUrls,
       };
@@ -182,7 +200,20 @@ export default function NewProductPage() {
                         </Button>
                       </div>
                     ) : (
-                      <select className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm" value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
+                      <select
+                        className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm"
+                        value={form.categoryId}
+                        onChange={(e) => {
+                          const newCatId = e.target.value;
+                          const catObj = categories.find((c) => c.id === newCatId);
+                          const isUnique = catObj?.name === "Piezas Únicas";
+                          setForm((prev) => ({
+                            ...prev,
+                            categoryId: newCatId,
+                            quantity: isUnique && (!prev.quantity || prev.quantity === "0") ? "1" : prev.quantity,
+                          }));
+                        }}
+                      >
                         <option value="">Seleccionar categoria</option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>
@@ -192,6 +223,73 @@ export default function NewProductPage() {
                       </select>
                     )}
                   </div>
+
+                  {selectedCategory === "Relojes" && (
+                    <div className="md:col-span-2 rounded-2xl border border-gold-600/30 bg-gold-600/10 p-5 space-y-4">
+                      <div className="flex items-center gap-2 text-gold-500 font-semibold text-sm">
+                        <Sparkles className="h-4 w-4" />
+                        <span>Especificaciones de Relojería (Diferenciación y Filtros)</span>
+                      </div>
+                      <div className="grid gap-4 sm:grid-cols-3">
+                        <div>
+                          <label className="mb-1 block text-xs font-medium text-white/90">Marca</label>
+                          <Input
+                            className="admin-input"
+                            value={watchDetails.brand}
+                            onChange={(e) => setWatchDetails({ ...watchDetails, brand: e.target.value })}
+                            placeholder="Ej: Rolex, Cartier, Omega..."
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs font-medium text-white/90">Tipo de Reloj</label>
+                          <select
+                            className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm"
+                            value={watchDetails.type}
+                            onChange={(e) => setWatchDetails({ ...watchDetails, type: e.target.value })}
+                          >
+                            <option value="">Seleccionar tipo</option>
+                            <option value="Automático">Automático</option>
+                            <option value="Cuarzo">Cuarzo</option>
+                            <option value="Cronógrafo">Cronógrafo</option>
+                            <option value="Deportivo">Deportivo</option>
+                            <option value="Clásico / Vestir">Clásico / Vestir</option>
+                            <option value="Esqueleto">Esqueleto</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs font-medium text-white/90">Tipo de Malla / Correa</label>
+                          <select
+                            className="admin-input flex h-10 w-full rounded-md border px-3 py-2 text-sm"
+                            value={watchDetails.strap}
+                            onChange={(e) => setWatchDetails({ ...watchDetails, strap: e.target.value })}
+                          >
+                            <option value="">Seleccionar malla</option>
+                            <option value="Malla de Acero 316L">Malla de Acero 316L</option>
+                            <option value="Malla de Cuero Italiano">Malla de Cuero Italiano</option>
+                            <option value="Malla Milanesa">Malla Milanesa</option>
+                            <option value="Malla de Caucho Deportivo">Malla de Caucho Deportivo</option>
+                            <option value="Malla de Titanio">Malla de Titanio</option>
+                            <option value="Malla Cerámica">Malla Cerámica</option>
+                          </select>
+                        </div>
+                      </div>
+                      <p className="text-xs text-white/60">
+                        Estos atributos se sincronizarán automáticamente como etiquetas para filtros en la tienda.
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedCategory === "Piezas Únicas" && (
+                    <div className="md:col-span-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5">
+                      <div className="flex items-center gap-2 text-amber-300 font-semibold text-sm mb-1">
+                        <Sparkles className="h-4 w-4" />
+                        <span>Pieza Única • Oportunidad Irrepetible</span>
+                      </div>
+                      <p className="text-xs text-white/75">
+                        Esta joya se destacará como obra maestra singular (1 de 1). La cantidad se sugiere en 1 unidad para reflejar su exclusividad.
+                      </p>
+                    </div>
+                  )}
 
                   <div>
                     <label className="mb-2 block text-sm font-medium text-white/90">Genero</label>

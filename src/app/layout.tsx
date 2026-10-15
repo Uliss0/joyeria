@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     siteName: 'Moksha Joyería',
     images: [
       {
-        url: '/moksha-joyeria.png',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Moksha Joyeria - Tienda Oficial',
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Moksha Joyeria - Tienda Oficial',
     description: 'Descubre joyería premium de MOKSHA. Diseños contemporáneos, elegantes y únicos.',
-    images: ['/moksha-joyeria.png'],
+    images: ['/og-image.jpg'],
     creator: '@moksha_joyeria', // Cambia por tu cuenta de Twitter
   },
   robots: {
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'tu-codigo-de-verificacion-google', // Agrega tu código de verificación de Google Search Console
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'tu-codigo-de-verificacion-google',
   },
 };
 
@@ -79,6 +79,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.GOOGLE_ANALYTICS_ID;
+
   return (
     <html lang="es">
       <body>
@@ -91,7 +93,9 @@ export default function RootLayout({
             phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
           />
         </AuthProvider>
-        <GoogleAnalytics gaId="GA_MEASUREMENT_ID" />
+        {gaId && gaId !== 'TU_ID_DE_GA4' && gaId !== 'GA_MEASUREMENT_ID' && (
+          <GoogleAnalytics gaId={gaId} />
+        )}
       </body>
     </html>
   );

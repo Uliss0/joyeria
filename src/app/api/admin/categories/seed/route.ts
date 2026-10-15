@@ -15,6 +15,8 @@ export async function POST(req: Request) {
     { name: "Collares", slug: "collares", description: "Collares elegantes y modernos" },
     { name: "Pulseras", slug: "pulseras", description: "Pulseras y brazaletes" },
     { name: "Aros", slug: "aros", description: "Aros y pendientes" },
+    { name: "Relojes", slug: "relojes", description: "Relojería de precisión y distinción" },
+    { name: "Piezas Únicas", slug: "piezas-unicas", description: "Creaciones irrepetibles de alta joyería" },
   ];
 
   await prisma.category.createMany({ data: categories.map((c) => ({ ...c })), skipDuplicates: true });

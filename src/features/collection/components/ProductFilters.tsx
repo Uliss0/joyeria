@@ -188,7 +188,7 @@ function FiltersContent({
       />
 
       <FilterSection
-        title="Tematica"
+        title="Estilos y Atributos"
         options={themeOptions}
         selectedValues={selectedThemes}
         onChange={onThemeChange}

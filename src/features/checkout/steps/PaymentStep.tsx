@@ -145,14 +145,15 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
   };
 
   return (
-    <div className={cn("max-w-2xl mx-auto", className)}>
+    <div className={cn("max-w-2xl mx-auto bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm text-foreground", className)}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Método de pago</h3>
+          <h3 className="text-lg font-serif font-semibold text-foreground border-b border-border/50 pb-2">Método de pago</h3>
 
           <div className="grid gap-4 md:grid-cols-2">
             {paymentChoices.map((choice) => {
               const Icon = choice.icon;
+              const isSelected = formData.paymentMethod === choice.value;
 
               return (
                 <label key={choice.value} className="relative">
@@ -160,18 +161,23 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
                     type="radio"
                     name="paymentMethod"
                     value={choice.value}
-                    checked={formData.paymentMethod === choice.value}
+                    checked={isSelected}
                     onChange={() => handleInputChange("paymentMethod", choice.value)}
                     className="sr-only peer"
                   />
-                  <div className="h-full cursor-pointer rounded-2xl border border-gray-200 bg-white p-4 transition-all peer-checked:border-gold-600 peer-checked:bg-gold-50 peer-checked:shadow-md hover:border-gray-300">
+                  <div className={cn(
+                    "h-full cursor-pointer rounded-2xl border p-4 transition-all",
+                    isSelected
+                      ? "border-gold-500 bg-gold-500/10 shadow-sm ring-1 ring-gold-500/30"
+                      : "border-border bg-background/60 hover:border-border/80"
+                  )}>
                     <div className="flex items-start gap-3">
-                      <div className="rounded-xl border border-white/60 bg-white p-2 text-gold-600 shadow-sm">
+                      <div className="rounded-xl border border-border bg-card p-2 text-gold-600 dark:text-gold-400 shadow-sm">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="space-y-1">
-                        <div className="font-medium text-gray-900">{choice.label}</div>
-                        <div className="text-sm leading-5 text-gray-600">{choice.description}</div>
+                        <div className="font-medium text-foreground">{choice.label}</div>
+                        <div className="text-sm leading-5 text-muted-foreground font-sans">{choice.description}</div>
                       </div>
                     </div>
                   </div>
@@ -182,17 +188,17 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
         </div>
 
         {formData.paymentMethod === "TARJETA" ? (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Información de la tarjeta</h3>
+          <div className="space-y-4 pt-2">
+            <h3 className="text-lg font-serif font-semibold text-foreground border-b border-border/50 pb-2">Información de la tarjeta</h3>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label htmlFor="cardType">Tipo de tarjeta *</Label>
+                <Label htmlFor="cardType" className="text-foreground font-medium text-sm">Tipo de tarjeta *</Label>
                 <Select
                   value={formData.cardType || ""}
                   onValueChange={(value) => handleInputChange("cardType", value as "credit" | "debit")}
                 >
-                  <SelectTrigger className={cn(errors.cardType && "border-red-500")}>
+                  <SelectTrigger className={cn("mt-1.5", errors.cardType && "border-red-500")}>
                     <SelectValue placeholder="Seleccionar" />
                   </SelectTrigger>
                   <SelectContent>
@@ -204,12 +210,12 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
               </div>
 
               <div>
-                <Label htmlFor="cardholderName">Nombre del titular *</Label>
+                <Label htmlFor="cardholderName" className="text-foreground font-medium text-sm">Nombre del titular *</Label>
                 <Input
                   id="cardholderName"
                   value={formData.cardholderName || ""}
                   onChange={(event) => handleInputChange("cardholderName", event.target.value)}
-                  className={cn(errors.cardholderName && "border-red-500")}
+                  className={cn("mt-1.5", errors.cardholderName && "border-red-500")}
                   placeholder="Como aparece en la tarjeta"
                 />
                 {errors.cardholderName && <p className="mt-1 text-sm text-red-600">{errors.cardholderName}</p>}
@@ -217,12 +223,12 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
             </div>
 
             <div>
-              <Label htmlFor="cardNumber">Número de tarjeta *</Label>
+              <Label htmlFor="cardNumber" className="text-foreground font-medium text-sm">Número de tarjeta *</Label>
               <Input
                 id="cardNumber"
                 value={formData.cardNumber || ""}
                 onChange={(event) => handleCardNumberChange(event.target.value)}
-                className={cn(errors.cardNumber && "border-red-500")}
+                className={cn("mt-1.5", errors.cardNumber && "border-red-500")}
                 placeholder="1234 5678 9012 3456"
                 maxLength={19}
               />
@@ -231,12 +237,12 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
 
             <div className="grid gap-4 md:grid-cols-3">
               <div>
-                <Label htmlFor="expiryMonth">Mes *</Label>
+                <Label htmlFor="expiryMonth" className="text-foreground font-medium text-sm">Mes *</Label>
                 <Select
                   value={formData.expiryMonth || ""}
                   onValueChange={(value) => handleInputChange("expiryMonth", value)}
                 >
-                  <SelectTrigger className={cn(errors.expiryMonth && "border-red-500")}>
+                  <SelectTrigger className={cn("mt-1.5", errors.expiryMonth && "border-red-500")}>
                     <SelectValue placeholder="MM" />
                   </SelectTrigger>
                   <SelectContent>
@@ -251,12 +257,12 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
               </div>
 
               <div>
-                <Label htmlFor="expiryYear">Año *</Label>
+                <Label htmlFor="expiryYear" className="text-foreground font-medium text-sm">Año *</Label>
                 <Select
                   value={formData.expiryYear || ""}
                   onValueChange={(value) => handleInputChange("expiryYear", value)}
                 >
-                  <SelectTrigger className={cn(errors.expiryYear && "border-red-500")}>
+                  <SelectTrigger className={cn("mt-1.5", errors.expiryYear && "border-red-500")}>
                     <SelectValue placeholder="YYYY" />
                   </SelectTrigger>
                   <SelectContent>
@@ -271,13 +277,13 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
               </div>
 
               <div>
-                <Label htmlFor="cvv">CVV *</Label>
+                <Label htmlFor="cvv" className="text-foreground font-medium text-sm">CVV *</Label>
                 <Input
                   id="cvv"
                   type="password"
                   value={formData.cvv || ""}
                   onChange={(event) => handleInputChange("cvv", event.target.value.replace(/\D/g, "").slice(0, 4))}
-                  className={cn(errors.cvv && "border-red-500")}
+                  className={cn("mt-1.5", errors.cvv && "border-red-500")}
                   placeholder="123"
                   maxLength={4}
                 />
@@ -286,12 +292,12 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="rounded-2xl border border-border bg-muted/40 p-5">
             <div className="flex items-start gap-3">
-              <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+              <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-600 dark:text-gold-400" />
               <div className="space-y-2">
-                <h4 className="font-medium text-gray-900">Instrucciones de pago</h4>
-                <p className="text-sm text-gray-600">
+                <h4 className="font-medium text-foreground">Instrucciones de pago</h4>
+                <p className="text-sm text-muted-foreground font-sans leading-relaxed">
                   {formData.paymentMethod === "MERCADO_PAGO" &&
                     "Al confirmar vas a recibir el enlace o la instrucción para completar Mercado Pago."}
                   {formData.paymentMethod === "TRANSFERENCIA" &&
@@ -305,31 +311,31 @@ export function PaymentStep({ shippingData, onNext, onBack, className }: Payment
         )}
 
         {formData.paymentMethod === "TARJETA" && (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 pt-2">
             <Checkbox id="saveCard" checked={false} disabled />
-            <Label htmlFor="saveCard" className="text-sm text-gray-500">
+            <Label htmlFor="saveCard" className="text-sm text-muted-foreground">
               La tarjeta no se guarda en este flujo simplificado.
             </Label>
           </div>
         )}
 
-        <div className="rounded-2xl border border-green-200 bg-green-50 p-4">
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
           <div className="flex items-start space-x-3">
-            <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
+            <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
             <div>
-              <h4 className="font-medium text-green-800">Pago seguro</h4>
-              <p className="mt-1 text-sm text-green-700">
+              <h4 className="font-medium text-emerald-800 dark:text-emerald-300">Pago seguro</h4>
+              <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-400 font-sans">
                 Tus datos están protegidos con encriptación SSL. No almacenamos información sensible de tu tarjeta.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-between pt-6">
-          <Button type="button" variant="outline" onClick={onBack}>
+        <div className="flex justify-between pt-6 border-t border-border">
+          <Button type="button" variant="outline" onClick={onBack} className="border-border text-foreground hover:bg-muted cursor-pointer">
             Volver
           </Button>
-          <Button type="submit" className="bg-gold-600 hover:bg-gold-700">
+          <Button type="submit" className="btn-gold text-white cursor-pointer">
             <Lock className="mr-2 h-4 w-4" />
             Continuar
           </Button>

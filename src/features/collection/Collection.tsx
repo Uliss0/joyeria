@@ -177,10 +177,23 @@ function CollectionContent() {
   }, [searchParams]);
 
   const categoryOptions = useMemo<FilterOption[]>(() => {
+    const coreCategories = [
+      { value: "anillos", label: "Anillos" },
+      { value: "collares", label: "Collares" },
+      { value: "pulseras", label: "Pulseras" },
+      { value: "aros", label: "Aros" },
+      { value: "relojes", label: "Relojes" },
+      { value: "piezas-unicas", label: "Piezas Únicas" },
+    ];
+
     const map = new Map<string, FilterOption>();
+    for (const core of coreCategories) {
+      map.set(core.value, { value: core.value, label: core.label, count: 0 });
+    }
+
     for (const product of allProducts) {
       const slug = normalizeValue(product.category?.slug || "coleccion");
-      const label = product.category?.name || "Colecci\u00f3n";
+      const label = product.category?.name || "Colección";
       const current = map.get(slug);
       if (current) {
         current.count = (current.count || 0) + 1;
@@ -188,8 +201,36 @@ function CollectionContent() {
         map.set(slug, { value: slug, label, count: 1 });
       }
     }
-    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
+    return Array.from(map.values());
   }, [allProducts]);
+
+  const headerData = useMemo(() => {
+    if (selectedCategories.includes("relojes")) {
+      return {
+        title: "Alta Relojería",
+        subtitle: "Precisión técnica, distinción y status. Relojes automáticos, cronógrafos y piezas de vanguardia.",
+      };
+    }
+    if (selectedCategories.includes("piezas-unicas")) {
+      return {
+        title: "Piezas Únicas",
+        subtitle: "Oportunidades irrepetibles 1 de 1. Obras maestras de alta joyería concebidas para ser únicas en el mundo.",
+      };
+    }
+    if (selectedCategories.length === 1) {
+      const match = categoryOptions.find((c) => c.value === selectedCategories[0]);
+      if (match) {
+        return {
+          title: match.label,
+          subtitle: `Explorá nuestra exclusiva selección de ${match.label.toLowerCase()}.`,
+        };
+      }
+    }
+    return {
+      title: "Nuestra Colección",
+      subtitle: "Descubre piezas de vanguardia que reflejan tu estilo personal y distinción atemporal.",
+    };
+  }, [selectedCategories, categoryOptions]);
 
   const genderOptions = useMemo<FilterOption[]>(() => {
     const base = [
@@ -444,8 +485,8 @@ function CollectionContent() {
           {/* Main Content */}
           <div className="flex-1">
             <CollectionHeader
-              title="Nuestra Colección"
-              subtitle="Descubre piezas únicas que reflejan tu estilo personal"
+              title={headerData.title}
+              subtitle={headerData.subtitle}
               totalProducts={displayedProducts.length}
               sortBy={sortBy}
               viewMode={viewMode}
