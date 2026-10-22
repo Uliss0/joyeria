@@ -23,6 +23,18 @@
   --color-popover-foreground: hsl(var(--popover-foreground));
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-gold-50: #fdfdfb;
+  --color-gold-100: #fbf9f5;
+  --color-gold-200: #f6f1e8;
+  --color-gold-300: #f0e6d1;
+  --color-gold-400: #e6d0a9;
+  --color-gold-500: #d4b27d;
+  --color-gold-600: #c19659;
+  --color-gold-700: #a47a4a;
+  --color-gold-800: #86633f;
+  --color-gold-900: #6f5236;
+  --color-gold-950: #3c2718;
 }
 
 /* Custom color variables for gold palette */
@@ -272,15 +284,16 @@
   }
 
   .btn-gold {
-    background-color: var(--color-gold-600);
-    color: white;
+    background-color: var(--color-gold-600) !important;
+    color: #ffffff !important;
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: background-color 0.2s;
   }
   .btn-gold:hover {
-    background-color: var(--color-gold-700);
+    background-color: var(--color-gold-700) !important;
+    color: #ffffff !important;
   }
 
   .text-gold-600 {
@@ -288,7 +301,7 @@
   }
 
   .bg-gold-600 {
-    background-color: var(--color-gold-600);
+    background-color: var(--color-gold-600) !important;
   }
 
   .bg-gold-50 {
@@ -300,7 +313,8 @@
   }
 
   .hover\:bg-gold-700:hover {
-    background-color: var(--color-gold-700);
+    background-color: var(--color-gold-700) !important;
+    color: #ffffff !important;
   }
 
   .hover\:text-gold-700:hover {

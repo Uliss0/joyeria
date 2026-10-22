@@ -39,10 +39,10 @@ export function Footer({ className }: FooterProps) {
               Joyas que hablan de vos. Diseños contemporaneos, elegantes y pensados para destacar cada momento.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-white/50 transition-colors hover:text-white" aria-label="Facebook">
+              <Link href="https://www.facebook.com/p/Moksha-Joyeria-61582584544646/" className="text-white/50 transition-colors hover:text-white" aria-label="Facebook">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="@moksha.joyeriaa" className="text-white/50 transition-colors hover:text-white" aria-label="Instagram">
+              <Link href="https://instagram.com/moksha_joyeriaa" className="text-white/50 transition-colors hover:text-white" aria-label="Instagram">
                 <Instagram className="h-5 w-5" />
               </Link>
             </div>

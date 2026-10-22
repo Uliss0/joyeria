@@ -15,16 +15,16 @@ export default async function AccountLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div className="min-h-[calc(100vh-5rem)] bg-transparent py-8 md:py-12 text-foreground">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 lg:sticky lg:top-24">
             <AccountSidebar />
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 min-w-0">
             {children}
           </div>
         </div>

@@ -19,8 +19,8 @@ export function OrganizationStructuredData() {
       availableLanguage: 'Spanish',
     },
     sameAs: [
-      'https://facebook.com/moksha-joyeria',
-      'https://instagram.com/moksha_joyeria',
+      'https://www.facebook.com/p/Moksha-Joyeria-61582584544646/',
+      'https://instagram.com/moksha_joyeriaa',
       'https://twitter.com/moksha_joyeria',
     ],
     foundingDate: '2025',

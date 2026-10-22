@@ -21,37 +21,55 @@ export function AccountSidebar() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div className="space-y-1">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Mi Cuenta</h2>
+    <div className="bg-card/95 border border-border/80 rounded-3xl p-6 shadow-sm backdrop-blur-md text-foreground">
+      <div className="space-y-2">
+        <div className="px-3 pb-3 mb-2 border-b border-border/60">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-500/90 block">
+            Panel
+          </span>
+          <h2 className="text-xl font-serif font-light text-foreground mt-0.5">Mi Cuenta</h2>
+        </div>
 
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+        <nav className="space-y-1.5" aria-label="Navegación de cuenta">
+          {navigation.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-gold-50 text-gold-700 border border-gold-200"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-              )}
-            >
-              <Icon className="w-5 h-5" />
-              <span>{item.name}</span>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group cursor-pointer",
+                  isActive
+                    ? "bg-gold-500/10 text-gold-500 dark:text-gold-400 border border-gold-500/30 shadow-sm"
+                    : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                )}
+              >
+                <div
+                  className={cn(
+                    "p-2 rounded-xl transition-colors",
+                    isActive
+                      ? "bg-gold-500/15 text-gold-500 dark:text-gold-400"
+                      : "bg-background/80 text-muted-foreground group-hover:text-foreground group-hover:bg-background"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span className="font-medium truncate">{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
-        <div className="pt-4 mt-4 border-t border-gray-200">
+        <div className="pt-4 mt-4 border-t border-border/60">
           <button
             onClick={handleSignOut}
-            className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="flex items-center gap-3.5 w-full px-3.5 py-3 rounded-2xl text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-500/10 hover:text-red-600 transition-colors cursor-pointer group"
           >
-            <LogOut className="w-5 h-5" />
+            <div className="p-2 rounded-xl bg-red-500/10 text-red-500 group-hover:bg-red-500/20 transition-colors">
+              <LogOut className="w-4 h-4" />
+            </div>
             <span>Cerrar Sesión</span>
           </button>
         </div>

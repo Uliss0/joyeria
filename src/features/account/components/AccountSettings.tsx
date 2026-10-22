@@ -12,109 +12,116 @@ export function AccountSettings() {
   const [promoNotifications, setPromoNotifications] = useState(false);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-foreground">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">Preferencias de notificaciones</h3>
-        <p className="text-sm text-gray-600">
-          Controla cómo te comunicamos novedades y actualizaciones.
+        <h3 className="text-xl font-serif font-light text-foreground">Preferencias de notificaciones</h3>
+        <p className="text-sm text-muted-foreground font-sans mt-1">
+          Controla cómo te comunicamos novedades, pedidos y actualizaciones exclusivas.
         </p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
-        <div className="flex items-start space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gold-100 flex items-center justify-center">
-            <Bell className="w-5 h-5 text-gold-700" />
+      <div className="bg-card/95 border border-border/80 rounded-3xl p-6 space-y-5 shadow-sm backdrop-blur-sm">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-2xl bg-gold-500/10 border border-gold-500/20 text-gold-500 flex items-center justify-center shrink-0">
+            <Bell className="w-5 h-5" />
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">Alertas de pedidos</p>
-            <p className="text-sm text-gray-600">
-              Confirmaciones, envíos y actualizaciones de tu compra.
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Alertas de pedidos</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Confirmaciones, envíos y actualizaciones del estado de tu compra.
             </p>
           </div>
           <input
             type="checkbox"
-            className="h-4 w-4 accent-gold-600"
+            className="h-4 w-4 mt-1 accent-gold-600 rounded cursor-pointer"
             checked={emailNotifications}
             onChange={(e) => setEmailNotifications(e.target.checked)}
           />
         </div>
 
-        <div className="flex items-start space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-            <Mail className="w-5 h-5 text-gray-600" />
+        <div className="border-t border-border/60 pt-4 flex items-start gap-4">
+          <div className="w-10 h-10 rounded-2xl bg-background/80 border border-border/60 text-muted-foreground flex items-center justify-center shrink-0">
+            <Mail className="w-5 h-5" />
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">Promociones y lanzamientos</p>
-            <p className="text-sm text-gray-600">
-              Descuentos exclusivos y novedades de MOKSHA.
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Promociones y lanzamientos</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Acceso anticipado a colecciones exclusivas y novedades de MOKSHA.
             </p>
           </div>
           <input
             type="checkbox"
-            className="h-4 w-4 accent-gold-600"
+            className="h-4 w-4 mt-1 accent-gold-600 rounded cursor-pointer"
             checked={promoNotifications}
             onChange={(e) => setPromoNotifications(e.target.checked)}
           />
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-border/60" />
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">Seguridad</h3>
-        <p className="text-sm text-gray-600">
-          Cambia tu contraseña o refuerza la seguridad de tu cuenta.
+        <h3 className="text-xl font-serif font-light text-foreground">Seguridad</h3>
+        <p className="text-sm text-muted-foreground font-sans mt-1">
+          Administra la seguridad y credenciales de acceso a tu cuenta.
         </p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
-        <div className="flex items-start space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-            <Lock className="w-5 h-5 text-gray-600" />
+      <div className="bg-card/95 border border-border/80 rounded-3xl p-6 space-y-5 shadow-sm backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
+          <div className="w-10 h-10 rounded-2xl bg-background/80 border border-border/60 text-muted-foreground flex items-center justify-center shrink-0">
+            <Lock className="w-5 h-5" />
           </div>
-          <div className="flex-1 space-y-3">
-            <Label htmlFor="newPassword">Nueva contraseña</Label>
-            <Input id="newPassword" type="password" placeholder="********" disabled />
-            <p className="text-xs text-gray-500">
-              Próximamente habilitaremos el cambio de contraseña desde aquí. 
+          <div className="flex-1 min-w-0 space-y-2">
+            <Label htmlFor="newPassword" className="text-xs uppercase tracking-wider font-semibold text-foreground/80">
+              Nueva contraseña
+            </Label>
+            <Input
+              id="newPassword"
+              type="password"
+              placeholder="••••••••"
+              disabled
+              className="h-11 rounded-xl border-input bg-background/50 text-muted-foreground opacity-80"
+            />
+            <p className="text-xs text-muted-foreground">
+              Próximamente habilitaremos el cambio de contraseña directo desde este panel.
             </p>
           </div>
-          <Button variant="outline" size="sm" disabled>
+          <Button variant="outline" size="sm" disabled className="rounded-xl border-border">
             Guardar
           </Button>
         </div>
 
-        <div className="flex items-start space-x-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
-            <ShieldCheck className="w-5 h-5 text-emerald-600" />
+        <div className="border-t border-border/60 pt-4 flex items-start gap-4">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-5 h-5" />
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">Autenticación segura</p>
-            <p className="text-sm text-gray-600">
-              Estamos preparando mejoras de seguridad para tu cuenta.
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Autenticación segura</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Tu sesión está cifrada y protegida por los protocolos de seguridad de MOKSHA.
             </p>
           </div>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-border/60" />
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">Preferencias de envío</h3>
-        <p className="text-sm text-gray-600">
-          Esta sección quedarán lista cuando integremos la API de envíos.
+        <h3 className="text-xl font-serif font-light text-foreground">Preferencias de envío</h3>
+        <p className="text-sm text-muted-foreground font-sans mt-1">
+          Configuración avanzada de logística y entrega.
         </p>
       </div>
 
-      <div className="bg-white border border-dashed border-gray-300 rounded-lg p-6 flex items-start space-x-3">
-        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-          <Truck className="w-5 h-5 text-blue-600" />
+      <div className="bg-card/95 border border-dashed border-border rounded-3xl p-6 flex items-start gap-4 shadow-sm backdrop-blur-sm">
+        <div className="w-10 h-10 rounded-2xl bg-gold-500/10 border border-gold-500/20 text-gold-500 flex items-center justify-center shrink-0">
+          <Truck className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-900">Configura tus preferencias de entrega</p>
-          <p className="text-sm text-gray-600">
-            Podrás seleccionar transportistas y horarios preferidos cuando la integración
-            esté disponible.
+          <p className="text-sm font-medium text-foreground">Preferencias de entrega personalizadas</p>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Podrás seleccionar sucursales preferidas y horarios convenientes cuando la integración logística esté habilitada.
           </p>
         </div>
       </div>

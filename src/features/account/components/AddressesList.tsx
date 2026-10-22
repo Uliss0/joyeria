@@ -223,14 +223,15 @@ export function AddressesList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 border-b border-border/60 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mis Direcciones</h1>
-          <p className="text-gray-600 mt-1">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-500/90 block">Direcciones de Entrega</span>
+          <h1 className="text-3xl md:text-4xl font-serif font-light text-foreground mt-1 tracking-tight">Mis Direcciones</h1>
+          <p className="text-sm text-muted-foreground font-sans mt-1.5">
             Gestiona tus direcciones de envío y facturación.
           </p>
         </div>
-        <Button className="btn-gold" onClick={openModal}>
+        <Button variant="gold" className="btn-gold" onClick={openModal}>
           Agregar Dirección
         </Button>
       </div>
@@ -241,7 +242,7 @@ export function AddressesList() {
           if (!open) closeModal();
         }}
       >
-        <DialogContent className="max-w-2xl bg-white">
+        <DialogContent className="max-w-2xl bg-card border-border text-foreground rounded-3xl">
           <DialogHeader>
             <DialogTitle>{editingId ? "Editar dirección" : "Agregar dirección"}</DialogTitle>
             <DialogDescription>
@@ -264,7 +265,7 @@ export function AddressesList() {
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un tipo" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-card border-border text-foreground">
                     <SelectItem value="shipping">Envío</SelectItem>
                     <SelectItem value="billing">Facturación</SelectItem>
                   </SelectContent>
@@ -275,7 +276,7 @@ export function AddressesList() {
                 <Label htmlFor="firstName">Nombre *</Label>
                 <Input
                   id="firstName"
-                  className="bg-white"
+
                   value={formData.firstName}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, firstName: event.target.value }))
@@ -290,7 +291,7 @@ export function AddressesList() {
                 <Label htmlFor="lastName">Apellido *</Label>
                 <Input
                   id="lastName"
-                  className="bg-white"
+
                   value={formData.lastName}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, lastName: event.target.value }))
@@ -305,7 +306,7 @@ export function AddressesList() {
                 <Label htmlFor="company">Empresa</Label>
                 <Input
                   id="company"
-                  className="bg-white"
+
                   value={formData.company}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, company: event.target.value }))
@@ -317,7 +318,7 @@ export function AddressesList() {
                 <Label htmlFor="address1">Dirección *</Label>
                 <Input
                   id="address1"
-                  className="bg-white"
+
                   value={formData.address1}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, address1: event.target.value }))
@@ -332,7 +333,7 @@ export function AddressesList() {
                 <Label htmlFor="address2">Apartamento, piso, etc.</Label>
                 <Input
                   id="address2"
-                  className="bg-white"
+
                   value={formData.address2}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, address2: event.target.value }))
@@ -344,7 +345,7 @@ export function AddressesList() {
                 <Label htmlFor="city">Ciudad *</Label>
                 <Input
                   id="city"
-                  className="bg-white"
+
                   value={formData.city}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, city: event.target.value }))
@@ -357,7 +358,7 @@ export function AddressesList() {
                 <Label htmlFor="state">Provincia / Estado *</Label>
                 <Input
                   id="state"
-                  className="bg-white"
+
                   value={formData.state}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, state: event.target.value }))
@@ -370,7 +371,7 @@ export function AddressesList() {
                 <Label htmlFor="zipCode">Código Postal *</Label>
                 <Input
                   id="zipCode"
-                  className="bg-white"
+
                   value={formData.zipCode}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, zipCode: event.target.value }))
@@ -385,7 +386,7 @@ export function AddressesList() {
                 <Label htmlFor="country">País *</Label>
                 <Input
                   id="country"
-                  className="bg-white"
+
                   value={formData.country}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, country: event.target.value }))
@@ -400,7 +401,7 @@ export function AddressesList() {
                 <Label htmlFor="phone">Teléfono</Label>
                 <Input
                   id="phone"
-                  className="bg-white"
+
                   value={formData.phone}
                   onChange={(event) =>
                     setFormData((prev) => ({ ...prev, phone: event.target.value }))
@@ -424,7 +425,7 @@ export function AddressesList() {
               <Button type="button" variant="outline" onClick={closeModal} disabled={saving}>
                 Cancelar
               </Button>
-              <Button type="submit" className="btn-gold" disabled={saving}>
+              <Button type="submit" variant="gold" className="btn-gold" disabled={saving}>
                 {saving ? "Guardando..." : editingId ? "Guardar cambios" : "Guardar dirección"}
               </Button>
             </DialogFooter>
@@ -460,22 +461,22 @@ export function AddressesList() {
           ))}
         </div>
       ) : addresses.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-card/95 rounded-3xl border border-border/80 p-12 text-center shadow-sm backdrop-blur-sm">
           <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-xl font-serif font-light text-foreground mb-2">
             No tienes direcciones guardadas
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
             Agrega tu primera dirección para facilitar tus futuras compras.
           </p>
-          <Button className="btn-gold" onClick={openModal}>
+          <Button variant="gold" className="btn-gold" onClick={openModal}>
             Agregar Dirección
           </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {addresses.map((address) => (
-            <div key={address.id} className="bg-white rounded-lg border border-gray-200 p-6">
+            <div key={address.id} className="bg-card/95 rounded-3xl border border-border/80 p-6 shadow-sm backdrop-blur-sm">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-2">
                   <Badge
@@ -489,7 +490,7 @@ export function AddressesList() {
                     {address.type === "shipping" ? "Envío" : "Facturación"}
                   </Badge>
                   {address.isDefault && (
-                    <Badge className="bg-gold-100 text-gold-800 flex items-center space-x-1">
+                    <Badge className="bg-gold-500/15 text-gold-500 border border-gold-500/25 flex items-center space-x-1 font-medium">
                       <Star className="w-3 h-3" />
                       <span>Predeterminada</span>
                     </Badge>
@@ -504,15 +505,15 @@ export function AddressesList() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteAddress(address.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
 
-              <div className="space-y-2 text-sm text-gray-600">
-                <p className="font-medium text-gray-900">
+              <div className="space-y-1.5 text-sm text-muted-foreground">
+                <p className="font-serif font-medium text-foreground text-base">
                   {address.firstName} {address.lastName}
                 </p>
                 {address.company && <p>{address.company}</p>}
@@ -526,12 +527,12 @@ export function AddressesList() {
               </div>
 
               {!address.isDefault && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-border/60">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleSetDefault(address.id)}
-                    className="w-full"
+                    className="w-full rounded-xl border-border hover:border-gold-500/40 text-xs"
                   >
                     Establecer como predeterminada
                   </Button>

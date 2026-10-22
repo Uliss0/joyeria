@@ -1,16 +1,14 @@
 "use client";
 
-import { useId } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import type { Swiper as SwiperType } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "@/features/collection/components/ProductGrid";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 interface Product {
@@ -45,11 +43,25 @@ interface ProductCarouselProps {
   id?: string;
 }
 
-export function ProductCarousel({ products, title, subtitle, className, loading = false, id }: ProductCarouselProps) {
-  const rawId = useId();
-  const safeId = rawId.replace(/[^a-zA-Z0-9_-]/g, "");
-  const prevBtnClass = `swiper-prev-${safeId}`;
-  const nextBtnClass = `swiper-next-${safeId}`;
+export function ProductCarousel({
+  products,
+  title,
+  subtitle,
+  className,
+  loading = false,
+  id,
+}: ProductCarouselProps) {
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.update();
+      setIsBeginning(swiperRef.current.isBeginning);
+      setIsEnd(swiperRef.current.isEnd);
+    }
+  }, [products, loading]);
 
   if (!loading && products.length === 0) return null;
 
@@ -73,19 +85,24 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
 
         <div className="relative group/carousel">
           <Swiper
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              setIsBeginning(swiper.isBeginning);
+              setIsEnd(swiper.isEnd);
+            }}
+            onSlideChange={(swiper) => {
+              setIsBeginning(swiper.isBeginning);
+              setIsEnd(swiper.isEnd);
+            }}
             slidesPerView={1}
             spaceBetween={20}
-            navigation={{
-              nextEl: `.${nextBtnClass}`,
-              prevEl: `.${prevBtnClass}`,
-            }}
             pagination={false}
             breakpoints={{
               640: { slidesPerView: 2, spaceBetween: 20 },
               768: { slidesPerView: 3, spaceBetween: 30 },
               1024: { slidesPerView: 4, spaceBetween: 40 },
             }}
-            modules={[Navigation, Pagination]}
+            modules={[Pagination]}
             className="product-swiper"
           >
             {loading
@@ -108,22 +125,35 @@ export function ProductCarousel({ products, title, subtitle, className, loading 
                 ))}
           </Swiper>
 
-          <div
+          <button
+            type="button"
+            onClick={() => swiperRef.current?.slidePrev()}
+            disabled={isBeginning}
+            aria-label="Producto anterior"
             className={cn(
-              prevBtnClass,
-              "absolute left-0 top-1/2 -translate-y-1/2 -ml-3 md:-ml-5 bg-card/90 hover:bg-card border border-border z-10 opacity-70 group-hover/carousel:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex"
+              "absolute left-0 top-1/2 -translate-y-1/2 -ml-3 md:-ml-5 bg-card/90 hover:bg-card border border-border z-10 transition-all duration-300 rounded-full w-10 h-10 items-center justify-center shadow-md hidden md:flex",
+              isBeginning
+                ? "opacity-30 cursor-not-allowed"
+                : "opacity-70 group-hover/carousel:opacity-100 hover:scale-105 cursor-pointer"
             )}
           >
             <ChevronLeft className="w-5 h-5 text-foreground" />
-          </div>
-          <div
+          </button>
+
+          <button
+            type="button"
+            onClick={() => swiperRef.current?.slideNext()}
+            disabled={isEnd}
+            aria-label="Producto siguiente"
             className={cn(
-              nextBtnClass,
-              "absolute right-0 top-1/2 -translate-y-1/2 -mr-3 md:-mr-5 bg-card/90 hover:bg-card border border-border z-10 opacity-70 group-hover/carousel:opacity-100 transition-opacity duration-300 rounded-full w-10 h-10 items-center justify-center cursor-pointer shadow-md hidden md:flex"
+              "absolute right-0 top-1/2 -translate-y-1/2 -mr-3 md:-mr-5 bg-card/90 hover:bg-card border border-border z-10 transition-all duration-300 rounded-full w-10 h-10 items-center justify-center shadow-md hidden md:flex",
+              isEnd
+                ? "opacity-30 cursor-not-allowed"
+                : "opacity-70 group-hover/carousel:opacity-100 hover:scale-105 cursor-pointer"
             )}
           >
             <ChevronRight className="w-5 h-5 text-foreground" />
-          </div>
+          </button>
         </div>
       </div>
     </section>
