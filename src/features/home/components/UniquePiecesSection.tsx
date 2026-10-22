@@ -90,12 +90,12 @@ export function UniquePiecesSection({ className }: UniquePiecesSectionProps) {
     <section id="piezas-unicas" className={cn("unique-pieces-section py-20 md:py-28 overflow-hidden", className)}>
       {/* Background ambient radial glows */}
       <div
-        className="absolute top-1/4 -left-32 w-96 h-96 rounded-full pointer-events-none opacity-25 blur-3xl"
+        className="absolute top-1/4 -left-32 w-96 h-96 rounded-full pointer-events-none opacity-25 blur-3xl transform-gpu"
         style={{ background: "radial-gradient(circle, rgba(212,178,125,0.4) 0%, transparent 70%)" }}
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-10 -right-32 w-[30rem] h-[30rem] rounded-full pointer-events-none opacity-20 blur-3xl"
+        className="absolute bottom-10 -right-32 w-[30rem] h-[30rem] rounded-full pointer-events-none opacity-20 blur-3xl transform-gpu"
         style={{ background: "radial-gradient(circle, rgba(164,122,74,0.35) 0%, transparent 70%)" }}
         aria-hidden="true"
       />

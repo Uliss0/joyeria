@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -56,24 +58,56 @@
   --font-sans: 'Montserrat', sans-serif;
 }
 /*ocultar scrollbar*/
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  overflow-x: clip;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
 
 /* Custom styles */
 @layer base {
-  html, body {
+  body {
     font-family: var(--font-sans);
-    background: radial-gradient(circle at top left, rgba(212, 178, 125, 0.18), transparent 32%),
-                linear-gradient(180deg, #1a1b1f 0%, #111215 48%, #0b0c0e 100%) no-repeat fixed;
     color: hsl(var(--foreground));
     min-height: 100vh;
-    transition: background 0.35s ease, color 0.35s ease;
+    overflow-x: clip;
+    position: relative;
+    background: transparent;
+  }
+
+  /* ── Ambient Background Layer (Hardware-accelerated fixed lighting & shading) ── */
+  .ambient-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: strict;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(212, 178, 125, 0.22) 0%, rgba(212, 178, 125, 0.06) 28%, transparent 45%),
+      radial-gradient(circle at 85% 58%, rgba(164, 122, 74, 0.15) 0%, rgba(164, 122, 74, 0.04) 30%, transparent 50%),
+      linear-gradient(180deg, #1d1e23 0%, #15161a 32%, #0e0f12 68%, #070709 100%);
+  }
+
+  .light .ambient-background,
+  .theme-light .ambient-background {
+    background:
+      radial-gradient(circle at 14% 12%, rgba(212, 178, 125, 0.28) 0%, rgba(212, 178, 125, 0.08) 28%, transparent 48%),
+      radial-gradient(circle at 88% 52%, rgba(193, 150, 89, 0.20) 0%, rgba(193, 150, 89, 0.05) 30%, transparent 52%),
+      radial-gradient(circle at 20% 88%, rgba(164, 122, 74, 0.12) 0%, transparent 45%),
+      linear-gradient(180deg, #fdfbf8 0%, #f6f0e5 25%, #ede0cb 60%, #dfccad 100%);
   }
 
   .light, .theme-light {
-    background: radial-gradient(circle at top left, rgba(212, 178, 125, 0.06), transparent 32%),
-                linear-gradient(180deg, #faf8f5 0%, #f5efe4 48%, #ebdcc5 100%) no-repeat fixed;
+    background-color: transparent;
   }
 
   .light body, .theme-light body {
@@ -321,6 +355,20 @@
     color: var(--color-gold-700);
   }
 
+  /* ── Product Card & Info Tag Badges ── */
+  .product-tag-badge {
+    background-color: rgba(212, 178, 125, 0.15);
+    border: 1px solid rgba(212, 178, 125, 0.35);
+    color: var(--color-gold-300);
+  }
+
+  .light .product-tag-badge,
+  .theme-light .product-tag-badge {
+    background-color: rgba(193, 150, 89, 0.12) !important;
+    border: 1px solid rgba(193, 150, 89, 0.35) !important;
+    color: #7a5423 !important; /* Deep rich bronze-gold — high contrast on light cards */
+  }
+
   .premium-card {
     transition: var(--transition-smooth);
     border-radius: 1rem;
@@ -484,7 +532,7 @@
       radial-gradient(ellipse at top left, rgba(212, 178, 125, 0.14), transparent 45%),
       linear-gradient(180deg, #18191d 0%, #131417 50%, #0f1013 100%);
     color: #f5efe4;
-    transition: background 0.35s ease, color 0.35s ease;
+
   }
   .light .unique-pieces-section,
   .theme-light .unique-pieces-section {
@@ -514,7 +562,7 @@
       radial-gradient(ellipse at top right, rgba(212, 178, 125, 0.12), transparent 45%),
       linear-gradient(180deg, #131417 0%, #1a1b1f 50%, #121316 100%);
     color: #f5efe4;
-    transition: background 0.35s ease, color 0.35s ease;
+
   }
   .light .watches-section,
   .theme-light .watches-section {

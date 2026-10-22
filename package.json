@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Tienda online de joyería premium MOKSHA",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

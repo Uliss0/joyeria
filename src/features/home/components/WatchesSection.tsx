@@ -186,10 +186,10 @@ export function WatchesSection({ className }: WatchesSectionProps) {
               </p>
             </div>
             <div className="flex flex-wrap gap-1.5 mt-4">
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Automático</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Cronógrafo</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Cuarzo</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Deportivo</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Automático</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Cronógrafo</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Cuarzo</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Deportivo</span>
             </div>
           </button>
 
@@ -213,10 +213,10 @@ export function WatchesSection({ className }: WatchesSectionProps) {
               </p>
             </div>
             <div className="flex flex-wrap gap-1.5 mt-4">
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Malla Milanesa</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Acero 316L</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Cuero Italiano</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Caucho</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Malla Milanesa</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Acero 316L</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Cuero Italiano</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Caucho</span>
             </div>
           </button>
 
@@ -240,9 +240,9 @@ export function WatchesSection({ className }: WatchesSectionProps) {
               </p>
             </div>
             <div className="flex flex-wrap gap-1.5 mt-4">
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Zafiro Antirreflejo</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Hermético 10 ATM</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-foreground/80 font-medium">Garantía Oficial</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Zafiro Antirreflejo</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Hermético 10 ATM</span>
+              <span className="product-tag-badge text-[10px] px-2 py-0.5 rounded font-medium">Garantía Oficial</span>
             </div>
           </button>
         </div>

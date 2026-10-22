@@ -271,7 +271,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
                 <Badge
                   key={tag.name}
                   variant="secondary"
-                  className="text-[10px] px-1.5 py-0.5 font-sans rounded-md bg-gold-500/15 text-gold-700 dark:text-gold-300 border border-gold-500/30 font-medium tracking-tight whitespace-nowrap"
+                  className="product-tag-badge text-[10px] px-1.5 py-0.5 font-sans rounded-md bg-gold-500/15 text-gold-800 dark:text-gold-300 border border-gold-500/30 font-medium tracking-tight whitespace-nowrap"
                   style={
                     tag.color && tag.color !== "#000" && tag.color !== "#000000"
                       ? { backgroundColor: `${tag.color}20`, borderColor: `${tag.color}40`, color: tag.color }

@@ -149,7 +149,7 @@ export default function ProductPage({ product, relatedProducts = [], className }
   };
 
   return (
-    <div className={cn("min-h-screen bg-background text-foreground transition-colors duration-300", className)}>
+    <div className={cn("min-h-screen bg-transparent text-foreground transition-colors duration-300", className)}>
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-muted-foreground mb-8">

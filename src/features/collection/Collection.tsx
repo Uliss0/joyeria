@@ -450,7 +450,7 @@ function CollectionContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen bg-transparent text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb 
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8 font-sans">

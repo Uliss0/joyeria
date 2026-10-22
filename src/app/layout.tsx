@@ -82,16 +82,26 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.GOOGLE_ANALYTICS_ID;
 
   return (
-    <html lang="es">
+    <html lang="es" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('theme')==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');}}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
+        <div className="ambient-background" aria-hidden="true" />
         <OrganizationStructuredData />
         <AuthProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <WhatsAppFloatingButton
-            phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
-          />
+          <div className="relative z-10 flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <WhatsAppFloatingButton
+              phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
+            />
+          </div>
         </AuthProvider>
         {gaId && gaId !== 'TU_ID_DE_GA4' && gaId !== 'GA_MEASUREMENT_ID' && (
           <GoogleAnalytics gaId={gaId} />

@@ -13,6 +13,7 @@ const InstagramFeedSection = dynamic(() => import("./components/InstagramFeedSec
 const TestimonialsSection = dynamic(() => import("./components/TestimonialsSection").then((mod) => mod.TestimonialsSection), { ssr: false });
 import { UniquePiecesSection } from "./components/UniquePiecesSection";
 import { WatchesSection } from "./components/WatchesSection";
+import { CategoriesShowcase } from "./components/CategoriesShowcase";
 
 // Definición de la interfaz Product (copiada de ProductGrid para asegurar compatibilidad)
 interface Product {
@@ -124,13 +125,14 @@ export default function Home() {
             {/*Logo arriba del video */}
             
             <img
-              src="/moksha-titulo.png"
-              alt="MOKSHA Joyería Premium"
-              className="mb-8 max-w-full sm:max-w-md md:max-w-xl mx-auto w-full h-auto drop-shadow-lg"
-            />
+  src="/moksha3.png"
+  alt="MOKSHA Joyería Premium"
+  className="mb-10 max-w-full sm:max-w-md md:max-w-xl mx-auto w-full h-auto drop-shadow-lg [transform:rotateZ(0.01deg)]"
+/>
+{/*
             <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-sans drop-shadow-md">
               Donde cada joya cuenta una historia.
-            </p>
+            </p>*/}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/coleccion">
@@ -155,6 +157,9 @@ export default function Home() {
       </section>
 
       
+
+      {/* Shop by Category - Horizontal Visual Grid */}
+      <CategoriesShowcase />
 
       {/* Product Carousel Section - Popular Products */}
       <ProductCarousel

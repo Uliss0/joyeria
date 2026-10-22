@@ -402,7 +402,7 @@ const Header = () => {
     <nav 
       // Punto 1: Sticky top-0
       // Punto 3: Border blanco (border-white/95) igual que el texto
-      className="sticky top-0 z-50 bg-[#222428] text-white/95 backdrop-blur-md border-b border-white/95 shadow-sm transition-all"
+      className="sticky top-0 z-50 bg-[#222428] text-white/95 backdrop-blur-md border-b border-white/95 shadow-sm transform-gpu transition-[background-color,border-color,box-shadow] duration-200"
     >
       
       {/* Punto 2: Layout Grid para móvil para evitar superposición Cart/Logo */}

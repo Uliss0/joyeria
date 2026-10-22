@@ -202,7 +202,7 @@ export function ProductInfo({
               <Badge
                 key={tag.name}
                 variant="secondary"
-                className="text-xs px-2.5 py-1 font-sans rounded-md bg-gold-500/15 text-gold-700 dark:text-gold-300 border border-gold-500/30 font-medium tracking-tight"
+                className="product-tag-badge text-xs px-2.5 py-1 font-sans rounded-md bg-gold-500/15 text-gold-800 dark:text-gold-300 border border-gold-500/30 font-medium tracking-tight"
                 style={
                   tag.color && tag.color !== "#000" && tag.color !== "#000000"
                     ? { backgroundColor: `${tag.color}20`, borderColor: `${tag.color}40`, color: tag.color }
