@@ -90,7 +90,7 @@ export function CategoriesShowcase({ className }: CategoriesShowcaseProps) {
     <section className={cn("py-8 md:py-1 relative overflow-hidden", className)}>
       <div className="container relative z-10 mx-auto px-4 md:px-6">
         {/* Cabecera sutil y minimalista */}
-        <div className="flex items-center justify-between mb-4 md:mb-6">
+        <div className="flex items-center justify-between ">
        
 
           <div className="flex items-center gap-2">
@@ -162,7 +162,7 @@ export function CategoriesShowcase({ className }: CategoriesShowcaseProps) {
 
                 {/* Título de la categoría completamente limpio y minimalista */}
                 <div className="absolute inset-0 p-4 flex flex-col justify-end items-center text-center z-10">
-                  <h3 className="font-serif text-lg sm:text-xl lg:text-2xl font-light text-gray-200 tracking-wide drop-shadow-md group-hover:text-gold-200 transition-colors duration-300 ml-20 ">
+                  <h3 className="font-serif text-lg sm:text-xl lg:text-2xl font-light text-gray-200 tracking-wide drop-shadow-md group-hover:text-gold-200 transition-colors duration-300">
                     {cat.name}
                   </h3>
                 </div>
